@@ -1,0 +1,84 @@
+import { 
+  LayoutDashboard, 
+  User, 
+  Settings, 
+  Folder,
+  HelpCircle,
+  Package,
+  Database,
+  Book,
+  type LucideIcon
+} from "lucide-react";
+
+export interface NavItem {
+  title: string;
+  href: string;
+  icon: LucideIcon;
+  badge?: string;
+}
+
+export interface NavSection {
+  title: string;
+  items: NavItem[];
+}
+
+export const navigationConfig: NavSection[] = [
+  {
+    title: "Main",
+    items: [
+      {
+        title: "Dashboard",
+        href: "/dashboard",
+        icon: LayoutDashboard,
+      },
+      {
+        title: "AASX Manager",
+        href: "/aasx-manager",
+        icon: Package,
+      },
+      {
+        title: "AAS Viewer",
+        href: "/aas-viewer",
+        icon: Database,
+      },
+      {
+        title: "Dictionary",
+        href: "/dictionary",
+        icon: Book,
+      },
+    ],
+  },
+  {
+    title: "User Settings",
+    items: [
+      {
+        title: "My profile",
+        href: "/profile",
+        icon: User,
+      },
+      {
+        title: "Preferences",
+        href: "/profile/preferences",
+        icon: Settings,
+      },
+    ],
+  },
+  {
+    title: "Workspaces",
+    items: [
+      {
+        title: "My workspaces",
+        href: "/workspaces",
+        icon: Folder,
+      },
+    ],
+  },
+];
+
+export const bottomNavItems: NavItem[] = [
+  {
+    title: "Help & Support",
+    href: "/help",
+    icon: HelpCircle,
+  },
+];

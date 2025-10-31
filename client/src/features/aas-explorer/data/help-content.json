@@ -1,0 +1,156 @@
+{
+  "topics": [
+    {
+      "id": "getting-started",
+      "title": "Getting Started",
+      "category": "getting-started",
+      "content": "Welcome to RE-Eclipse AASX Web! This guide will help you get started with managing Asset Administration Shell packages.\n\n**Quick Start:**\n1. Upload an AASX file or create a new package\n2. Browse the tree structure to explore shells, submodels, and elements\n3. Click on any element to view or edit its properties\n4. Use the toolbar for common actions like save, export, and undo\n\n**Key Features:**\n- Full AAS V3.0 compliance\n- Property editing with validation\n- Multi-language support\n- Undo/Redo functionality\n- Export to multiple formats",
+      "keywords": ["start", "begin", "intro", "welcome", "tutorial"],
+      "relatedTopics": ["file-management", "tree-navigation", "property-editing"]
+    },
+    {
+      "id": "file-management",
+      "title": "File Management",
+      "category": "features",
+      "content": "**Uploading Files:**\n- Click 'Upload' or drag and drop AASX files\n- Maximum file size: 200MB\n- Supported formats: .aasx\n\n**Creating New Packages:**\n- Click 'Create New' to start from scratch\n- Choose from templates (Digital Nameplate, Technical Data)\n- Or create an empty package\n\n**Exporting:**\n- JSON: Full environment export\n- XML: AAS V3.0 compliant format\n- Excel: Multi-sheet export with metadata\n- CSV: Flattened property data\n\n**Downloading:**\n- Click 'Download' to save the current package\n- File is saved in AASX format",
+      "keywords": ["upload", "download", "create", "export", "import", "file"],
+      "relatedTopics": ["getting-started", "excel-export", "csv-export"]
+    },
+    {
+      "id": "tree-navigation",
+      "title": "Tree Navigation",
+      "category": "features",
+      "content": "**Navigating the Tree:**\n- Click to expand/collapse nodes\n- Use arrow keys for keyboard navigation\n- Double-click to open property panel\n\n**Tree Structure:**\n- Environment (root)\n  - Asset Administration Shells\n    - Submodels\n      - Submodel Elements\n\n**Search:**\n- Use Ctrl+F to search\n- Filter by type, semantic ID, or text\n- Results highlight in tree\n\n**Selection:**\n- Single click: Select\n- Ctrl+Click: Toggle selection\n- Shift+Click: Range selection\n- Ctrl+A: Select all",
+      "keywords": ["tree", "navigate", "browse", "search", "find", "select"],
+      "relatedTopics": ["keyboard-shortcuts", "multi-select", "breadcrumb"]
+    },
+    {
+      "id": "property-editing",
+      "title": "Editing Properties",
+      "category": "features",
+      "content": "**Editing Values:**\n1. Select an element in the tree\n2. Click 'Edit' in the property panel\n3. Modify values in the form\n4. Click 'Save' to apply changes\n\n**Property Types:**\n- Property: Simple key-value pairs\n- MultiLanguageProperty: Text in multiple languages\n- Range: Min/max values\n- File/Blob: Binary data\n- Collection: Nested elements\n\n**Validation:**\n- Real-time validation as you type\n- Error messages show invalid values\n- Required fields marked with *\n\n**Multi-Language:**\n- Add translations for different languages\n- Use language codes (en, de, fr, etc.)\n- Edit all languages in one form",
+      "keywords": ["edit", "property", "value", "modify", "change", "update"],
+      "relatedTopics": ["undo-redo", "validation", "multi-language"]
+    },
+    {
+      "id": "undo-redo",
+      "title": "Undo & Redo",
+      "category": "features",
+      "content": "**Using Undo/Redo:**\n- Ctrl+Z: Undo last action\n- Ctrl+Y: Redo last undone action\n- Click toolbar buttons for undo/redo\n\n**What Can Be Undone:**\n- Property edits\n- Element creation\n- Element deletion\n- Element moves\n- Paste operations\n\n**History:**\n- Last 50 commands stored\n- View command history in toolbar\n- Clear history with 'Clear' button\n\n**Limitations:**\n- File operations (upload/download) cannot be undone\n- Undo history cleared on file close",
+      "keywords": ["undo", "redo", "revert", "history", "ctrl+z"],
+      "relatedTopics": ["property-editing", "keyboard-shortcuts"]
+    },
+    {
+      "id": "keyboard-shortcuts",
+      "title": "Keyboard Shortcuts",
+      "category": "shortcuts",
+      "content": "**General:**\n- F1: Open help\n- Ctrl+S: Save\n- Ctrl+F: Search\n- Escape: Close dialog/clear selection\n\n**Editing:**\n- Ctrl+Z: Undo\n- Ctrl+Y: Redo\n- Ctrl+C: Copy\n- Ctrl+X: Cut\n- Ctrl+V: Paste\n- Ctrl+D: Duplicate\n- F2: Rename\n- Delete: Delete selected\n\n**Navigation:**\n- Arrow Keys: Navigate tree\n- Enter: Expand/collapse\n- Tab: Next element\n- Shift+Tab: Previous element\n\n**Selection:**\n- Ctrl+A: Select all\n- Ctrl+Click: Toggle selection\n- Shift+Click: Range selection",
+      "keywords": ["keyboard", "shortcuts", "hotkeys", "keys", "ctrl"],
+      "relatedTopics": ["tree-navigation", "undo-redo", "property-editing"]
+    },
+    {
+      "id": "excel-export",
+      "title": "Excel Export",
+      "category": "features",
+      "content": "**Exporting to Excel:**\n1. Click 'Export' > 'Excel'\n2. Choose export options\n3. File downloads automatically\n\n**Export Options:**\n- Include metadata\n- Multi-language support\n- Template: Flat or Hierarchical\n\n**Excel Structure:**\n- Sheet 1: Asset Administration Shells\n- Sheet 2: Submodels\n- Sheet 3: Properties\n- Sheet 4: Metadata (optional)\n\n**Use Cases:**\n- Bulk property review\n- Data analysis in Excel\n- Sharing with non-technical users\n- Import into other systems",
+      "keywords": ["excel", "export", "xlsx", "spreadsheet"],
+      "relatedTopics": ["csv-export", "file-management", "excel-import"]
+    },
+    {
+      "id": "csv-export",
+      "title": "CSV Export",
+      "category": "features",
+      "content": "**Exporting to CSV:**\n1. Select a submodel\n2. Click 'Export' > 'CSV'\n3. File downloads automatically\n\n**CSV Format:**\n- Flattened property data\n- One row per property\n- Columns: Path, ID, Type, Value, Description\n\n**Use Cases:**\n- Import into databases\n- Data analysis\n- Bulk editing in spreadsheet\n- Integration with other tools\n\n**Tips:**\n- Use semicolon delimiter for European locales\n- UTF-8 encoding for special characters\n- First row contains headers",
+      "keywords": ["csv", "export", "comma", "spreadsheet"],
+      "relatedTopics": ["excel-export", "file-management", "csv-import"]
+    },
+    {
+      "id": "excel-import",
+      "title": "Excel Import",
+      "category": "features",
+      "content": "**Importing from Excel:**\n1. Click 'Import' > 'Excel'\n2. Select Excel file\n3. Review validation errors\n4. Preview changes\n5. Click 'Import' to apply\n\n**File Format:**\n- Must match export format\n- Required columns: Path, ID, Value\n- Optional columns: Type, Description\n\n**Validation:**\n- Path must exist in current package\n- Value type must match property type\n- Required fields cannot be empty\n\n**Tips:**\n- Export first to get correct format\n- Use template for new data\n- Validate before import",
+      "keywords": ["excel", "import", "xlsx", "upload"],
+      "relatedTopics": ["excel-export", "csv-import", "validation"]
+    },
+    {
+      "id": "csv-import",
+      "title": "CSV Import",
+      "category": "features",
+      "content": "**Importing from CSV:**\n1. Click 'Import' > 'CSV'\n2. Select CSV file\n3. Review validation errors\n4. Preview changes\n5. Click 'Import' to apply\n\n**File Format:**\n- Comma or semicolon delimiter\n- UTF-8 encoding\n- First row: headers\n- Required columns: Path, Value\n\n**Validation:**\n- All paths must exist\n- Values must match types\n- No duplicate paths\n\n**Error Handling:**\n- Invalid rows skipped\n- Error report generated\n- Partial import possible",
+      "keywords": ["csv", "import", "comma", "upload"],
+      "relatedTopics": ["csv-export", "excel-import", "validation"]
+    },
+    {
+      "id": "validation",
+      "title": "Validation",
+      "category": "features",
+      "content": "**AAS V3.0 Validation:**\n- Real-time validation as you edit\n- Schema validation on save\n- Semantic ID validation\n- Reference validation\n\n**Validation Levels:**\n- Error: Must be fixed before save\n- Warning: Should be reviewed\n- Info: Suggestions for improvement\n\n**Common Errors:**\n- Missing required fields\n- Invalid value types\n- Broken references\n- Invalid semantic IDs\n\n**Validation Panel:**\n- View all validation errors\n- Click error to navigate to element\n- Filter by severity\n- Export validation report",
+      "keywords": ["validation", "error", "warning", "check", "validate"],
+      "relatedTopics": ["property-editing", "aas-specification"]
+    },
+    {
+      "id": "multi-language",
+      "title": "Multi-Language Support",
+      "category": "features",
+      "content": "**Adding Languages:**\n1. Edit a MultiLanguageProperty\n2. Click 'Add Language'\n3. Select language code\n4. Enter translated text\n\n**Supported Languages:**\n- Use ISO 639-1 codes (en, de, fr, etc.)\n- Or ISO 639-2 codes (eng, deu, fra, etc.)\n\n**Best Practices:**\n- Always provide English (en) as fallback\n- Use consistent language codes\n- Translate descriptions and display names\n\n**Display:**\n- UI shows preferred language\n- Fallback to English if translation missing\n- Language selector in settings",
+      "keywords": ["language", "translation", "multilanguage", "i18n", "locale"],
+      "relatedTopics": ["property-editing"]
+    },
+    {
+      "id": "context-menu",
+      "title": "Context Menus",
+      "category": "features",
+      "content": "**Using Context Menus:**\n- Right-click on tree node\n- Or press Menu key\n- Select action from menu\n\n**Available Actions:**\n- Edit: Open property editor\n- Add Element: Create new child\n- Copy/Cut/Paste: Clipboard operations\n- Duplicate: Create copy\n- Move Up/Down: Reorder\n- Delete: Remove element\n\n**Keyboard:**\n- Arrow keys to navigate menu\n- Enter to select\n- Escape to close\n\n**Bulk Operations:**\n- Select multiple items\n- Right-click for bulk actions\n- Delete, copy, or move multiple items",
+      "keywords": ["context", "menu", "right-click", "actions"],
+      "relatedTopics": ["keyboard-shortcuts", "multi-select"]
+    },
+    {
+      "id": "drag-drop",
+      "title": "Drag & Drop",
+      "category": "features",
+      "content": "**Reordering Elements:**\n1. Click and hold element\n2. Drag to new position\n3. Drop to place\n\n**Visual Feedback:**\n- Ghost image while dragging\n- Drop zones highlighted\n- Invalid drops disabled\n\n**Keyboard Drag:**\n- Select element\n- Press Space to start drag\n- Arrow keys to move\n- Space to drop\n- Escape to cancel\n\n**Undo:**\n- Drag operations can be undone\n- Use Ctrl+Z to revert",
+      "keywords": ["drag", "drop", "reorder", "move", "dnd"],
+      "relatedTopics": ["undo-redo", "keyboard-shortcuts"]
+    },
+    {
+      "id": "multi-select",
+      "title": "Multi-Select",
+      "category": "features",
+      "content": "**Selecting Multiple Items:**\n- Ctrl+Click: Toggle selection\n- Shift+Click: Range selection\n- Ctrl+A: Select all\n\n**Bulk Operations:**\n- Copy: Ctrl+C\n- Cut: Ctrl+X\n- Delete: Delete key\n- Right-click for more actions\n\n**Visual Feedback:**\n- Selected items highlighted\n- Count shown in toolbar\n- Clear with Escape\n\n**Limitations:**\n- Cannot select across different parents\n- Some operations require single selection",
+      "keywords": ["select", "multiple", "bulk", "ctrl", "shift"],
+      "relatedTopics": ["context-menu", "keyboard-shortcuts"]
+    },
+    {
+      "id": "breadcrumb",
+      "title": "Breadcrumb Navigation",
+      "category": "features",
+      "content": "**Using Breadcrumbs:**\n- View current path at top\n- Click any level to navigate\n- Shows: Environment > Shell > Submodel > Element\n\n**Features:**\n- Responsive design\n- Collapses on small screens\n- Keyboard accessible\n- Updates automatically\n\n**Navigation:**\n- Click breadcrumb to jump to that level\n- Use with tree for quick navigation\n- Shows full hierarchical path",
+      "keywords": ["breadcrumb", "path", "navigation", "hierarchy"],
+      "relatedTopics": ["tree-navigation"]
+    },
+    {
+      "id": "virtual-scrolling",
+      "title": "Virtual Scrolling",
+      "category": "features",
+      "content": "**Performance Optimization:**\n- Handles 10,000+ nodes smoothly\n- Only visible items rendered\n- Scroll position preserved\n- 60fps scrolling\n\n**How It Works:**\n- Virtual rendering of tree nodes\n- Automatic when tree is large\n- No configuration needed\n\n**Benefits:**\n- Fast initial load\n- Low memory usage\n- Smooth scrolling\n- No lag with large files",
+      "keywords": ["virtual", "scroll", "performance", "large", "optimization"],
+      "relatedTopics": ["tree-navigation"]
+    },
+    {
+      "id": "aas-specification",
+      "title": "AAS V3.0 Specification",
+      "category": "faq",
+      "content": "**Asset Administration Shell:**\n- Industry 4.0 standard\n- Digital representation of assets\n- Standardized data exchange\n\n**Key Concepts:**\n- Environment: Root container\n- Shell: Asset representation\n- Submodel: Aspect of asset\n- Elements: Properties and data\n\n**Compliance:**\n- Full AAS V3.0 support\n- Schema validation\n- Semantic ID support\n- Reference validation\n\n**Resources:**\n- [AAS Specification](https://www.plattform-i40.de/)\n- [IDTA](https://industrialdigitaltwin.org/)\n- [GitHub](https://github.com/admin-shell-io)",
+      "keywords": ["aas", "specification", "standard", "v3", "industry 4.0"],
+      "relatedTopics": ["validation", "getting-started"]
+    },
+    {
+      "id": "troubleshooting",
+      "title": "Troubleshooting",
+      "category": "faq",
+      "content": "**Common Issues:**\n\n**File Won't Upload:**\n- Check file size (max 200MB)\n- Verify file format (.aasx)\n- Check browser console for errors\n\n**Validation Errors:**\n- Review error messages\n- Check AAS V3.0 specification\n- Verify required fields\n\n**Performance Issues:**\n- Large files may be slow\n- Close other browser tabs\n- Use virtual scrolling\n\n**Save Fails:**\n- Check disk space\n- Verify write permissions\n- Review validation errors\n\n**Need Help:**\n- Check documentation\n- Search help system (F1)\n- Contact support",
+      "keywords": ["troubleshoot", "problem", "issue", "error", "help", "support"],
+      "relatedTopics": ["validation", "file-management"]
+    }
+  ]
+}

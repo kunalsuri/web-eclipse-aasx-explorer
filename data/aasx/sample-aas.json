@@ -1,0 +1,65 @@
+{
+  "assetAdministrationShells": [
+    {
+      "idShort": "SampleAAS",
+      "id": "https://example.com/ids/aas/sample-001",
+      "assetInformation": {
+        "assetKind": "Instance",
+        "globalAssetId": "https://example.com/ids/asset/sample-001"
+      },
+      "submodels": [
+        {
+          "type": "ModelReference",
+          "keys": [
+            {
+              "type": "Submodel",
+              "value": "https://example.com/ids/sm/technical-data"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "submodels": [
+    {
+      "idShort": "TechnicalData",
+      "id": "https://example.com/ids/sm/technical-data",
+      "kind": "Instance",
+      "submodelElements": [
+        {
+          "idShort": "MaxRotationSpeed",
+          "modelType": "Property",
+          "valueType": "xs:int",
+          "value": "5000"
+        },
+        {
+          "idShort": "Weight",
+          "modelType": "Property",
+          "valueType": "xs:double",
+          "value": "15.5"
+        },
+        {
+          "idShort": "ManufacturerName",
+          "modelType": "Property",
+          "valueType": "xs:string",
+          "value": "ACME Corporation"
+        },
+        {
+          "idShort": "ProductDescription",
+          "modelType": "MultiLanguageProperty",
+          "value": [
+            {
+              "language": "en",
+              "text": "High-performance industrial motor"
+            },
+            {
+              "language": "de",
+              "text": "Hochleistungs-Industriemotor"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "conceptDescriptions": []
+}

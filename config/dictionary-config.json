@@ -1,0 +1,22 @@
+{
+  "eclass": {
+    "apiUrl": "https://eclass-cdp.com/xmlapi/v1",
+    "timeout": 30000,
+    "retryAttempts": 3,
+    "retryDelay": 1000,
+    "defaultSearchPath": "eclass"
+  },
+  "ieccdd": {
+    "apiUrl": "https://cdd.iec.ch/api/v1",
+    "timeout": 30000,
+    "retryAttempts": 3,
+    "retryDelay": 1000,
+    "defaultSearchPath": "iec-cdd"
+  },
+  "cache": {
+    "serverTTL": 86400,
+    "clientTTL": 604800,
+    "maxSize": 52428800,
+    "maxEntries": 1000
+  }
+}
