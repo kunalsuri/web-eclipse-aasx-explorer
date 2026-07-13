@@ -8,6 +8,13 @@ This document is the record of that assessment: what was checked, what was found
 what I think it means, and what to do next. It is meant to be read cold by a future
 agent session — no prior conversation context is assumed.
 
+**Companion doc:** `docs/2026-07-13-confidence-assessment-and-verification-methodology.md`
+answers a specific follow-up asked in the same session — how confident we actually
+are that the TypeScript codebase correctly translated the C# app, and how to
+measure that quantitatively (golden-master differential testing, official AAS
+conformance suite, mechanical API-surface diffing) instead of relying on
+self-reported percentages. Read it alongside task 4 below.
+
 ---
 
 ## 1. Executive Summary
@@ -309,7 +316,7 @@ Status legend: `TODO` not started · `IN PROGRESS` · `BLOCKED` needs a decision
 | 1 | Delete orphaned literal-port plugin files (`plugin-manager.ts`, `plugin-action-invoker.ts`, `plugin-event-handler.ts`, `plugin-standard-actions.ts`, `plugin-visual-extension.ts`) | `server/src/services` | P0 | TODO | Confirmed unimported/dead; removes 27 of 261 typecheck errors |
 | 2 | Fix remaining ~234 real `npm run check` errors | repo-wide | P0 | TODO | Start with highest-count files: `useContextMenu.ts` (24), `TreeNodeContextMenu.tsx` (24), test files under `__tests__`, `shared/aas-sample-data.ts` duplicate identifiers, missing `xml2js` dependency |
 | 3 | Run `npm audit`, triage 31 vulnerabilities (2 critical, 16 high) | deps | P1 | TODO | Not investigated this session |
-| 4 | Build a regenerable C#↔TS parity matrix (script, not prose) | tooling | P1 | TODO | Replace the two contradictory hand-written analyses |
+| 4 | Build a regenerable C#↔TS parity matrix (script, not prose) — **prefer golden-master differential testing over a symbol-diff matrix alone; see companion doc** | tooling | P1 | TODO | Replace the two contradictory hand-written analyses. See `docs/2026-07-13-confidence-assessment-and-verification-methodology.md` for why and the concrete build order (fix typecheck gate → build headless C# harness against `src/BlazorUI/*.aasx` samples → diff JSON output against TS → re-baseline parity claims from that) |
 | 5 | Add an independent verification subagent that gates "phase complete" claims | `.claude/agents/` | P1 | TODO | Read/bash/test tools only; no code-writing |
 | 6 | Run `admin-shell-io/aas-test-engines` against this repo's REST API + validation engine | validation / API | P1 | TODO | Establishes objective, standards-body-graded correctness |
 | 7 | Re-verify actual AASd-* constraint correctness against IDTA-01001-3-0 Part 1 text, not just internal test count | `shared/validation-rules/*` | P1 | TODO | "150/150" is a count of implemented functions, not proof of spec fidelity |
