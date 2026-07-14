@@ -121,3 +121,4 @@ Thumbs.db
 # Local development files
 .env.local
 scripts/*.log
+.claude/settings.local.json
