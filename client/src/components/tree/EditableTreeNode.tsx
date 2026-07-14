@@ -12,7 +12,7 @@ import { DraggableTreeNode } from './DraggableTreeNode';
 import { PropertyEditorFactory } from '../property-editors/PropertyEditorFactory';
 import { useContextMenu } from '../../hooks/useContextMenu';
 import { useIsSelected } from '../../stores/selectionStore';
-import { useClipboard } from '../../stores/clipboardStore';
+import { useIsCut } from '../../stores/clipboardStore';
 import { useActiveEditor, useValidation } from '../../stores/editorStore';
 import { cn } from '@/lib/utils';
 import '../context-menu/context-menu.css';
@@ -50,13 +50,12 @@ export function EditableTreeNode({
   const nodeRef = useRef<HTMLDivElement>(null);
   
   const isSelected = useIsSelected(node.id);
-  const { isCut } = useClipboard();
+  const isCutItem = useIsCut(node.id);
   const { openEditor, closeEditor, updateValue, saveEditor } = useActiveEditor();
   const { validation } = useValidation(node.id);
   const contextMenuItems = useContextMenu(node, () => onEdit?.(node));
 
   const hasChildren = node.children && node.children.length > 0;
-  const isCutItem = isCut(node.id);
   const canEdit = allowInlineEdit && node.modelType === 'Property' && node.value !== undefined;
 
   // Validation icon
@@ -148,7 +147,7 @@ export function EditableTreeNode({
   return (
     <ContextMenu
       trigger={
-        <DraggableTreeNode id={node.id}>
+        <DraggableTreeNode id={node.id} node={node}>
           <div
             ref={nodeRef}
             className={cn(

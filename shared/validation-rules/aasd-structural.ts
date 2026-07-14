@@ -1522,8 +1522,8 @@ export const AASd_045: ValidationRule = {
         const list = element as SubmodelElementList;
         const declaredType = list.typeValueListElement;
 
-        if (declaredType && list.value.length > 0) {
-          list.value.forEach((item: SubmodelElement, idx: number) => {
+        if (declaredType && list.value!.length > 0) {
+          list.value!.forEach((item: SubmodelElement, idx: number) => {
             if (item.modelType !== declaredType) {
               errors.push({
                 path: `${path}.value[${idx}]`,

@@ -12,6 +12,8 @@ export interface ContextMenuItem {
   icon?: ReactNode;
   shortcut?: string;
   enabled?: boolean;
+  disabled?: boolean;
+  danger?: boolean;
   visible?: boolean;
   separator?: boolean;
   onClick?: () => void;

@@ -346,7 +346,7 @@ export function AasExplorerIntegrated({
         <ResizablePanel defaultSize={50} minSize={30}>
           <div className="h-full p-4">
             <PropertyPanel
-              selectedNode={selectedNode}
+              node={selectedNode}
               fileId={fileId}
             />
           </div>

@@ -11,9 +11,8 @@ import type {
   Reference,
   LangStringNameType,
   LangStringTextType,
-  ReferenceTypes,
-  KeyTypes,
 } from "./aas-v3-types";
+import { ReferenceTypes, KeyTypes } from "./aas-v3-types";
 
 // ============================================================================
 // Serialization

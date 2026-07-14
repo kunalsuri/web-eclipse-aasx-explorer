@@ -4,7 +4,7 @@
  * Shared types and interfaces for property editors
  */
 
-import type { Reference, LangStringSet } from '../../../../shared/aas-v3-types';
+import type { Reference, LangStringTextType } from '../../../../shared/aas-v3-types';
 
 // ============================================================================
 // Validation Types
@@ -43,7 +43,7 @@ export interface PropertyMetadata {
   valueType: string;
   constraints?: Constraint[];
   semanticId?: Reference;
-  description?: LangStringSet;
+  description?: LangStringTextType[];
   category?: string;
   required?: boolean;
   readonly?: boolean;

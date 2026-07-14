@@ -14,7 +14,7 @@ import { ContextMenu } from '../context-menu/ContextMenu';
 import { DraggableTreeNode } from './DraggableTreeNode';
 import { useContextMenu } from '../../hooks/useContextMenu';
 import { useIsSelected } from '../../stores/selectionStore';
-import { useClipboard } from '../../stores/clipboardStore';
+import { useIsCut } from '../../stores/clipboardStore';
 import '../context-menu/context-menu.css';
 
 interface TreeNodeProps {
@@ -40,11 +40,10 @@ export function TreeNodeWithFeatures({
   expanded = false,
 }: TreeNodeProps) {
   const isSelected = useIsSelected(node.id);
-  const { isCut } = useClipboard();
+  const isCutItem = useIsCut(node.id);
   const contextMenuItems = useContextMenu(node, () => onEdit?.(node));
 
   const hasChildren = node.children && node.children.length > 0;
-  const isCutItem = isCut(node.id);
 
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
@@ -57,7 +56,7 @@ export function TreeNodeWithFeatures({
 
   return (
     <ContextMenu trigger={
-      <DraggableTreeNode id={node.id}>
+      <DraggableTreeNode id={node.id} node={node}>
         <div
           className={`tree-node ${isSelected ? 'selected' : ''} ${isCutItem ? 'cut' : ''}`}
           style={{ paddingLeft: `${level * 20}px` }}

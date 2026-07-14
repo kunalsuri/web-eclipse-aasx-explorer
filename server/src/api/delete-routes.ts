@@ -6,7 +6,7 @@
 
 import { Router, type Request, type Response } from 'express';
 import { ElementManager } from '../services/element-manager';
-import { NotFoundError } from '../services/element-finder';
+import { NotFoundError, type ElementPath } from '../services/element-finder';
 
 const router = Router();
 const elementManager = new ElementManager();
@@ -87,14 +87,14 @@ router.delete('/submodels/:submodelId/submodel-elements/:idShortPath', async (re
     const userId = (req as any).user?.id || 'anonymous';
 
     // Parse idShort path
-    const pathSegments = idShortPath.split('.').map(segment => ({
-      type: 'SubmodelElement' as const,
-      value: segment
+    const pathSegments: ElementPath[] = idShortPath.split('.').map(segment => ({
+      type: 'element' as const,
+      id: segment
     }));
 
     // Add submodel to path
-    const fullPath = [
-      { type: 'Submodel' as const, value: submodelId },
+    const fullPath: ElementPath[] = [
+      { type: 'submodel' as const, id: submodelId },
       ...pathSegments
     ];
 

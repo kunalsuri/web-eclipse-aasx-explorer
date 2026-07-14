@@ -5,7 +5,38 @@
  * reference autocomplete in the UI.
  */
 
-import type { Environment, AssetAdministrationShell, Submodel, SubmodelElement, ConceptDescription, Key, KeyTypes, Reference } from '../../../shared/aas-v3-types';
+import type { Environment, AssetAdministrationShell, Submodel, SubmodelElement, ConceptDescription, Key, Reference } from '../../../shared/aas-v3-types';
+import { KeyTypes, AasSubmodelElements } from '../../../shared/aas-v3-types';
+
+/**
+ * Map a submodel element's modelType (AasSubmodelElements) to the
+ * corresponding KeyTypes member used in Reference/Key paths. The two enums
+ * share the same string values for overlapping members, but are distinct
+ * nominal types, so a direct cast is not safe - use this explicit table.
+ */
+const SUBMODEL_ELEMENT_TO_KEY_TYPE: Record<AasSubmodelElements, KeyTypes> = {
+  [AasSubmodelElements.AnnotatedRelationshipElement]: KeyTypes.AnnotatedRelationshipElement,
+  [AasSubmodelElements.BasicEventElement]: KeyTypes.BasicEventElement,
+  [AasSubmodelElements.Blob]: KeyTypes.Blob,
+  [AasSubmodelElements.Capability]: KeyTypes.Capability,
+  [AasSubmodelElements.DataElement]: KeyTypes.DataElement,
+  [AasSubmodelElements.Entity]: KeyTypes.Entity,
+  [AasSubmodelElements.EventElement]: KeyTypes.EventElement,
+  [AasSubmodelElements.File]: KeyTypes.File,
+  [AasSubmodelElements.MultiLanguageProperty]: KeyTypes.MultiLanguageProperty,
+  [AasSubmodelElements.Operation]: KeyTypes.Operation,
+  [AasSubmodelElements.Property]: KeyTypes.Property,
+  [AasSubmodelElements.Range]: KeyTypes.Range,
+  [AasSubmodelElements.ReferenceElement]: KeyTypes.ReferenceElement,
+  [AasSubmodelElements.RelationshipElement]: KeyTypes.RelationshipElement,
+  [AasSubmodelElements.SubmodelElement]: KeyTypes.SubmodelElement,
+  [AasSubmodelElements.SubmodelElementList]: KeyTypes.SubmodelElementList,
+  [AasSubmodelElements.SubmodelElementCollection]: KeyTypes.SubmodelElementCollection,
+};
+
+function toKeyType(modelType: AasSubmodelElements): KeyTypes {
+  return SUBMODEL_ELEMENT_TO_KEY_TYPE[modelType];
+}
 
 export interface ReferenceSuggestion {
   id: string;
@@ -122,7 +153,7 @@ export class ReferenceSuggestionService {
         if (submodel.submodelElements) {
           this.indexSubmodelElements(
             submodel.submodelElements,
-            [{ type: 'Submodel', value: submodel.id }],
+            [{ type: KeyTypes.Submodel, value: submodel.id }],
             suggestions
           );
         }
@@ -152,18 +183,20 @@ export class ReferenceSuggestionService {
     suggestions: ReferenceSuggestion[]
   ): void {
     for (const element of elements) {
-      const elementPath = [
+      const idShort = element.idShort ?? '';
+      const keyType = toKeyType(element.modelType);
+      const elementPath: Key[] = [
         ...parentPath,
-        { type: element.modelType as KeyTypes, value: element.idShort },
+        { type: keyType, value: idShort },
       ];
 
       suggestions.push({
-        id: element.idShort,
-        idShort: element.idShort,
-        type: element.modelType as KeyTypes,
+        id: idShort,
+        idShort,
+        type: keyType,
         path: elementPath,
         semanticId: element.semanticId,
-        displayName: `${element.idShort} (${element.modelType})`,
+        displayName: `${idShort} (${element.modelType})`,
         parentPath: parentPath.map((k) => k.value).join(' / '),
       });
 
@@ -186,9 +219,10 @@ export class ReferenceSuggestionService {
     return {
       id: shell.id,
       idShort: shell.idShort || shell.id,
-      type: 'AssetAdministrationShell' as KeyTypes,
-      path: [{ type: 'AssetAdministrationShell' as KeyTypes, value: shell.id }],
-      semanticId: shell.semanticId,
+      type: KeyTypes.AssetAdministrationShell,
+      path: [{ type: KeyTypes.AssetAdministrationShell, value: shell.id }],
+      // Note: AssetAdministrationShell does not implement HasSemantics in the
+      // AAS V3 spec, so there is no semanticId to carry over here.
       displayName: `${shell.idShort || shell.id} (Shell)`,
     };
   }
@@ -200,8 +234,8 @@ export class ReferenceSuggestionService {
     return {
       id: submodel.id,
       idShort: submodel.idShort || submodel.id,
-      type: 'Submodel' as KeyTypes,
-      path: [{ type: 'Submodel' as KeyTypes, value: submodel.id }],
+      type: KeyTypes.Submodel,
+      path: [{ type: KeyTypes.Submodel, value: submodel.id }],
       semanticId: submodel.semanticId,
       displayName: `${submodel.idShort || submodel.id} (Submodel)`,
     };
@@ -216,8 +250,8 @@ export class ReferenceSuggestionService {
     return {
       id: cd.id,
       idShort: cd.idShort || cd.id,
-      type: 'ConceptDescription' as KeyTypes,
-      path: [{ type: 'ConceptDescription' as KeyTypes, value: cd.id }],
+      type: KeyTypes.ConceptDescription,
+      path: [{ type: KeyTypes.ConceptDescription, value: cd.id }],
       displayName: `${cd.idShort || cd.id} (ConceptDescription)`,
     };
   }

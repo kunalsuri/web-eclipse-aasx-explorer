@@ -196,6 +196,13 @@ export class ElementFinder {
       return parent.submodelElements || null;
     }
 
+    // From here on, parent must be a SubmodelElement - Submodel has no
+    // modelType field, but TS can't narrow that away via the check above
+    // alone (submodelElements is optional), so guard explicitly.
+    if (!('modelType' in parent)) {
+      return null;
+    }
+
     // SubmodelElementCollection
     if (parent.modelType === 'SubmodelElementCollection') {
       return (parent as SubmodelElementCollection).value || null;
@@ -348,7 +355,7 @@ export class ElementFinder {
           const nestedPath = this.buildPathInElements(
             nested,
             elementIdShort,
-            [...currentPath, { type: 'element', id: element.idShort }]
+            [...currentPath, { type: 'element', id: element.idShort ?? '' }]
           );
           if (nestedPath) {
             return nestedPath;
@@ -379,7 +386,7 @@ export class ElementFinder {
           const nestedPath = this.buildPathInElements(
             nested,
             elementIdShort,
-            [...currentPath, { type: 'element', id: element.idShort }]
+            [...currentPath, { type: 'element', id: element.idShort ?? '' }]
           );
           if (nestedPath) {
             return nestedPath;

@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Settings, Info, AlertCircle, CheckCircle, Loader2 } from "lucide-react";
 
-interface Plugin {
+export interface Plugin {
   id: string;
   name: string;
   version: string;
@@ -24,6 +24,8 @@ interface Plugin {
   enabled: boolean;
   state: "unloaded" | "loading" | "loaded" | "initializing" | "initialized" | "activating" | "active" | "deactivating" | "deactivated" | "error";
   error?: string;
+  config?: Record<string, any>;
+  configSchema?: Record<string, any>;
 }
 
 interface PluginListProps {

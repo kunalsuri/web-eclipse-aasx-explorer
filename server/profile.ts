@@ -18,7 +18,7 @@ const upload = multer({
     },
     filename: (req, file, cb) => {
       const ext = path.extname(file.originalname);
-      const filename = `${req.user?.id}_${Date.now()}${ext}`;
+      const filename = `${req.jwtUser?.userId}_${Date.now()}${ext}`;
       cb(null, filename);
     }
   }),

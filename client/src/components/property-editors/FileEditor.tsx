@@ -21,6 +21,8 @@ export interface FileMetadata {
   fileName: string;
   fileSize: number;
   uploadDate: string;
+  valueType: string;
+  readonly?: boolean;
 }
 
 export interface FileEditorProps extends PropertyEditorProps<FileValue | null> {
@@ -81,6 +83,8 @@ export function FileEditor({
         fileName: file.name,
         fileSize: file.size,
         uploadDate: new Date().toISOString(),
+        valueType: result.contentType,
+        readonly: propMetadata?.readonly,
       });
 
       onBlur?.();
