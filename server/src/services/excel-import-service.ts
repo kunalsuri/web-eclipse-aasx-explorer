@@ -4,7 +4,7 @@
  * Imports property updates from Excel files with validation.
  */
 
-import * as XLSX from 'xlsx';
+import ExcelJS from 'exceljs';
 
 export interface ImportResult {
   success: boolean;
@@ -35,19 +35,20 @@ export class ExcelImportService {
   async importProperties(fileBuffer: Buffer): Promise<ImportResult> {
     try {
       // Read workbook
-      const workbook = XLSX.read(fileBuffer);
-      
+      const workbook = new ExcelJS.Workbook();
+      await workbook.xlsx.load(fileBuffer as any);
+
       // Get Properties sheet
-      if (!workbook.Sheets['Properties']) {
+      const propertiesSheet = workbook.getWorksheet('Properties');
+      if (!propertiesSheet) {
         return {
           success: false,
           errors: [{ row: 0, field: 'sheet', message: 'Properties sheet not found' }],
         };
       }
-      
-      const propertiesSheet = workbook.Sheets['Properties'];
-      const properties = XLSX.utils.sheet_to_json(propertiesSheet);
-      
+
+      const properties = sheetToJson(propertiesSheet);
+
       // Validate
       const errors = this.validateImport(properties);
       if (errors.length > 0) {
@@ -175,4 +176,32 @@ export class ExcelImportService {
         return value;
     }
   }
+}
+
+/**
+ * Convert a worksheet to an array of row objects keyed by the header row,
+ * mirroring the shape XLSX.utils.sheet_to_json produced.
+ */
+function sheetToJson(worksheet: ExcelJS.Worksheet): any[] {
+  const rows: any[] = [];
+  let headers: string[] = [];
+
+  worksheet.eachRow((row, rowNumber) => {
+    const values = row.values as any[];
+    if (rowNumber === 1) {
+      headers = values.slice(1).map((v) => String(v ?? ''));
+      return;
+    }
+
+    const obj: any = {};
+    headers.forEach((header, index) => {
+      const cellValue = values[index + 1];
+      if (cellValue !== undefined && cellValue !== null) {
+        obj[header] = cellValue;
+      }
+    });
+    rows.push(obj);
+  });
+
+  return rows;
 }

@@ -5,7 +5,7 @@
  * Supports multi-language properties and metadata.
  */
 
-import * as XLSX from 'xlsx';
+import ExcelJS from 'exceljs';
 import type {
   Environment,
   AssetAdministrationShell,
@@ -28,34 +28,26 @@ export class ExcelExportService {
   /**
    * Export entire environment to Excel
    */
-  exportEnvironment(env: Environment, options: ExcelExportOptions = {}): Buffer {
-    const workbook = XLSX.utils.book_new();
-    
+  async exportEnvironment(env: Environment, options: ExcelExportOptions = {}): Promise<Buffer> {
+    const workbook = new ExcelJS.Workbook();
+
     // Sheet 1: Asset Administration Shells
-    const shellsData = this.extractShells(env);
-    const shellsSheet = XLSX.utils.json_to_sheet(shellsData);
-    XLSX.utils.book_append_sheet(workbook, shellsSheet, 'Shells');
-    
+    addSheet(workbook, 'Shells', this.extractShells(env));
+
     // Sheet 2: Submodels
-    const submodelsData = this.extractSubmodels(env);
-    const submodelsSheet = XLSX.utils.json_to_sheet(submodelsData);
-    XLSX.utils.book_append_sheet(workbook, submodelsSheet, 'Submodels');
-    
+    addSheet(workbook, 'Submodels', this.extractSubmodels(env));
+
     // Sheet 3: Properties
-    const propertiesData = this.extractProperties(env, options);
-    const propertiesSheet = XLSX.utils.json_to_sheet(propertiesData);
-    XLSX.utils.book_append_sheet(workbook, propertiesSheet, 'Properties');
-    
+    addSheet(workbook, 'Properties', this.extractProperties(env, options));
+
     // Sheet 4: Metadata (optional)
     if (options.includeMetadata) {
-      const metadataData = this.extractMetadata(env);
-      const metadataSheet = XLSX.utils.json_to_sheet(metadataData);
-      XLSX.utils.book_append_sheet(workbook, metadataSheet, 'Metadata');
+      addSheet(workbook, 'Metadata', this.extractMetadata(env));
     }
-    
+
     // Generate binary
-    const binary = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
-    return binary;
+    const binary = await workbook.xlsx.writeBuffer();
+    return Buffer.from(binary);
   }
   
   /**
@@ -211,4 +203,25 @@ export class ExcelExportService {
       },
     ];
   }
+}
+
+/**
+ * Append a worksheet built from an array of flat row objects, mirroring
+ * what XLSX.utils.json_to_sheet + book_append_sheet produced: one column
+ * per key found across the rows, one row per array entry.
+ */
+function addSheet(workbook: ExcelJS.Workbook, name: string, data: any[]): void {
+  const worksheet = workbook.addWorksheet(name);
+  if (data.length === 0) {
+    return;
+  }
+
+  const headerSet = new Set<string>();
+  data.forEach((row) => {
+    Object.keys(row).forEach((key) => headerSet.add(key));
+  });
+  const headers = Array.from(headerSet);
+
+  worksheet.columns = headers.map((header) => ({ header, key: header }));
+  worksheet.addRows(data);
 }

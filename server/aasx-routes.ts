@@ -1256,7 +1256,7 @@ router.get("/:id/export/excel", async (req: Request, res: Response) => {
     const environment = JSON.parse(envData);
 
     const excelService = new ExcelExportService();
-    const buffer = excelService.exportEnvironment(environment, {
+    const buffer = await excelService.exportEnvironment(environment, {
       includeMetadata: includeMetadata === 'true',
       multiLanguage: multiLanguage === 'true',
     });
