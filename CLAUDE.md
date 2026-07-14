@@ -1,17 +1,60 @@
-# CLAUDE.md
+<!-- Copyright (c) 2026 Kunal Suri (CEA LIST). All rights reserved. -->
+# web-eclipse-aasx-explorer — Claude Code project memory
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
+# Imports tool-agnostic rules (Claude Code native directive)
 @AGENTS.md
+# Relative link for non-Claude agents: [AGENTS.md](AGENTS.md)
 
-The imported file above is the canonical, tool-agnostic project guide (commands, architecture, storage duality, testing, code conventions, and this repo's spec-driven agent workflow) — read it first. Everything below is Claude-Code-specific and additive.
+**A modern, web-based platform for managing, validating, and exploring Industry 4.0 digital twins**
+Stack: TypeScript/JavaScript.
 
-## Project config in this repo
+## Build & test — VERIFY in the cold-start pass before trusting
+- Build: `npm install && npm run build`
+- Test:  `npm test`
+- Test locations: tests/
+- Run the suite matching what you changed BEFORE claiming success.
 
-- `.claude/settings.json` — a conservative permissions allowlist for common read-only and test/build commands (typecheck, test runs, `git status`/`diff`/`log`). It does not allow anything destructive or state-changing (no push, commit, reset, etc.) — those still prompt.
-- `.claude/agents/` — subagents scoped to this codebase's three real domains: `aas-validation-engineer` (shared validation engine / AASd-* constraints), `frontend-feature-dev` (`client/src/features/*`), `backend-service-dev` (`server/src/services`, `server/src/api`, auth). Prefer delegating a domain-scoped task to the matching subagent over doing it inline when the task is large enough to benefit from a focused context.
-- `.claude/commands/` — project slash commands: `/aas-check` (typecheck + full test suite), `/spec-status` (summarize `.kiro/CONSOLIDATED-SUMMARY.md` progress and next steps).
+## Hard rules (non-negotiable)
+- **Respect existing boundaries.** Treat unfamiliar, load-bearing code as frozen until the module map says otherwise.
+- Check `ai/guide/MODULE_MAP.md` Stability before editing any file. `frozen` = hands off.
+- Anything you write into `ai/` is `[inferred]` until a human flips it to `[verified]`.
+  Never flip that tag yourself.
+- **No Phantom Bugs & Configuration Churn:** Do not rewrite, restructure, or simplify configuration or instruction files (`CLAUDE.md`, `AGENTS.md`, `package.json`, or anything in `ai/guide/`) based on quick searches or automated suggestions. Keep edits surgical. Never replace detailed guides with simplified stubs. (one exception: during /cold-start only, the pass may correct the stamped Build/Test lines in this file and AGENTS.md/CLAUDE.md, and the Definition-of-done line in ai/guide/CONVENTIONS.md, after verifying against real config files — tag each correction `[inferred]` and change nothing else in these files)
+- **Verify claims:** Before declaring a task finished, run `node install.mjs verify . --strict` (or your repo's verify script) to ensure no file paths in the knowledge documents are broken.
+- **Record work:** Every unit of work (feature, bugfix, refactor, process change) ends with a row appended to `ai/lab/WORKLOG.md` — even work done outside the slash commands.
 
-## Note on the two doc layers
+## Where to look — read on demand, do NOT pre-load
+- Role → path manifest:   ai/INDEX.md
+- Machine-readable facts: ai/repo-profile.json   (orient output; deterministic)
+- Find code by area:      ai/guide/MODULE_MAP.md   <- START HERE to locate anything
+- What & why:             ai/guide/PROJECT_OVERVIEW.md
+- System shape:           ai/guide/ARCHITECTURE.md
+- Feature -> files:       ai/guide/FEATURE_MAP.md
+- Conventions:            ai/guide/CONVENTIONS.md
+- Generated analysis:     ai/analysis/   (feature catalog, diagrams, audit reports)
+- Specs / ADRs / evals:   ai/lab/
 
-`/AGENTS.md` + `.agents/*.md` are general-purpose docs meant to work for any agent/tool. `.kiro/specs/*` and `.kiro/CONSOLIDATED-SUMMARY.md` are this project's own tracked planning/status artifacts (see `.agents/workflow.md`). Keep new Claude-Code-only material (hooks, subagents, commands, settings) here and in `.claude/`, not duplicated into `AGENTS.md`.
+## Token discipline
+- Locate via MODULE_MAP.md, then open only needed files. Don't crawl the tree.
+- Prefer grep and line counts over whole-file reads.
+- Delegate isolated/heavy work to subagents: `repo-explorer` (read-only exploration),
+  `feature-builder` (implements), `test-runner` (tests).
+
+## Repo intelligence (the `ai/` knowledge-base)
+The `ai/` folder is the single source of truth for repository intelligence. It is
+tool-agnostic: any AI coding agent (Claude, Cursor, Copilot, Codex) reads the same
+verified maps, architecture docs, and feature catalogs. New features, refactors, and
+onboarding all start here. Claude Code's auto-memory is machine-local and unshared —
+the committed `ai/` layer is the source of truth every agent and teammate reads, so
+record durable knowledge there.
+
+If `CLAUDE_bkp_*.md` exists, it is the prior configuration. Knowledge was extracted
+from it during /cold-start — do not re-read it; use `ai/guide/` instead.
+
+## Cold start
+If `ai/guide/MODULE_MAP.md` still has placeholder rows, run `/cold-start` once, then a
+human audits (set Stability, flip [inferred] -> [verified]) before features are built.
+If backup files (e.g. `CLAUDE_bkp_*.md`) exist, the agent will extract and reuse
+knowledge from your prior configuration to seed the ai/guide/ documents.
+
+<!-- Installed by ai-fication-kit 0.3.0 on 2026-07-14. -->

@@ -1,0 +1,37 @@
+<!-- Copyright (c) 2026 Kunal Suri (CEA LIST). All rights reserved. -->
+# Module map — directory → responsibility → entry point
+
+> [!NOTE]
+> **This is a scaffolded template.** Run the `/cold-start` slash command in Claude Code (or see [docs/FAQ.md#cursor-copilot-codex](../../docs/FAQ.md#cursor-copilot-codex) for other tools) to have the agent explore your repository and automatically populate this file.
+
+> **Index only.** Find the area here, then open the entry file directly. Don't crawl
+> the tree. The directory list can be regenerated; **Responsibility** and **Stability**
+> are judgement and must be audited by a human.
+> Last verified: <fill in date> @ commit <fill in sha>
+
+## Stability legend (the most important column)
+- `frozen` — inherited / load-bearing legacy, **or generated/vendored code**: never
+  hand-edit; if it has a regeneration command, name it in the Responsibility cell
+  and change the module only by re-running it. **DO NOT edit** without explicit
+  instruction.
+- `stable` — works; change carefully and with tests.
+- `ours`   — active development surface. Safe for agents to modify.
+- `?`      — not yet audited. **Treat as `frozen` until a human decides.**
+
+## Modules (run `/cold-start` to populate, then audit)
+| Directory | Responsibility (one line) | Entry point | Stability (guess) | Status |
+|---|---|---|---|---|
+| <fill in> | <fill in> | <fill in> | ? | [inferred] |
+<!-- verify-ignore:start -->
+<!-- Example (illustrative, not a claim about this repo): | `src/api/` | HTTP routes | `src/api/main.ts` | ours | [inferred] | — the human audit rewrites Status to [verified] (YYYY-MM-DD) -->
+<!-- verify-ignore:end -->
+
+Detected test locations (from orient): tests/
+
+## Audit protocol
+1. /cold-start fills rows, Stability = its guess (or `?`), Status = `[inferred]`.
+2. A human sets Stability per row and flips confirmed rows to `[verified] (date)`.
+3. Agents treat `?` rows as `frozen`. Agents never flip tags.
+
+Field guide for the human audit (how to decide, evidence bar, worked rows):
+https://github.com/kunalsuri/ai-fication-kit/blob/main/docs/AUDIT-GUIDE.md
