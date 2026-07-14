@@ -1,0 +1,32 @@
+%% Copyright (c) 2026 Kunal Suri (CEA LIST). All rights reserved.
+%% Drafted by /cold-start 2026-07-14 @ commit edba5d7. [inferred] — regenerate, don't hand-edit.
+%% The main boundary: client (React SPA) <-> server (Express), and the storage duality seam.
+%% Protocol verified: REST/HTTP (express app in server/index.ts, TanStack Query in client/src/api/).
+%% Auth flow sequencing below is inferred from file names (jwt-auth-routes.ts,
+%% session-manager.ts, auth-middleware.ts) -- not verified line-by-line. Confirm on audit.
+sequenceDiagram
+  participant U as Client (React SPA)
+  participant R as server/routes.ts + src/api/*-routes.ts
+  participant AU as server/auth/auth-middleware.ts
+  participant SV as server/src/services/*
+  participant SH as shared/* (parser, validation engine)
+  participant FS as server/storage.ts (FileStorage)
+  participant DATA as data/*.json (flat files)
+  participant AASX as data/aasx/ (via atomic-file-writer.ts)
+
+  U->>R: HTTP request (REST, TanStack Query)
+  R->>AU: check JWT + session
+  AU-->>R: 200 authorized / 401
+  R->>SV: delegate to service
+  SV->>SH: parse/validate (aas-parser.ts, aas-validation-engine.ts)
+  SH-->>SV: Environment / ValidationResult[]
+  alt user/session/prefs/config data
+    SV->>FS: read/write
+    FS->>DATA: flat JSON (NOT Postgres, despite shared/schema.ts contract)
+  else AASX package data
+    SV->>AASX: read/write via atomic-file-writer.ts
+  end
+  SV-->>R: result
+  R-->>U: JSON response
+
+  note over DATA: shared/schema.ts (Drizzle) targets Postgres via<br/>`npm run db:push`, but dev/runtime storage never<br/>reads from Postgres -- storage duality (see ARCHITECTURE.md)

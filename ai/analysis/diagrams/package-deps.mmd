@@ -1,0 +1,35 @@
+%% Copyright (c) 2026 Kunal Suri (CEA LIST). All rights reserved.
+%% Drafted by /cold-start 2026-07-14 @ commit edba5d7. [inferred] — regenerate, don't hand-edit.
+%% Module dependency graph, derived from ai/repo-indepth.json moduleStructure + tsconfig.json path aliases.
+graph LR
+  client["client/ (React SPA)"]
+  server["server/ (Express)"]
+  shared["shared/ (AAS domain core)"]
+  data["data/ (flat-JSON runtime storage)"]
+  config["config/ (dictionary-config.json)"]
+  tests["tests/"]
+  scripts["scripts/"]
+
+  client -->|"@shared/*"| shared
+  client -->|"REST (fetch/TanStack Query)"| server
+  server -->|"@shared/*"| shared
+  server --> data
+  server --> config
+  scripts --> server
+  tests -.->|"exercises"| client
+  tests -.->|"exercises"| server
+  tests -.->|"exercises"| shared
+
+  subgraph shared_detail["shared/ internals"]
+    direction TB
+    types["aas-v3-types.ts"]
+    parser["aas-parser.ts"]
+    validation["aas-validation-engine.ts + validation-rules/*"]
+    search["aas-search-engine.ts"]
+    schema["schema.ts (Drizzle/Zod)"]
+    plugincontracts["plugin-manifest.ts, plugin-types.ts"]
+    parser --> types
+    validation --> types
+    search --> types
+  end
+  shared --- shared_detail

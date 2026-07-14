@@ -1,0 +1,82 @@
+%% Copyright (c) 2026 Kunal Suri (CEA LIST). All rights reserved.
+%% Drafted by /cold-start 2026-07-14 @ commit edba5d7. [inferred] — regenerate, don't hand-edit.
+%% Core domain types -- verified directly against shared/aas-v3-types.ts exported
+%% interfaces (type names, extends relations); cardinalities/associations are a
+%% reasonable inference from the AAS V3 metamodel, not line-by-line read. Confirm on audit.
+classDiagram
+  class Environment {
+    +AssetAdministrationShell[] assetAdministrationShells
+    +Submodel[] submodels
+    +ConceptDescription[] conceptDescriptions
+  }
+  class Identifiable {
+    <<extends Referable>>
+    +string id
+    +AdministrativeInformation administration
+  }
+  class Referable {
+    <<extends HasExtensions>>
+    +string idShort
+    +LangStringNameType[] displayName
+  }
+  class AssetAdministrationShell {
+    +AssetInformation assetInformation
+    +Reference[] submodels
+  }
+  class Submodel {
+    +SubmodelElement[] submodelElements
+  }
+  class SubmodelElement {
+    <<abstract, has-semantics>>
+  }
+  class SubmodelElementCollection {
+    +SubmodelElement[] value
+  }
+  class SubmodelElementList {
+    +SubmodelElement[] value
+  }
+  class Property { +string value }
+  class ConceptDescription {
+    +EmbeddedDataSpecification[] embeddedDataSpecifications
+  }
+  class Reference {
+    +ReferenceTypes type
+    +Key[] keys
+  }
+  class ValidationRule {
+    <<AASd-xxx constraint, shared/validation-rules/*>>
+    +string id
+    +Severity severity
+    +validate(target) ValidationResult
+  }
+  class ValidationResult {
+    +string ruleId
+    +Severity severity
+    +string message
+  }
+  class SchemaRecord {
+    <<Drizzle/Zod - shared/schema.ts - Postgres contract only>>
+    +users
+    +sessions
+  }
+
+  Identifiable --|> Referable
+  AssetAdministrationShell --|> Identifiable
+  Submodel --|> Identifiable
+  ConceptDescription --|> Identifiable
+  SubmodelElement --|> Referable
+  SubmodelElementCollection --|> SubmodelElement
+  SubmodelElementList --|> SubmodelElement
+  Property --|> SubmodelElement
+
+  Environment "1" o-- "many" AssetAdministrationShell
+  Environment "1" o-- "many" Submodel
+  Environment "1" o-- "many" ConceptDescription
+  AssetAdministrationShell "1" o-- "many" Reference : submodels (indirection)
+  Reference ..> Submodel : resolves to
+  Submodel "1" o-- "many" SubmodelElement
+  SubmodelElementCollection "1" o-- "many" SubmodelElement : nested
+  ValidationRule --> ValidationResult : produces
+  ValidationRule ..> Environment : validates
+
+  note for SchemaRecord "Separate from Environment -- SchemaRecord is app/user\nstate (Postgres contract, unused at runtime -- see\nARCHITECTURE.md storage duality). Environment is\nparsed in-memory from .aasx files via shared/aas-parser.ts,\nnot DB-backed."
