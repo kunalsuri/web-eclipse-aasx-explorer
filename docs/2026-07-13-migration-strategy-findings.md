@@ -312,19 +312,20 @@ Status legend: `TODO` not started · `IN PROGRESS` · `BLOCKED` needs a decision
 `DONE`.
 
 **Update — 2026-07-14:** Tasks 1 and 2 are done — see [PR #17](https://github.com/kunalsuri/web-eclipse-aasx-explorer/pull/17)
-(open, not yet merged as of this writing). `npm run check` is now genuinely
+(merged to `main` as of this writing). `npm run check` is now genuinely
 **0 errors** (was 261). Also landed in earlier commits on `main` this same
-window (predating PR #17, already merged): golden-master fixtures and a
-differential test (`tests/integration/golden-master/aasx-parser.test.ts`),
-which is the first real step on task 4 below — see its own finding recorded
-under "What task 4 found" beneath the table.
+window (predating PR #17): golden-master fixtures and a differential test
+(`tests/integration/golden-master/aasx-parser.test.ts`), which is the first
+real step on task 4 below — see "What task 4's new golden-master test found"
+beneath the table, plus a deeper follow-up finding recorded further below
+("2026-07-14: task 4 is bigger than it looked").
 
 | # | Task | Area | Priority | Status | Notes |
 |---|------|------|----------|--------|-------|
 | 1 | Delete orphaned literal-port plugin files (`plugin-manager.ts`, `plugin-action-invoker.ts`, `plugin-event-handler.ts`, `plugin-standard-actions.ts`, `plugin-visual-extension.ts`) | `server/src/services` | P0 | **DONE** (PR #17) | Also found and deleted 2 more of the same pattern during the fix: `server/src/plugins/document-shelf-plugin.ts`, `technical-data-plugin.ts` — confirmed unimported anywhere, superseded by `DocumentShelfPanel.tsx`/`TechnicalDataPanel.tsx`. 7 files removed total |
 | 2 | Fix remaining ~234 real `npm run check` errors | repo-wide | P0 | **DONE** (PR #17) | `npm run check` → 0 errors. Root causes: 89 of the 234 were `tsconfig.json` only excluding `**/*.test.ts`, not `**/*.test.tsx` (jest-dom matcher types on 8 test files); rest were real — enum literal/member mismatches, missing type guards on `SubmodelElement \| Submodel` unions, a stale `LangStringSet` type reference, `Express.Request` augmentation drift, missing `xml2js` dependency. `npm test` unchanged at 548 passed / 8 failed / 39 skipped (no regressions; the 8 failures are the task-4 finding below) |
-| 3 | Run `npm audit`, triage 31 vulnerabilities (2 critical, 16 high) | deps | P1 | TODO | Not investigated yet; now at 76 reported (2 critical/37 high/33 moderate/4 low) per GitHub's scan as of PR #17 — recheck exact count with `npm audit` directly, GitHub's count may include advisories npm doesn't surface the same way |
-| 4 | Build a regenerable C#↔TS parity matrix (script, not prose) — **prefer golden-master differential testing over a symbol-diff matrix alone; see companion doc** | tooling | P1 | IN PROGRESS | Fixtures + differential test now exist (`tests/fixtures/golden-master/`, `tests/integration/golden-master/aasx-parser.test.ts`, already on `main`). Result: parse succeeds on all 8 real-world `.aasx` fixtures but extracted element counts are 0 for every one — see note below. Remaining work: implement a real AAS-XML deserializer, then re-run this suite as the acceptance test, then extend the matrix beyond just parsing (validation, serialization) |
+| 3 | Run `npm audit`, triage 31 vulnerabilities (2 critical, 16 high) | deps | P1 | **DONE** (24 of 31 fixed); **BLOCKED** (5 remain, dev-tooling-only, see below) | `npm audit` confirmed 31 (1 low/12 moderate/16 high/2 critical) — GitHub's 76 count on the PR appears to double-count advisories per dependency path, npm's own count is authoritative. Fixed 24 total: `npm audit fix` (no `--force`) got 18 including both criticals (`fast-xml-parser` — real attack surface, uploaded `.aasx` XML; `vitest` — dev-only UI-server RCE); `drizzle-orm` bumped 0.39.1→0.45.2 (real SQL-injection CVE fix, plain registry install); `xlsx` (SheetJS, no npm-registry fix at all — maintainers only publish patches via their own CDN post-MFA-incident) replaced entirely with `exceljs@4.4.0` since it's a real attack surface (`excel-import-service.ts` runs `XLSX.read()`/now `ExcelJS.Workbook#load()` on **user-uploaded** file buffers) — both `excel-import-service.ts` and `excel-export-service.ts` rewritten, `exportEnvironment` is now `async` (call site in `aasx-routes.ts` updated to `await`), verified with a manual export→import round-trip smoke test (not just typecheck) plus `npm run check` (0 errors) and `npm test` (548/8/39, same pre-existing golden-master gap, no regression); exceljs's own nested vulnerable `uuid@8.3.2` pinned to `uuid@^13.0.2` via a `package.json` `overrides` entry (safe — exceljs only calls `uuid.v4()`, identical API v8→v13). 5 remain — see below |
+| 4 | Build a regenerable C#↔TS parity matrix (script, not prose) — **prefer golden-master differential testing over a symbol-diff matrix alone; see companion doc** | tooling | P1 | **BLOCKED** | Fixtures + differential test exist (`tests/fixtures/golden-master/`, `tests/integration/golden-master/aasx-parser.test.ts`). Scoping decision pending — see "2026-07-14: task 4 is bigger than it looked" below before starting implementation |
 | 5 | Add an independent verification subagent that gates "phase complete" claims | `.claude/agents/` | P1 | TODO | Read/bash/test tools only; no code-writing |
 | 6 | Run `admin-shell-io/aas-test-engines` against this repo's REST API + validation engine | validation / API | P1 | TODO | Establishes objective, standards-body-graded correctness |
 | 7 | Re-verify actual AASd-* constraint correctness against IDTA-01001-3-0 Part 1 text, not just internal test count | `shared/validation-rules/*` | P1 | TODO | "150/150" is a count of implemented functions, not proof of spec fidelity |
@@ -333,6 +334,48 @@ under "What task 4 found" beneath the table.
 | 10 | Remaining plugins (13 more) | `client/src/plugins/*` | P2 | TODO | See §4.1 plugin list |
 | 11 | XML/AML/RDF import-export completeness check against C# `AasxAmlImExport`, `AasxBammRdfImExport` | `server/src/services` | P2 | TODO | |
 | 12 | Update `.kiro/CONSOLIDATED-SUMMARY.md` to reflect verified (not self-reported) numbers | docs | P1 | TODO | Unblocked now that tasks 1–2 are done, but not yet started — do this once PR #17 is merged to `main`, and combine with a real answer on task 4 (the "97-100% complete" editing-UI claims specifically need re-checking against working code, not just a clean typecheck) |
+
+### Task 3: 5 remaining vulnerabilities — all one dev-tooling dependency chain
+
+After the fixes above, `npm audit` reports 5 (4 moderate, 1 high), all
+downstream of one root cause: **`drizzle-kit` still depends on the
+deprecated, abandoned `@esbuild-kit/esm-loader`/`@esbuild-kit/core-utils`
+packages**, which pull a vulnerable `esbuild` (`GHSA-67mh-4wv8-2f99` — a
+website can send requests to, and read responses from, a running dev
+server). `vite` independently bundles its own (already-patched, from the
+earlier `npm audit fix` pass) `esbuild`, but npm's dependency graph still
+flags `vite` in the same remediation path because forcing the fix requires
+`vite@8.1.4`.
+
+Checked upstream status directly (`drizzle-team/drizzle-orm` GitHub issues,
+July 2026): **at least 5 open PRs propose dropping `@esbuild-kit/esm-loader`
+in favor of `tsx`** (the actively-maintained successor, by the same author),
+the oldest open since November 2024, the newest from April 2026 — none
+merged as of this session. npm's own suggested "fix" for `drizzle-kit` is to
+**downgrade** to `0.18.1`, which is npm's resolver routing around a
+dependency range rather than a real upstream fix, and would lose 13+ minor
+versions of functionality — not applied.
+
+**Decision: left as-is, accepted risk, not a code change.** Rationale:
+- Both remaining vulnerable paths (`esbuild` via `vite`'s dev server,
+  `esbuild` via `drizzle-kit`'s `@esbuild-kit` loader) are **dev-server-only
+  exploits** — a malicious website sending requests to a `vite`/`drizzle-kit`
+  dev process running on the developer's own machine. Not reachable in the
+  built production bundle or from a deployed server.
+- `drizzle-kit` itself is a dev-time-only CLI (`npm run db:push`); per
+  `AGENTS.md`'s storage-duality note, this repo's actual runtime persistence
+  is flat JSON in `data/`, not a live Postgres connection, so `drizzle-kit`
+  isn't even in the production request path.
+- The only real fix (`vite@8.1.4`, a 3-major-version jump) has meaningfully
+  higher regression risk to the build than the vulnerability's real-world
+  exposure justifies right now; `drizzle-kit` has *no* real fix to apply yet
+  — the dependency it needs to drop is still present in every published
+  version as of this check.
+
+**Revisit when:** any of the open `drizzle-kit`/`@esbuild-kit` removal PRs
+merge and ship in a release, or if the dev server is ever exposed outside
+localhost (e.g. a shared dev environment), at which point this risk
+acceptance should be re-evaluated.
 
 ### What task 4's new golden-master test found
 
@@ -345,10 +388,51 @@ cause: every real-world sample stores its environment as namespaced AAS XML
 `convertXmlToSubmodel`/`convertXmlToConceptDescription` in
 `shared/aas-parser.ts` are explicitly-commented "simplified" stubs that assume
 a flat object shape, not the real namespaced XML schema — so parsing
-"succeeds" but silently returns an empty environment. This is a genuine
-correctness bug independent of the `npm run check` gate, and per the P0
-sequencing above, a real AAS-XML deserializer is the concrete next
-implementation task once this session's typecheck-gate PR merges.
+"succeeds" but silently returns an empty environment.
+
+### 2026-07-14: task 4 is bigger than it looked — needs a scoping decision
+
+Follow-up session dug into what "implement a real AAS-XML deserializer" would
+actually require, and found the framing was wrong: **none of the 8
+golden-master fixtures are AAS V3 XML.** Inspecting the actual XML inside each
+`.aasx` (`xmlns:aas="http://www.admin-shell.io/aas/2/0"` etc.) shows 7 fixtures
+are legacy **AAS V2.0** XML and 1 (`Phoenix_Contact_PT_4_-_CAD.aasx`) is **AAS
+V1.0**. The C# reference (`AdminShellPackageFileBasedEnv` in
+`AasxCsharpLibrary/PackageEnv/AdminShellPackageEnvBase.cs:145-206`) detects the
+schema version by namespace and runs the XML through a dedicated migration
+path — `res.ConvertFromV20(v20)` / `res.ConvertFromV10(v10)` — before handing
+back a V3 `Environment`. That migration is implemented as `ConvertFromV20`/
+`ConvertFromV10` extension methods spread across ~26 files under
+`eclipse-aasx-package-explorer/src/AasxCsharpLibrary/Extensions/*`, backed by
+the V1.0/V2.0 compatibility object models in `AasxCompatibilityModels/V10/`
+(4,649 lines) and `AasxCompatibilityModels/V20/` (8,896 lines).
+
+So this is not "write an XML parser for the shape we already understand" — it's
+"port a legacy-format migration engine," and it has real, non-obvious,
+fixture-verified semantics, e.g. (diffed directly from
+`Example_AAS_ServoDCMotor_21.aasx` against its golden JSON):
+- `semanticId` reference keys are always normalized to `GlobalReference`
+  in the V3 output, regardless of the original V2 `type` attribute (a V2
+  `<aas:key type="ConceptDescription" local="true" idType="IRDI">` semanticId
+  key still comes out as `{"type": "GlobalReference", ...}`).
+- `valueId` reference keys, by contrast, keep their original V2 `type`
+  attribute unchanged.
+- A V2 `<aas:qualifier>` with an empty `<aas:valueType />` defaults to
+  `"xs:string"` in the V3 output.
+- `assetRef` + `submodelRefs` (V2, on the AAS) collapse into V3's
+  `assetInformation` (`assetKind`/`globalAssetId`, sourced from the separate
+  top-level `<aas:asset>` element) and `submodels` (`ModelReference[]` with
+  `Submodel`-typed keys) respectively — different reference-type handling
+  again from either of the above.
+
+This was surfaced to the user as a scoping question (full V1+V2 port vs.
+V2.0-only first, covering 7/8 fixtures, vs. no formal spec) — **decision still
+pending as of this update; do not start implementing until it's resolved.**
+Recommendation if/when resumed: scope to V2.0 first (7/8 fixtures), write it
+as a `.kiro/specs/` entry given the size (~13,500 lines of C# reference model
++ scattered conversion logic to port faithfully), and treat V1.0
+(`Phoenix_Contact_PT_4_-_CAD.aasx`) as an explicit follow-up rather than
+blocking on it.
 
 ---
 
