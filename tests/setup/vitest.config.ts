@@ -7,14 +7,8 @@ export default defineConfig({
   test: {
     // Performance optimization - parallel execution
     pool: 'threads',
-    poolOptions: {
-      threads: {
-        singleThread: false,
-        minThreads: 1,
-        maxThreads: 4,
-      },
-    },
-    
+    maxWorkers: 4,
+
     // Test environment
     environment: 'jsdom',
     globals: true,
