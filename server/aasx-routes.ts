@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import { ExcelExportService } from "./src/services/excel-export-service.js";
 import { CsvExportService } from "./src/services/csv-export-service.js";
 import { ExcelImportService } from "./src/services/excel-import-service.js";
+import { AasxPackageService } from "./src/services/aasx-package-service.js";
 
 const router = Router();
 
@@ -53,17 +54,15 @@ router.post("/new", async (req: Request, res: Response) => {
       return;
     }
 
-    // Save environment to file
+    await fs.mkdir(path.join(process.cwd(), "data", "aasx"), { recursive: true });
     const envPath = path.join(
       process.cwd(),
       "data",
       "aasx",
       `${result.packageId}-environment.json`
     );
-    await fs.writeFile(
-      envPath,
-      JSON.stringify(result.environment, null, 2)
-    );
+    const packagePath = path.join(process.cwd(), "data", "aasx", `${result.packageId}.aasx`);
+    await AasxPackageService.create(packagePath, envPath, result.environment);
 
     // Save metadata
     const metadataPath = path.join(
@@ -83,9 +82,9 @@ router.post("/new", async (req: Request, res: Response) => {
       id: result.packageId,
       name: result.metadata.name + ".aasx",
       originalName: result.metadata.name + ".aasx",
-      size: 0, // New packages start with 0 size
+      size: (await fs.stat(packagePath)).size,
       uploadedAt: result.metadata.createdAt,
-      path: envPath,
+      path: packagePath,
     });
     await writeMetadata(allMetadata);
 
@@ -166,6 +165,16 @@ async function writeMetadata(metadata: FileMetadata[]): Promise<void> {
   await fs.rename(tempPath, metadataPath);
 }
 
+async function saveEnvironment(id: string, environment: unknown): Promise<void> {
+  const metadata = await readMetadata();
+  const file = metadata.find((item) => item.id === id);
+  if (!file) throw new Error(`Package metadata not found: ${id}`);
+  const envPath = path.join(process.cwd(), "data", "aasx", `${id}-environment.json`);
+  await AasxPackageService.save(file.path, envPath, environment as never);
+  file.size = (await fs.stat(file.path)).size;
+  await writeMetadata(metadata);
+}
+
 // POST /api/aasx/upload - Upload AASX file
 router.post("/upload", upload.single("file"), async (req: Request, res: Response) => {
   try {
@@ -183,6 +192,14 @@ router.post("/upload", upload.single("file"), async (req: Request, res: Response
       uploadedAt: new Date().toISOString(),
       path: req.file.path,
     };
+
+    const envPath = path.join(process.cwd(), "data", "aasx", `${fileId}-environment.json`);
+    try {
+      await AasxPackageService.import(req.file.path, envPath);
+    } catch (error) {
+      await fs.unlink(req.file.path).catch(() => undefined);
+      throw error;
+    }
 
     // Save metadata
     const allMetadata = await readMetadata();
@@ -418,10 +435,7 @@ router.patch("/environment/:id/property", async (req: Request, res: Response) =>
     const lastPart = pathParts[pathParts.length - 1];
     current[lastPart] = value;
 
-    // Save atomically
-    const tempPath = `${envPath}.tmp`;
-    await fs.writeFile(tempPath, JSON.stringify(environment, null, 2));
-    await fs.rename(tempPath, envPath);
+    await saveEnvironment(id, environment);
 
     res.json({
       success: true,
@@ -447,10 +461,7 @@ router.put("/environment/:id", async (req: Request, res: Response) => {
 
     const envPath = path.join(process.cwd(), "data", "aasx", `${id}-environment.json`);
 
-    // Save atomically
-    const tempPath = `${envPath}.tmp`;
-    await fs.writeFile(tempPath, JSON.stringify(environment, null, 2));
-    await fs.rename(tempPath, envPath);
+    await saveEnvironment(id, environment);
 
     res.json({
       success: true,

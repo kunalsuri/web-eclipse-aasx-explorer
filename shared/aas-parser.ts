@@ -7,6 +7,7 @@ import JSZip from "jszip";
 import type { Environment } from "./aas-v3-types";
 import { deserializeEnvironment } from "./aas-serialization";
 import { parseAasXmlEnvironment } from "./aas-xml-migration";
+import { inspectAasxPackage } from "./aasx-package";
 
 // ============================================================================
 // Types
@@ -75,7 +76,7 @@ export async function parseAasxBuffer(
         const zip = await JSZip.loadAsync(buffer);
 
         // Find AAS environment file (XML or JSON)
-        const envFile = await findEnvironmentFile(zip);
+        const envFile = await findEnvironmentFile(zip, buffer);
         if (!envFile) {
             return {
                 success: false,
@@ -89,7 +90,7 @@ export async function parseAasxBuffer(
         // Extract supplementary files
         const files: AasxFile[] = [];
         if (extractFiles) {
-            const extractedFiles = await extractSupplementaryFiles(zip);
+            const extractedFiles = await extractSupplementaryFiles(zip, envFile.path);
             files.push(...extractedFiles);
         }
 
@@ -150,8 +151,18 @@ interface EnvironmentFileInfo {
  * Find the AAS environment file in the AASX package
  */
 async function findEnvironmentFile(
-    zip: JSZip
+    zip: JSZip,
+    sourceBuffer?: ArrayBuffer | Uint8Array
 ): Promise<EnvironmentFileInfo | null> {
+    if (sourceBuffer) {
+        try {
+            const manifest = await inspectAasxPackage(sourceBuffer);
+            return { path: manifest.environmentPart, type: manifest.environmentFormat };
+        } catch {
+            // Some legacy fixtures have no OPC relationship chain. Their content
+            // is still validated below before it is accepted as an environment.
+        }
+    }
     // Common paths for actual AAS environment package parts. `aasx/aasx-origin`
     // is an OPC marker that points to relationships; it is not environment XML.
     const commonPaths = [
@@ -269,15 +280,14 @@ function parseXmlEnvironment(content: string): Environment {
 /**
  * Extract supplementary files from AASX package
  */
-async function extractSupplementaryFiles(zip: JSZip): Promise<AasxFile[]> {
+async function extractSupplementaryFiles(zip: JSZip, environmentPath: string): Promise<AasxFile[]> {
     const files: AasxFile[] = [];
 
     // Get all files except the environment file
     const zipFiles = Object.keys(zip.files).filter(
         (path) =>
             !zip.files[path].dir &&
-            !path.endsWith(".xml") &&
-            !path.endsWith(".json") &&
+            path !== environmentPath &&
             !path.includes("_rels") &&
             !path.includes("[Content_Types]")
     );
@@ -342,7 +352,7 @@ function guessMimeType(path: string): string {
 export async function isValidAasxBuffer(buffer: ArrayBuffer): Promise<boolean> {
     try {
         const zip = await JSZip.loadAsync(buffer);
-        const envFile = await findEnvironmentFile(zip);
+        const envFile = await findEnvironmentFile(zip, buffer);
         return envFile !== null;
     } catch {
         return false;
@@ -357,7 +367,7 @@ export async function getAasxInfo(
 ): Promise<{ fileCount: number; hasXml: boolean; hasJson: boolean } | null> {
     try {
         const zip = await JSZip.loadAsync(buffer);
-        const envFile = await findEnvironmentFile(zip);
+        const envFile = await findEnvironmentFile(zip, buffer);
 
         if (!envFile) {
             return null;
