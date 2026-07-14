@@ -311,12 +311,20 @@ Sources consulted:
 Status legend: `TODO` not started · `IN PROGRESS` · `BLOCKED` needs a decision ·
 `DONE`.
 
+**Update — 2026-07-14:** Tasks 1 and 2 are done — see [PR #17](https://github.com/kunalsuri/web-eclipse-aasx-explorer/pull/17)
+(open, not yet merged as of this writing). `npm run check` is now genuinely
+**0 errors** (was 261). Also landed in earlier commits on `main` this same
+window (predating PR #17, already merged): golden-master fixtures and a
+differential test (`tests/integration/golden-master/aasx-parser.test.ts`),
+which is the first real step on task 4 below — see its own finding recorded
+under "What task 4 found" beneath the table.
+
 | # | Task | Area | Priority | Status | Notes |
 |---|------|------|----------|--------|-------|
-| 1 | Delete orphaned literal-port plugin files (`plugin-manager.ts`, `plugin-action-invoker.ts`, `plugin-event-handler.ts`, `plugin-standard-actions.ts`, `plugin-visual-extension.ts`) | `server/src/services` | P0 | TODO | Confirmed unimported/dead; removes 27 of 261 typecheck errors |
-| 2 | Fix remaining ~234 real `npm run check` errors | repo-wide | P0 | TODO | Start with highest-count files: `useContextMenu.ts` (24), `TreeNodeContextMenu.tsx` (24), test files under `__tests__`, `shared/aas-sample-data.ts` duplicate identifiers, missing `xml2js` dependency |
-| 3 | Run `npm audit`, triage 31 vulnerabilities (2 critical, 16 high) | deps | P1 | TODO | Not investigated this session |
-| 4 | Build a regenerable C#↔TS parity matrix (script, not prose) — **prefer golden-master differential testing over a symbol-diff matrix alone; see companion doc** | tooling | P1 | TODO | Replace the two contradictory hand-written analyses. See `docs/2026-07-13-confidence-assessment-and-verification-methodology.md` for why and the concrete build order (fix typecheck gate → build headless C# harness against `src/BlazorUI/*.aasx` samples → diff JSON output against TS → re-baseline parity claims from that) |
+| 1 | Delete orphaned literal-port plugin files (`plugin-manager.ts`, `plugin-action-invoker.ts`, `plugin-event-handler.ts`, `plugin-standard-actions.ts`, `plugin-visual-extension.ts`) | `server/src/services` | P0 | **DONE** (PR #17) | Also found and deleted 2 more of the same pattern during the fix: `server/src/plugins/document-shelf-plugin.ts`, `technical-data-plugin.ts` — confirmed unimported anywhere, superseded by `DocumentShelfPanel.tsx`/`TechnicalDataPanel.tsx`. 7 files removed total |
+| 2 | Fix remaining ~234 real `npm run check` errors | repo-wide | P0 | **DONE** (PR #17) | `npm run check` → 0 errors. Root causes: 89 of the 234 were `tsconfig.json` only excluding `**/*.test.ts`, not `**/*.test.tsx` (jest-dom matcher types on 8 test files); rest were real — enum literal/member mismatches, missing type guards on `SubmodelElement \| Submodel` unions, a stale `LangStringSet` type reference, `Express.Request` augmentation drift, missing `xml2js` dependency. `npm test` unchanged at 548 passed / 8 failed / 39 skipped (no regressions; the 8 failures are the task-4 finding below) |
+| 3 | Run `npm audit`, triage 31 vulnerabilities (2 critical, 16 high) | deps | P1 | TODO | Not investigated yet; now at 76 reported (2 critical/37 high/33 moderate/4 low) per GitHub's scan as of PR #17 — recheck exact count with `npm audit` directly, GitHub's count may include advisories npm doesn't surface the same way |
+| 4 | Build a regenerable C#↔TS parity matrix (script, not prose) — **prefer golden-master differential testing over a symbol-diff matrix alone; see companion doc** | tooling | P1 | IN PROGRESS | Fixtures + differential test now exist (`tests/fixtures/golden-master/`, `tests/integration/golden-master/aasx-parser.test.ts`, already on `main`). Result: parse succeeds on all 8 real-world `.aasx` fixtures but extracted element counts are 0 for every one — see note below. Remaining work: implement a real AAS-XML deserializer, then re-run this suite as the acceptance test, then extend the matrix beyond just parsing (validation, serialization) |
 | 5 | Add an independent verification subagent that gates "phase complete" claims | `.claude/agents/` | P1 | TODO | Read/bash/test tools only; no code-writing |
 | 6 | Run `admin-shell-io/aas-test-engines` against this repo's REST API + validation engine | validation / API | P1 | TODO | Establishes objective, standards-body-graded correctness |
 | 7 | Re-verify actual AASd-* constraint correctness against IDTA-01001-3-0 Part 1 text, not just internal test count | `shared/validation-rules/*` | P1 | TODO | "150/150" is a count of implemented functions, not proof of spec fidelity |
@@ -324,7 +332,23 @@ Status legend: `TODO` not started · `IN PROGRESS` · `BLOCKED` needs a decision
 | 9 | Dictionary integration (ECLASS, IEC CDD) | `server/src/services` | P1 | TODO | Cross-reference `AasxPredefinedConcepts` (48 C# files) as source of truth |
 | 10 | Remaining plugins (13 more) | `client/src/plugins/*` | P2 | TODO | See §4.1 plugin list |
 | 11 | XML/AML/RDF import-export completeness check against C# `AasxAmlImExport`, `AasxBammRdfImExport` | `server/src/services` | P2 | TODO | |
-| 12 | Update `.kiro/CONSOLIDATED-SUMMARY.md` to reflect verified (not self-reported) numbers | docs | P1 | TODO | Do this only after task 1–2 land, so the doc is trustworthy again |
+| 12 | Update `.kiro/CONSOLIDATED-SUMMARY.md` to reflect verified (not self-reported) numbers | docs | P1 | TODO | Unblocked now that tasks 1–2 are done, but not yet started — do this once PR #17 is merged to `main`, and combine with a real answer on task 4 (the "97-100% complete" editing-UI claims specifically need re-checking against working code, not just a clean typecheck) |
+
+### What task 4's new golden-master test found
+
+All 8 real-world `.aasx` fixtures parse without throwing (matches the C#
+reference's `parse.success`), but `assetAdministrationShellCount` /
+`submodelCount` / `conceptDescriptionCount` come back **0 for every fixture**,
+while the C# reference reports real counts (e.g. 1/6/154 for one file). Root
+cause: every real-world sample stores its environment as namespaced AAS XML
+(`*.aas.xml`), and `convertXmlToEnvironment`/`convertXmlToAAS`/
+`convertXmlToSubmodel`/`convertXmlToConceptDescription` in
+`shared/aas-parser.ts` are explicitly-commented "simplified" stubs that assume
+a flat object shape, not the real namespaced XML schema — so parsing
+"succeeds" but silently returns an empty environment. This is a genuine
+correctness bug independent of the `npm run check` gate, and per the P0
+sequencing above, a real AAS-XML deserializer is the concrete next
+implementation task once this session's typecheck-gate PR merges.
 
 ---
 
@@ -341,3 +365,13 @@ Status legend: `TODO` not started · `IN PROGRESS` · `BLOCKED` needs a decision
 4. Start with Task 1–2 in the table above (the typecheck gate) before any new
    feature work — every other number in this project's tracking depends on that
    gate being real.
+
+**2026-07-14 update:** Tasks 1–2 are done as of [PR #17](https://github.com/kunalsuri/web-eclipse-aasx-explorer/pull/17)
+— confirm it has merged to `main` before relying on a green `npm run check`
+elsewhere. If it's still open, re-run `npm run check` yourself rather than
+assuming. Next concrete steps, in order: (a) implement a real AAS-XML
+deserializer in `shared/aas-parser.ts` to replace the stub — see "What task
+4's new golden-master test found" above, the golden-master suite already
+exists as its acceptance test; (b) task 3 (`npm audit`); (c) task 12
+(re-baseline `.kiro/CONSOLIDATED-SUMMARY.md`) once (a) and the gate are both
+confirmed merged and stable.
