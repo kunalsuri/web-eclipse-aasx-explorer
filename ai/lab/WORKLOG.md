@@ -36,3 +36,4 @@ this ledger says *what was done to it, when, and under which contract*.
 | ID | Date | Type | Title | Spec | ADRs | Review | Eval | Commits / PR | Knowledge updated | Status | Provenance |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | W-001 | 2026-07-14 | process | `/cold-start` — draft ai/guide/ knowledge layer + diagrams | — | — | — | — | uncommitted (working tree) | `ai/guide/MODULE_MAP.md`, `ai/guide/ARCHITECTURE.md`, `ai/guide/CONVENTIONS.md`, `ai/guide/PROJECT_OVERVIEW.md`, `ai/guide/FEATURE_MAP.md`, `ai/analysis/diagrams/package-deps.mmd`, `ai/analysis/diagrams/domain-core.mmd`, `ai/analysis/diagrams/seam.mmd` | in-review | [inferred] |
+| W-002 | 2026-07-14 | docs | `/create-feature-catalog` — source-backed implemented-feature inventory | — | — | — | — | uncommitted (working tree) | `ai/analysis/FEATURE_CATALOG.md`, `ai/guide/FEATURE_MAP.md` | in-review | [inferred] |

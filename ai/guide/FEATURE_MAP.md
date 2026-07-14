@@ -19,6 +19,8 @@
 
 ## Candidate features (drafted by /cold-start 2026-07-14 @ commit `edba5d7`, audit before trusting)
 
+> Source-backed expansion and current wiring status: [FEATURE_CATALOG.md](../analysis/FEATURE_CATALOG.md) `[inferred]`.
+
 ### AAS Explorer  `[inferred]`
 - **Business goal:** Browse a parsed AASX package's element tree.
 - **Touches:** `client/src/features/aas-explorer/`, `shared/aas-parser.ts`, `shared/aas-v3-types.ts`.
