@@ -17,7 +17,7 @@ import {
   FolderPlus,
 } from 'lucide-react';
 import type { ContextMenuItem } from '../components/context-menu/ContextMenu';
-import { useClipboard } from '../stores/clipboardStore';
+import { useClipboard, useCanPaste } from '../stores/clipboardStore';
 import { useCommandStore } from '../stores/commandStore';
 import { useSelectionStore } from '../stores/selectionStore';
 import {
@@ -41,10 +41,11 @@ interface TreeNode {
  * Get context menu items for a tree node
  */
 export function useContextMenu(node: TreeNode, onEdit?: () => void) {
-  const { copy, cut, paste, canPaste } = useClipboard();
+  const { copy, cut, paste } = useClipboard();
+  const canPasteHere = useCanPaste(node);
   const execute = useCommandStore((state) => state.execute);
   const selectedIdsSet = useSelectionStore((state) => state.selectedIds);
-  const clearSelection = useSelectionStore((state) => state.clearSelection);
+  const clearSelection = useSelectionStore((state) => state.deselectAll);
 
   const selectedIds = Array.from(selectedIdsSet);
   const isMultiSelect = selectedIds.length > 1;
@@ -54,8 +55,9 @@ export function useContextMenu(node: TreeNode, onEdit?: () => void) {
   // Edit action
   if (onEdit) {
     items.push({
+      id: 'edit',
       label: 'Edit',
-      icon: Edit2,
+      icon: <Edit2 className="h-4 w-4" />,
       shortcut: 'F2',
       onClick: onEdit,
     });
@@ -64,18 +66,20 @@ export function useContextMenu(node: TreeNode, onEdit?: () => void) {
   // Add Element submenu (for containers)
   if (canHaveChildren(node.modelType)) {
     items.push({
+      id: 'add-element',
       label: 'Add Element',
-      icon: Plus,
+      icon: <Plus className="h-4 w-4" />,
       submenu: getAddElementSubmenu(node),
     });
   }
 
-  items.push({ separator: true });
+  items.push({ id: 'sep-add-element', label: '', separator: true });
 
   // Copy
   items.push({
+    id: 'copy',
     label: isMultiSelect ? `Copy ${selectedIds.length} items` : 'Copy',
-    icon: Copy,
+    icon: <Copy className="h-4 w-4" />,
     shortcut: formatPlatformShortcut('c'),
     onClick: () => {
       if (isMultiSelect) {
@@ -89,8 +93,9 @@ export function useContextMenu(node: TreeNode, onEdit?: () => void) {
 
   // Cut
   items.push({
+    id: 'cut',
     label: isMultiSelect ? `Cut ${selectedIds.length} items` : 'Cut',
-    icon: Scissors,
+    icon: <Scissors className="h-4 w-4" />,
     shortcut: formatPlatformShortcut('x'),
     onClick: () => {
       if (isMultiSelect) {
@@ -104,10 +109,11 @@ export function useContextMenu(node: TreeNode, onEdit?: () => void) {
 
   // Paste
   items.push({
+    id: 'paste',
     label: 'Paste',
-    icon: Clipboard,
+    icon: <Clipboard className="h-4 w-4" />,
     shortcut: formatPlatformShortcut('v'),
-    disabled: !canPaste(node),
+    disabled: !canPasteHere,
     onClick: async () => {
       await paste(node);
       clearSelection();
@@ -117,8 +123,9 @@ export function useContextMenu(node: TreeNode, onEdit?: () => void) {
   // Duplicate
   if (!isMultiSelect) {
     items.push({
+      id: 'duplicate',
       label: 'Duplicate',
-      icon: Files,
+      icon: <Files className="h-4 w-4" />,
       shortcut: formatPlatformShortcut('d'),
       onClick: () => {
         if (node.parent) {
@@ -129,15 +136,16 @@ export function useContextMenu(node: TreeNode, onEdit?: () => void) {
     });
   }
 
-  items.push({ separator: true });
+  items.push({ id: 'sep-duplicate', label: '', separator: true });
 
   // Move Up/Down (if has siblings)
   if (node.parent && node.index !== undefined) {
     const siblings = getChildArray(node.parent);
-    
+
     items.push({
+      id: 'move-up',
       label: 'Move Up',
-      icon: ArrowUp,
+      icon: <ArrowUp className="h-4 w-4" />,
       disabled: node.index === 0,
       onClick: () => {
         if (node.parent && node.index !== undefined && node.index > 0) {
@@ -154,8 +162,9 @@ export function useContextMenu(node: TreeNode, onEdit?: () => void) {
     });
 
     items.push({
+      id: 'move-down',
       label: 'Move Down',
-      icon: ArrowDown,
+      icon: <ArrowDown className="h-4 w-4" />,
       disabled: node.index === siblings.length - 1,
       onClick: () => {
         if (node.parent && node.index !== undefined && node.index < siblings.length - 1) {
@@ -171,13 +180,14 @@ export function useContextMenu(node: TreeNode, onEdit?: () => void) {
       },
     });
 
-    items.push({ separator: true });
+    items.push({ id: 'sep-move', label: '', separator: true });
   }
 
   // Delete
   items.push({
+    id: 'delete',
     label: isMultiSelect ? `Delete ${selectedIds.length} items` : 'Delete',
-    icon: Trash2,
+    icon: <Trash2 className="h-4 w-4" />,
     shortcut: 'Del',
     danger: true,
     onClick: () => {
@@ -216,56 +226,64 @@ function getAddElementSubmenu(node: TreeNode): ContextMenuItem[] {
 
   // Simple data elements
   items.push({
+    id: 'add-property',
     label: 'Property',
-    icon: FolderPlus,
+    icon: <FolderPlus className="h-4 w-4" />,
     onClick: () => addElement(node, AasSubmodelElements.Property),
   });
 
   items.push({
+    id: 'add-multi-language-property',
     label: 'Multi Language Property',
-    icon: FolderPlus,
+    icon: <FolderPlus className="h-4 w-4" />,
     onClick: () => addElement(node, AasSubmodelElements.MultiLanguageProperty),
   });
 
   items.push({
+    id: 'add-range',
     label: 'Range',
-    icon: FolderPlus,
+    icon: <FolderPlus className="h-4 w-4" />,
     onClick: () => addElement(node, AasSubmodelElements.Range),
   });
 
-  items.push({ separator: true });
+  items.push({ id: 'sep-1', label: '', separator: true });
 
   // Container elements
   items.push({
+    id: 'add-collection',
     label: 'Collection',
-    icon: FolderPlus,
+    icon: <FolderPlus className="h-4 w-4" />,
     onClick: () => addElement(node, AasSubmodelElements.SubmodelElementCollection),
   });
 
   items.push({
+    id: 'add-list',
     label: 'List',
-    icon: FolderPlus,
+    icon: <FolderPlus className="h-4 w-4" />,
     onClick: () => addElement(node, AasSubmodelElements.SubmodelElementList),
   });
 
-  items.push({ separator: true });
+  items.push({ id: 'sep-2', label: '', separator: true });
 
   // Other elements
   items.push({
+    id: 'add-reference-element',
     label: 'Reference Element',
-    icon: FolderPlus,
+    icon: <FolderPlus className="h-4 w-4" />,
     onClick: () => addElement(node, AasSubmodelElements.ReferenceElement),
   });
 
   items.push({
+    id: 'add-file',
     label: 'File',
-    icon: FolderPlus,
+    icon: <FolderPlus className="h-4 w-4" />,
     onClick: () => addElement(node, AasSubmodelElements.File),
   });
 
   items.push({
+    id: 'add-blob',
     label: 'Blob',
-    icon: FolderPlus,
+    icon: <FolderPlus className="h-4 w-4" />,
     onClick: () => addElement(node, AasSubmodelElements.Blob),
   });
 

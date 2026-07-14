@@ -11,7 +11,8 @@ import type {
   SubmodelElement,
   Reference,
   Key,
-  LangStringSet,
+  LangStringNameType,
+  LangStringTextType,
 } from '../../../shared/aas-v3-types';
 
 export interface XMLSerializationConfig {
@@ -172,17 +173,20 @@ export class XMLSerializationService {
   /**
    * Serialize lang string set to XML
    */
-  private serializeLangStringSet(tagName: string, langStrings: LangStringSet): string[] {
+  private serializeLangStringSet(
+    tagName: string,
+    langStrings: (LangStringNameType | LangStringTextType)[]
+  ): string[] {
     const lines: string[] = [];
 
     lines.push(this.indentLine(`<${tagName}>`));
     this.indent++;
 
-    for (const [lang, text] of Object.entries(langStrings)) {
+    for (const langString of langStrings) {
       lines.push(this.indentLine('<langString>'));
       this.indent++;
-      lines.push(this.indentLine(`<language>${this.escapeXml(lang)}</language>`));
-      lines.push(this.indentLine(`<text>${this.escapeXml(text)}</text>`));
+      lines.push(this.indentLine(`<language>${this.escapeXml(langString.language)}</language>`));
+      lines.push(this.indentLine(`<text>${this.escapeXml(langString.text)}</text>`));
       this.indent--;
       lines.push(this.indentLine('</langString>'));
     }

@@ -11,15 +11,15 @@ import { Input } from '@/components/ui/input';
 import { Plus, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { PropertyEditorProps } from './types';
-import type { LangStringSet } from '../../../../shared/aas-v3-types';
+import type { LangStringTextType } from '../../../../shared/aas-v3-types';
 
-export interface MultiLanguageEditorProps extends PropertyEditorProps<LangStringSet> {
+export interface MultiLanguageEditorProps extends PropertyEditorProps<LangStringTextType[]> {
   maxLanguages?: number;
   requiredLanguages?: string[];
 }
 
 export function MultiLanguageEditor({
-  value = {},
+  value = [],
   onChange,
   onBlur,
   validation,
@@ -30,23 +30,19 @@ export function MultiLanguageEditor({
   requiredLanguages = [],
 }: MultiLanguageEditorProps) {
   const [entries, setEntries] = React.useState<Array<{ lang: string; text: string }>>(
-    Object.entries(value).map(([lang, text]) => ({ lang, text }))
+    value.map(({ language, text }) => ({ lang: language, text }))
   );
 
   // Sync with external value changes
   React.useEffect(() => {
-    setEntries(Object.entries(value).map(([lang, text]) => ({ lang, text })));
+    setEntries(value.map(({ language, text }) => ({ lang: language, text })));
   }, [value]);
 
-  // Convert entries to LangStringSet
-  const entriesToValue = (entries: Array<{ lang: string; text: string }>): LangStringSet => {
-    const result: LangStringSet = {};
-    entries.forEach(({ lang, text }) => {
-      if (lang && text) {
-        result[lang] = text;
-      }
-    });
-    return result;
+  // Convert entries to LangStringTextType[]
+  const entriesToValue = (entries: Array<{ lang: string; text: string }>): LangStringTextType[] => {
+    return entries
+      .filter(({ lang, text }) => lang && text)
+      .map(({ lang, text }) => ({ language: lang, text }));
   };
 
   // Add new language entry

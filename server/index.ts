@@ -61,7 +61,7 @@ app.use((req, res, next) => {
       message: err.message,
       stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
       body: req.body,
-      user: req.user?.id,
+      user: req.jwtUser?.userId,
     });
 
     // Send structured error response

@@ -5,8 +5,8 @@
  * Based on: x-external-proj/src/AasxDictionaryImport/Iec61360Utils.cs
  */
 
-import type { DictionaryConcept, DictionarySource } from '../../../shared/dictionary-types';
-import { createIdShort } from '../../../shared/dictionary-types';
+import type { DictionaryConcept } from '../../../shared/dictionary-types';
+import { createIdShort, DictionarySource } from '../../../shared/dictionary-types';
 import type {
   ConceptDescription,
   Reference,

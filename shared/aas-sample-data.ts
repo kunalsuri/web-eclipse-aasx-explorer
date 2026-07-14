@@ -9,13 +9,7 @@ import type {
     Submodel,
     Property,
     SubmodelElementCollection,
-} from "./aas-v3-types";
-import type {
-    Environment,
-    AssetAdministrationShell,
-    Submodel,
-    Property,
-    SubmodelElementCollection,
+    File,
 } from "./aas-v3-types";
 import {
     AssetKind,
@@ -253,7 +247,7 @@ export function createSampleDocumentationSubmodel(id: string): Submodel {
                 ],
                 contentType: "application/pdf",
                 value: "/aasx/OperatingManual_EN.pdf",
-            },
+            } as File,
             {
                 modelType: AasSubmodelElements.File,
                 idShort: "SafetyInstructions",
@@ -263,7 +257,7 @@ export function createSampleDocumentationSubmodel(id: string): Submodel {
                 ],
                 contentType: "application/pdf",
                 value: "/aasx/SafetyInstructions_EN.pdf",
-            },
+            } as File,
             {
                 modelType: AasSubmodelElements.File,
                 idShort: "TechnicalDrawing",
@@ -273,7 +267,7 @@ export function createSampleDocumentationSubmodel(id: string): Submodel {
                 ],
                 contentType: "image/png",
                 value: "/aasx/TechnicalDrawing.png",
-            },
+            } as File,
         ],
     };
 }

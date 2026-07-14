@@ -9,13 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
-
-interface ClipboardItem {
-  element: any;
-  operation: 'copy' | 'cut';
-  sourceId: string;
-  timestamp: number;
-}
+import type { ClipboardItem } from '../hooks/use-clipboard';
 
 interface ClipboardPreviewProps {
   clipboardItem: ClipboardItem | null;
@@ -48,6 +42,9 @@ export function ClipboardPreview({
   const getElementType = (el: any): string => {
     return el.modelType || 'Element';
   };
+
+  // Get element value (only present on data elements like Property, Range, etc.)
+  const getElementValue = (el: any): unknown => el.value;
 
   return (
     <Card className={cn('w-full max-w-sm', className)}>
@@ -109,10 +106,10 @@ export function ClipboardPreview({
         )}
 
         {/* Additional info */}
-        {element.value !== undefined && (
+        {getElementValue(element) !== undefined && (
           <div className="text-xs text-muted-foreground">
             <span className="font-medium">Value:</span>{' '}
-            <span className="truncate">{String(element.value).substring(0, 50)}</span>
+            <span className="truncate">{String(getElementValue(element)).substring(0, 50)}</span>
           </div>
         )}
       </CardContent>

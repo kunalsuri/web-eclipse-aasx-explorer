@@ -514,7 +514,7 @@ export class ElementManager {
       );
 
       if (shellIndex === undefined || shellIndex === -1) {
-        throw new NotFoundError(`Shell with id "${shellId}" not found`);
+        throw new NotFoundError([{ type: 'aas', id: shellId }], 0);
       }
 
       // 3. Create backup
@@ -531,7 +531,7 @@ export class ElementManager {
       await this.auditLog.logEdit({
         userId,
         action: 'delete',
-        resourceType: 'shell',
+        resourceType: 'aas',
         resourceId: shellId,
         changes: [
           {
@@ -566,7 +566,7 @@ export class ElementManager {
       );
 
       if (submodelIndex === undefined || submodelIndex === -1) {
-        throw new NotFoundError(`Submodel with id "${submodelId}" not found`);
+        throw new NotFoundError([{ type: 'submodel', id: submodelId }], 0);
       }
 
       // 3. Remove submodel references from shells

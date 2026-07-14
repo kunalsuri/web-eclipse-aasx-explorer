@@ -301,7 +301,7 @@ export class AASSearchEngine {
       displayName: element.displayName,
       category: element.category,
       semanticId: element.semanticId,
-      value: this.getElementValue(element),
+      value: this.getElementValue(element) ?? undefined,
     });
 
     const type = this.getElementType(element);

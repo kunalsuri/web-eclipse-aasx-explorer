@@ -14,7 +14,7 @@ import { clipboardApi } from '../api/clipboard-api';
 import type { SubmodelElement } from '../../../../../shared/aas-v3-types';
 import { toast } from '@/hooks/use-toast';
 
-interface ClipboardItem {
+export interface ClipboardItem {
   element: SubmodelElement;
   operation: 'copy' | 'cut';
   sourcePackageId: string;

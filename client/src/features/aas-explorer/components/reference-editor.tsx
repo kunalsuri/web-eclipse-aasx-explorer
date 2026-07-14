@@ -12,7 +12,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Plus, Trash2, AlertCircle, Link2, ExternalLink } from 'lucide-react';
-import type { Reference, Key, ReferenceTypes, KeyTypes } from '../../../../../shared';
+import type { Reference, Key, ReferenceTypes } from '../../../../../shared';
+import { KeyTypes } from '../../../../../shared';
 
 interface ReferenceEditorProps {
   readonly value: Reference | null;
@@ -23,20 +24,20 @@ interface ReferenceEditorProps {
 
 // Common key types from AAS V3 specification
 const KEY_TYPES: KeyTypes[] = [
-  'AssetAdministrationShell',
-  'Submodel',
-  'Property',
-  'MultiLanguageProperty',
-  'Range',
-  'ReferenceElement',
-  'Blob',
-  'File',
-  'SubmodelElementCollection',
-  'SubmodelElementList',
-  'Operation',
-  'Entity',
-  'ConceptDescription',
-  'GlobalReference',
+  KeyTypes.AssetAdministrationShell,
+  KeyTypes.Submodel,
+  KeyTypes.Property,
+  KeyTypes.MultiLanguageProperty,
+  KeyTypes.Range,
+  KeyTypes.ReferenceElement,
+  KeyTypes.Blob,
+  KeyTypes.File,
+  KeyTypes.SubmodelElementCollection,
+  KeyTypes.SubmodelElementList,
+  KeyTypes.Operation,
+  KeyTypes.Entity,
+  KeyTypes.ConceptDescription,
+  KeyTypes.GlobalReference,
 ];
 
 /**
@@ -54,7 +55,7 @@ export function ReferenceEditor({
   disabled = false,
   errors = [],
 }: ReferenceEditorProps) {
-  const [newKeyType, setNewKeyType] = useState<KeyTypes>('Property');
+  const [newKeyType, setNewKeyType] = useState<KeyTypes>(KeyTypes.Property);
   const hasErrors = errors.length > 0;
 
   const reference = value || {

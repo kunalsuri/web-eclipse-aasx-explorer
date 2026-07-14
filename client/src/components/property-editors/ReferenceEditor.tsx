@@ -99,7 +99,7 @@ export function ReferenceEditor({
       // const results = await api.searchElements(term, metadata?.filterType);
       
       // Mock suggestions for now
-      const mockSuggestions: ReferenceSuggestion[] = [
+      const allSuggestions: ReferenceSuggestion[] = [
         {
           id: 'shell-1',
           idShort: 'ExampleShell',
@@ -115,7 +115,9 @@ export function ReferenceEditor({
           path: [{ type: 'Submodel', value: 'submodel-1' }],
           displayName: 'Technical Data Submodel',
         },
-      ].filter(s => 
+      ];
+
+      const mockSuggestions = allSuggestions.filter(s =>
         s.idShort.toLowerCase().includes(term.toLowerCase()) ||
         s.displayName.toLowerCase().includes(term.toLowerCase())
       );

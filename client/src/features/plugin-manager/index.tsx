@@ -6,25 +6,9 @@
  */
 
 import React, { useState, useEffect } from "react";
-import { PluginList } from "./components/PluginList";
+import { PluginList, type Plugin } from "./components/PluginList";
 import { PluginSettingsDialog } from "./components/PluginSettingsDialog";
 import { useToast } from "@/hooks/use-toast";
-
-interface Plugin {
-  id: string;
-  name: string;
-  version: string;
-  description: string;
-  author: {
-    name: string;
-    email: string;
-  };
-  enabled: boolean;
-  state: string;
-  error?: string;
-  config?: Record<string, any>;
-  configSchema?: Record<string, any>;
-}
 
 export const PluginManager: React.FC = () => {
   const [plugins, setPlugins] = useState<Plugin[]>([]);
