@@ -47,7 +47,7 @@
 | `server/index.ts`, `server/vite.ts`, `server/aasx-routes.ts`, `server/logging-endpoint.ts`, `server/profile.ts` | Server bootstrap, Vite middleware integration, top-level AASX routes, logging endpoint, profile endpoint | `server/index.ts` | stable | [inferred] |
 | `shared/aas-v3-types.ts` | AAS V3 metamodel type system (spec-derived) | `shared/aas-v3-types.ts` | stable | [inferred] |
 | `shared/aas-parser.ts`, `shared/aas-xml-migration.ts` | AASX (ZIP/OPC) package discovery plus legacy V1/V2 XML-to-V3 migration; covered by complete C# environment equality in `tests/integration/golden-master/aasx-parser.test.ts` | `shared/aas-parser.ts` | stable | [inferred] |
-| `shared/aas-validation-engine.ts` + `shared/validation-rules/` | AAS V3 constraint validation engine with 150 unique contiguous AASd-001..150 IDs; per-file totals overlap, so use `tests/unit/shared/validation/aasd/constraint-count.test.ts` instead of summing category files | `shared/aas-validation-engine.ts` | stable | [inferred] |
+| `shared/aas-validation-engine.ts` + `shared/validation-rules/` | AAS V3 constraint validation engine with 150 unique contiguous registered AASd-001..150 IDs; 35 are direct no-op validators, so registry count is not semantic completeness. Per-file totals overlap; use `tests/unit/shared/validation/aasd/constraint-count.test.ts` only for registration/count checks | `shared/aas-validation-engine.ts` | stable | [inferred] |
 | `shared/schema.ts` | Drizzle + Zod schema — defines the Postgres contract; **not** what dev/runtime storage actually uses (see `server/storage.ts` row and [ARCHITECTURE.md](ARCHITECTURE.md)) | `shared/schema.ts` | stable | [inferred] |
 | `shared/aas-search-engine.ts`, `shared/aas-search-filters.ts`, `shared/aas-search-types.ts` | AAS element search | `shared/aas-search-engine.ts` | stable | [inferred] |
 | `shared/aas-serialization.ts`, `shared/aas-validation.ts`, `shared/aas-sample-data.ts` | Serialization helpers, legacy/simple validation, sample data for dev/tests | — | ? | [inferred] |
@@ -59,6 +59,7 @@
 | `config/` | Static config: `dictionary-config.json` (ECLASS/IEC CDD dictionary adapter config) | `config/dictionary-config.json` | stable | [inferred] |
 | `.kiro/` | Spec-driven planning artifacts (not app code) — `specs/<feature>/{requirements,design,tasks}.md`, `CONSOLIDATED-SUMMARY.md` (feature-parity/plugin/constraint-count roadmap vs. the C# desktop app) | `.kiro/CONSOLIDATED-SUMMARY.md` | n/a (docs) | [inferred] |
 | `docs/` | Standalone analysis docs (confidence-assessment/migration-strategy notes) | — | n/a (docs) | [inferred] |
+| `_external_source/` | Frozen C# reference snapshot plus source-mined feature inventory used for translation/parity analysis; never treat it as current web runtime code | `_external_source/CSHARP_TO_TYPESCRIPT_FEATURE_INVENTORY.md` | frozen | [inferred] |
 
 Detected test locations (from orient): tests/
 

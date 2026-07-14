@@ -10,6 +10,7 @@ build/
 node_modules/
 
 x-external-proj/
+_external_source/
 
 .DS_Store
 server/public

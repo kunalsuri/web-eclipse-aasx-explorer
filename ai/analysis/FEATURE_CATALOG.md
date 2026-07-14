@@ -32,11 +32,11 @@ not just element counts, and all eight comparisons pass.
 |---|---|---|---|---|
 | F01 | Account access and recovery | Register, sign in, refresh credentials, sign out, and reset passwords | `client/src/pages/auth-page.tsx` | Reachable `[inferred]` |
 | F02 | User profile and preferences | Manage identity, picture, preferences, and account lifecycle | `client/src/pages/profile-page.tsx` | Partial `[inferred]` |
-| F03 | AASX package management | Create, upload, parse, list, download, and delete packages | `client/src/pages/aasx-manager-page.tsx` | Reachable `[inferred]` |
+| F03 | AASX package management | Create, upload, parse, list, download, and delete packages | `client/src/pages/aasx-manager-page.tsx` | Partial `[inferred]` |
 | F04 | AAS environment browsing | Load environments and inspect their overview, tree, metadata, and findings | `client/src/pages/aas-viewer-page.tsx` | Reachable `[inferred]` |
 | F05 | AAS property and structure editing | Change property values and manage submodels/elements | `client/src/features/aas-explorer/components/property-panel.tsx` | Partial `[inferred]` |
 | F06 | Clipboard, bulk operations, and undo/redo | Copy, paste, multi-select, batch-edit, and reverse edits | `client/src/features/aas-explorer/components/aas-explorer-integrated.tsx` | Infrastructure-only `[inferred]` |
-| F07 | AAS validation and reports | Apply AAS V3/AASd checks and export findings | `client/src/features/aas-explorer/components/validation-panel.tsx` | Reachable `[inferred]` |
+| F07 | AAS validation and reports | Apply AAS V3/AASd checks and export findings | `client/src/features/aas-explorer/components/validation-panel.tsx` | Partial `[inferred]` |
 | F08 | AAS search and reference suggestions | Find elements and choose valid reference targets | `server/aasx-routes.ts` | API-only / partial `[inferred]` |
 | F09 | Dictionary browsing | Search ECLASS/IEC CDD concepts and prepare ConceptDescription imports | `client/src/pages/dictionary-browser-page.tsx` | Partial `[inferred]` |
 | F10 | AAS export and import | Exchange JSON, CSV, Excel, and XML representations | `server/aasx-routes.ts` | API-only / partial `[inferred]` |
@@ -122,16 +122,18 @@ role middleware.
 ### F03 — AASX package management `[inferred]`
 
 - **Business goal:** Create or upload packages, parse them, and manage stored files.
-- **Status:** Reachable through the manager and dashboard; server endpoints are not
-  protected by auth middleware.
+- **Status:** Partial. The manager is reachable, but a newly created “package” is an
+  environment JSON sidecar recorded under an `.aasx` download name. Uploaded package
+  downloads return the original bytes, not later environment edits. Server endpoints
+  are also not protected by auth middleware.
 
 | Layer | Touch list | Confidence |
 |---|---|---|
 | UI | `client/src/pages/aasx-manager-page.tsx`, `client/src/features/aasx-manager/` | `[inferred]` |
 | Backend | `server/aasx-routes.ts`, `server/src/services/aas-package-creator.ts` | `[inferred]` |
 | Domain | `shared/aas-parser.ts`, `shared/aas-v3-types.ts` | `[inferred]` |
-| Persistence | `data/aasx/` package, metadata, and parsed-environment files | `[inferred]` |
-| Tests | `tests/unit/server/services/aas-package-creator.test.ts` passes; `tests/integration/golden-master/aasx-parser.test.ts` deep-compares all eight complete environments with the committed C# goldens and passes | `[inferred]` |
+| Persistence | `data/aasx/` original uploads plus separate metadata and parsed-environment files; no OPC-aware package write path | `[inferred]` |
+| Tests | `tests/unit/server/services/aas-package-creator.test.ts` checks generated environments; `tests/integration/golden-master/aasx-parser.test.ts` deep-compares all eight complete environments with the committed C# goldens. No create/download/reopen or edit/download/reopen test exists | `[inferred]` |
 
 - **Related:** F04, F07, F10.
 
@@ -156,7 +158,8 @@ role middleware.
 - **Business goal:** Persist property changes and manage the AAS element hierarchy.
 - **Status:** Partial. Ordinary Property edits use the mounted environment-property
   endpoint; richer multi-language, element, reorder, restore, and version operations
-  target an unmounted router or unused integrated UI.
+  target an unmounted router or unused integrated UI. All edits target the parsed
+  environment sidecar; the original package returned by Download is not repackaged.
 
 | Layer | Touch list | Confidence |
 |---|---|---|
@@ -188,8 +191,10 @@ role middleware.
 ### F07 — AAS validation and reports `[inferred]`
 
 - **Business goal:** Apply AAS V3/AASd constraints and communicate actionable findings.
-- **Status:** Reachable. The viewer validates locally; separate server validation and
-  preset endpoints are also mounted.
+- **Status:** Partial. The viewer validates locally and server validation/preset
+  endpoints are mounted, but 35 of the 150 registered AASd IDs are direct no-op
+  validators (`AASd-031..044`, `AASd-050`, `AASd-078..097`). The count therefore
+  proves registry coverage, not 150 implemented constraint semantics.
 
 | Layer | Touch list | Confidence |
 |---|---|---|
@@ -197,7 +202,7 @@ role middleware.
 | Backend | `server/aasx-routes.ts`, `server/src/services/validation-preset-manager.ts` | `[inferred]` |
 | Domain | `shared/aas-validation-engine.ts`, `shared/validation-rules/` | `[inferred]` |
 | Persistence | Validation cache beside packages and optional custom presets under `data/` | `[inferred]` |
-| Tests | `tests/unit/shared/validation/`, `tests/integration/validation/` | `[inferred]` |
+| Tests | `tests/unit/shared/validation/`, `tests/integration/validation/`; the constraint-count test checks totals/unique IDs but does not reject no-op rules | `[inferred]` |
 
 - **Related:** F04, F05, F10.
 

@@ -8,5 +8,15 @@
     "ip": "127.0.0.1",
     "createdAt": "2026-07-14T12:52:47.230Z",
     "expiresAt": "2026-07-21T12:52:47.230Z"
+  },
+  {
+    "sessionId": "9f255365c7cc8964d2de8c78dea3bfa20ab7a69d2d4dd3b2d870c1a57c9a2038",
+    "userId": "cde4b1be-76f3-4eaa-b9db-afcb9d235ce2",
+    "refreshTokenHash": "d107d718827ef8da28010547a76ab1b25fd347b4d6a335ee1bbc52a6cc303937",
+    "csrfTokenHash": "77b8520d5befcec6889f7a3138d3e5e15eb5b09dcbb611b676cc359f2927384d",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "ip": "127.0.0.1",
+    "createdAt": "2026-07-14T13:50:22.216Z",
+    "expiresAt": "2026-07-21T13:50:22.216Z"
   }
 ]
