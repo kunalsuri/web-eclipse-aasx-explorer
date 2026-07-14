@@ -551,7 +551,7 @@ describe('UpdateService', () => {
   });
 
   describe('updateMultiLanguageProperty', () => {
-    it.skip('should update multi-language property', async () => {
+    it('should update multi-language property', async () => {
       // Arrange - Create multi-language property with all required fields
       const mlProperty: any = {
         modelType: AasSubmodelElements.MultiLanguageProperty,
@@ -688,7 +688,7 @@ describe('UpdateService', () => {
       }
     });
 
-    it.skip('should restore from most recent backup', async () => {
+    it('should restore from most recent backup', async () => {
       // Arrange - Create a backup manually
       const backupTimestamp = Date.now();
       const backupPath = path.join(testBackupDir, `${testFileId}-${backupTimestamp}.json`);

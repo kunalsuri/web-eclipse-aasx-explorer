@@ -12,10 +12,10 @@ import { undoService } from '@/features/aas-explorer/services/undo-service';
 import type { SubmodelElement } from '../../../../shared/aas-v3-types';
 
 // Mock services
-vi.mock('../../features/aas-explorer/services/update-service');
-vi.mock('../../features/aas-explorer/services/undo-service');
+vi.mock('@/features/aas-explorer/services/update-service');
+vi.mock('@/features/aas-explorer/services/undo-service');
 
-describe.skip('Property Editing Flow - Integration', () => {
+describe('Property Editing Flow - Integration', () => {
   const mockFileId = 'test-file-id';
   const mockElementPath = [
     { type: 'submodel' as const, id: 'sm1' },
@@ -105,7 +105,7 @@ describe.skip('Property Editing Flow - Integration', () => {
     });
   });
 
-  it.skip('should handle validation errors before save', async () => {
+  it('should handle validation errors before save', async () => {
     const mockIntProperty: SubmodelElement = {
       modelType: 'Property',
       idShort: 'intProperty',
@@ -127,9 +127,9 @@ describe.skip('Property Editing Flow - Integration', () => {
       expect(screen.getByLabelText(/value/i)).toBeInTheDocument();
     });
 
-    // Enter invalid value (non-integer)
+    // Enter an invalid integer value that a number input can represent.
     const input = screen.getByLabelText(/value/i);
-    fireEvent.change(input, { target: { value: 'not-a-number' } });
+    fireEvent.change(input, { target: { value: '3.14' } });
 
     // Verify validation error is displayed
     await waitFor(() => {

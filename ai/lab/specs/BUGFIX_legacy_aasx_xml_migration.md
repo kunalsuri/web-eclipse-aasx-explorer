@@ -1,6 +1,6 @@
 <!-- Copyright (c) 2026 Kunal Suri (CEA LIST). All rights reserved. -->
 # BUGFIX: Legacy AASX XML migration `[inferred]`
-> **Status:** approved · **Author:** Codex · **Date:** 2026-07-14 · **Issue:** —
+> **Status:** in-review · **Author:** Codex · **Date:** 2026-07-14 · **Issue:** —
 >
 > **Authorization:** The user explicitly requested that the nine-month translation
 > be completed with 100% accuracy and authorized an urgent full-codebase repair.
@@ -64,6 +64,6 @@ the V3 TypeScript model. Keep supplementary-file extraction unchanged.
 4. Strict AI-knowledge path verification is green using the available verifier.
 
 ## Knowledge update on completion
-- [ ] `FEATURE_MAP.md` gotcha line added (so the next agent knows the trap)
-- [ ] `WORKLOG.md` row appended (type `bugfix`, linking this doc + review)
-- [ ] EVAL written if the hunt taught something worth keeping
+- [x] `FEATURE_MAP.md` gotcha line added (so the next agent knows the trap)
+- [x] `WORKLOG.md` row appended (type `bugfix`, linking this doc + review)
+- [x] EVAL not required; the durable trap is captured in the feature/module maps

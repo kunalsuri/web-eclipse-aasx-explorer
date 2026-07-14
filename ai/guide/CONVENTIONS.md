@@ -21,8 +21,10 @@
   `client/src/features/*/components/`.
 - `interface` over `type` for object contracts; avoid `any` (needs a justifying
   comment if unavoidable).
-- Directories use `lowercase-dash` naming (e.g. `dictionary-browser/`,
-  `plugin-manager/`); hooks prefixed `use` (e.g. `client/src/hooks/`).
+- Directories use `lowercase-dash` naming (e.g.
+  `client/src/features/dictionary-browser/` and
+  `client/src/features/plugin-manager/`); hooks prefixed `use` (e.g.
+  `client/src/hooks/`).
 - Tailwind CSS for styling; preserve dark-mode support via `next-themes`
   (`client/src/App.tsx` wires the theme provider) and WCAG 2.1 AA accessibility.
 - No side effects/async logic inside render bodies.

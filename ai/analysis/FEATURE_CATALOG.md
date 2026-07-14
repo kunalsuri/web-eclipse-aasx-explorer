@@ -18,14 +18,13 @@
 This is a single-file catalog. The optional backend/frontend split files remain
 scaffolds and are not authoritative. Test layout is hybrid: active default-suite
 tests live under `tests/`; 15 colocated `client/src/**/__tests__/` files exist,
-but `tests/setup/vitest.config.ts` does not include them. Two centralized UI
-integration suites are skipped, as are the XML service assertions.
+but `tests/setup/vitest.config.ts` does not include them. The centralized XML,
+property-editing, and undo/redo contracts are active in the default suite.
 
-Verification snapshot on 2026-07-14: `npm test` completed with 548 passed,
-8 failed, and 39 skipped tests. All 8 failures are environment-count comparisons
-in `tests/integration/golden-master/aasx-parser.test.ts`; parsing does not throw,
-but the TypeScript result has zero AAS/submodel/concept-description counts against
-non-zero C# baselines.
+Verification snapshot on 2026-07-14: `npm test` completed with 610 passed,
+0 failed, and 0 skipped tests. The eight legacy V1/V2 AASX fixtures now compare
+their complete TypeScript environments with the committed C# golden environments,
+not just element counts, and all eight comparisons pass.
 
 ## §1 Feature index
 
@@ -132,7 +131,7 @@ role middleware.
 | Backend | `server/aasx-routes.ts`, `server/src/services/aas-package-creator.ts` | `[inferred]` |
 | Domain | `shared/aas-parser.ts`, `shared/aas-v3-types.ts` | `[inferred]` |
 | Persistence | `data/aasx/` package, metadata, and parsed-environment files | `[inferred]` |
-| Tests | `tests/unit/server/services/aas-package-creator.test.ts` passes; `tests/integration/golden-master/aasx-parser.test.ts` currently has 8 failing count comparisons | `[inferred]` |
+| Tests | `tests/unit/server/services/aas-package-creator.test.ts` passes; `tests/integration/golden-master/aasx-parser.test.ts` deep-compares all eight complete environments with the committed C# goldens and passes | `[inferred]` |
 
 - **Related:** F04, F07, F10.
 
@@ -148,7 +147,7 @@ role middleware.
 | Backend | `server/aasx-routes.ts` file/environment endpoints | `[inferred]` |
 | Domain | `shared/aas-parser.ts`, `shared/aas-v3-types.ts` | `[inferred]` |
 | Persistence | Parsed environment files under `data/aasx/` | `[inferred]` |
-| Tests | `tests/integration/golden-master/aasx-parser.test.ts` parses fixtures but currently fails 8 count comparisons; colocated property/tree tests are outside the default test include | `[inferred]` |
+| Tests | `tests/integration/golden-master/aasx-parser.test.ts` deep-compares all eight complete environments with C# goldens; colocated property/tree tests remain outside the default test include | `[inferred]` |
 
 - **Related:** F03, F05, F07, F08.
 
@@ -165,7 +164,7 @@ role middleware.
 | Advanced UI | `client/src/features/aas-explorer/components/aas-explorer-integrated.tsx`, `client/src/features/aas-explorer/services/update-service.ts` | `[inferred]` |
 | Backend | `server/aasx-routes.ts`, `server/src/api/aasx/update.ts`, `server/src/services/element-manager.ts`, `server/src/services/update-service.ts` | `[inferred]` |
 | Persistence | Environment files under `data/aasx/`; advanced services also target backups/audit logs | `[inferred]` |
-| Tests | `tests/unit/server/services/element-manager.test.ts`, `tests/unit/server/services/update-service.test.ts`; centralized UI flows are skipped | `[inferred]` |
+| Tests | `tests/unit/server/services/element-manager.test.ts`, `tests/unit/server/services/update-service.test.ts`, `tests/integration/ui/property-editing-flow.test.tsx` | `[inferred]` |
 
 - **Related:** F04, F06, F07.
 
@@ -182,7 +181,7 @@ role middleware.
 | Client logic | `client/src/features/aas-explorer/hooks/use-clipboard.ts`, `client/src/features/aas-explorer/services/undo-service.ts`, `client/src/features/aas-explorer/services/bulk-operations-service.ts` | `[inferred]` |
 | Backend | `server/src/api/clipboard-routes.ts`, `server/src/services/clipboard-manager.ts` | `[inferred]` |
 | Persistence | Process memory on the server; localStorage fallback on the client | `[inferred]` |
-| Tests | `tests/unit/server/services/clipboard-manager.test.ts`; colocated clipboard/undo tests are excluded and `tests/integration/ui/undo-redo-flow.test.tsx` is skipped | `[inferred]` |
+| Tests | `tests/unit/server/services/clipboard-manager.test.ts`, `tests/integration/ui/undo-redo-flow.test.tsx`; colocated clipboard/undo tests remain outside the default include | `[inferred]` |
 
 - **Related:** F05.
 
@@ -206,8 +205,8 @@ role middleware.
 
 - **Business goal:** Find elements and assist users in constructing valid references.
 - **Status:** API-only / partial. Search APIs are mounted, but search UI is not
-  composed into the live viewer. Reference suggestions depend on request environment
-  state that no mounted middleware supplies.
+  composed into the live viewer. Reference suggestions load the parsed environment
+  identified by the request's `fileId` query/body field.
 
 | Layer | Touch list | Confidence |
 |---|---|---|
@@ -215,7 +214,7 @@ role middleware.
 | Backend | `server/aasx-routes.ts`, `server/src/api/reference-suggestion-routes.ts` | `[inferred]` |
 | Core | `server/src/services/aas-search-service.ts`, `server/src/services/reference-suggestion-service.ts`, `shared/aas-search-engine.ts` | `[inferred]` |
 | Persistence | In-memory indexes/caches; recent client searches use localStorage | `[inferred]` |
-| Tests | Colocated search-bar test is excluded by the default config; no active server search tests found | `[inferred]` |
+| Tests | `tests/unit/server/api/reference-suggestion-routes.test.ts` covers environment selection; the colocated search-bar test remains outside the default config | `[inferred]` |
 
 - **Related:** F04, F05, F09.
 
@@ -248,7 +247,7 @@ role middleware.
 | Backend | `server/aasx-routes.ts`, `server/src/api/xml-routes.ts` | `[inferred]` |
 | Services | `server/src/services/export-service.ts`, `server/src/services/excel-export-service.ts`, `server/src/services/excel-import-service.ts`, `server/src/services/xml-serialization-service.ts` | `[inferred]` |
 | Persistence | Reads parsed environments from `data/aasx/`; downloads are client-side | `[inferred]` |
-| Tests | `tests/unit/server/services/xml-serialization-service.test.ts` exists, but its assertions are skipped; no CSV/Excel route tests found | `[inferred]` |
+| Tests | `tests/unit/server/services/xml-serialization-service.test.ts` has 16 active structural round-trip/well-formedness assertions; no official XSD, CSV, or Excel route tests found | `[inferred]` |
 
 - **Related:** F03, F07.
 

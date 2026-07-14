@@ -6,10 +6,59 @@
  */
 
 import { Router, type Request, type Response } from 'express';
+import fs from 'fs/promises';
+import path from 'path';
 import { referenceSuggestionService } from '../services/reference-suggestion-service';
-import type { KeyTypes } from '../../../shared/aas-v3-types';
+import type { Environment, KeyTypes } from '../../../shared/aas-v3-types';
 
 const router = Router();
+
+export class ReferenceEnvironmentError extends Error {
+  constructor(
+    message: string,
+    public readonly status: 400 | 404
+  ) {
+    super(message);
+    this.name = 'ReferenceEnvironmentError';
+  }
+}
+
+export async function loadReferenceEnvironment(
+  req: Pick<Request, 'query' | 'body'>,
+  dataDir: string = path.join(process.cwd(), 'data', 'aasx')
+): Promise<Environment> {
+  const rawFileId = req.query.fileId ?? req.body?.fileId;
+  const fileId = Array.isArray(rawFileId) ? rawFileId[0] : rawFileId;
+
+  if (typeof fileId !== 'string' || fileId.trim() === '') {
+    throw new ReferenceEnvironmentError('fileId is required', 400);
+  }
+  if (!/^[A-Za-z0-9_-]+$/.test(fileId)) {
+    throw new ReferenceEnvironmentError('fileId contains unsupported characters', 400);
+  }
+
+  try {
+    const content = await fs.readFile(
+      path.join(dataDir, `${fileId}-environment.json`),
+      'utf-8'
+    );
+    return JSON.parse(content) as Environment;
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      throw new ReferenceEnvironmentError(`Environment not found for ${fileId}`, 404);
+    }
+    throw error;
+  }
+}
+
+function sendRouteError(error: unknown, res: Response, fallback: string): void {
+  if (error instanceof ReferenceEnvironmentError) {
+    res.status(error.status).json({ error: error.message });
+    return;
+  }
+  console.error(fallback, error);
+  res.status(500).json({ error: fallback });
+}
 
 /**
  * GET /api/v1/references/suggestions
@@ -24,11 +73,7 @@ router.get('/suggestions', async (req: Request, res: Response) => {
   try {
     const { q, type, limit } = req.query;
 
-    // Get environment from storage
-    const environment = (req as any).environment;
-    if (!environment) {
-      return res.status(500).json({ error: 'Environment not loaded' });
-    }
+    const environment = await loadReferenceEnvironment(req);
 
     // Search suggestions
     const suggestions = await referenceSuggestionService.searchElements(
@@ -42,8 +87,7 @@ router.get('/suggestions', async (req: Request, res: Response) => {
 
     res.json({ suggestions });
   } catch (error) {
-    console.error('Failed to get suggestions:', error);
-    res.status(500).json({ error: 'Failed to get suggestions' });
+    sendRouteError(error, res, 'Failed to get suggestions');
   }
 });
 
@@ -56,11 +100,7 @@ router.get('/suggestions/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    // Get environment from storage
-    const environment = (req as any).environment;
-    if (!environment) {
-      return res.status(500).json({ error: 'Environment not loaded' });
-    }
+    const environment = await loadReferenceEnvironment(req);
 
     // Get suggestion
     const suggestion = await referenceSuggestionService.getSuggestionById(
@@ -74,8 +114,7 @@ router.get('/suggestions/:id', async (req: Request, res: Response) => {
 
     res.json(suggestion);
   } catch (error) {
-    console.error('Failed to get suggestion:', error);
-    res.status(500).json({ error: 'Failed to get suggestion' });
+    sendRouteError(error, res, 'Failed to get suggestion');
   }
 });
 
@@ -93,11 +132,7 @@ router.post('/suggestions/by-semantic-id', async (req: Request, res: Response) =
       return res.status(400).json({ error: 'semanticId is required' });
     }
 
-    // Get environment from storage
-    const environment = (req as any).environment;
-    if (!environment) {
-      return res.status(500).json({ error: 'Environment not loaded' });
-    }
+    const environment = await loadReferenceEnvironment(req);
 
     // Get suggestions
     const suggestions = await referenceSuggestionService.getSuggestionsBySemanticId(
@@ -107,8 +142,7 @@ router.post('/suggestions/by-semantic-id', async (req: Request, res: Response) =
 
     res.json({ suggestions });
   } catch (error) {
-    console.error('Failed to get suggestions by semantic ID:', error);
-    res.status(500).json({ error: 'Failed to get suggestions' });
+    sendRouteError(error, res, 'Failed to get suggestions by semantic ID');
   }
 });
 

@@ -5,8 +5,8 @@
   "license": "EPL-2.0",
   "scripts": {
     "dev": "cross-env NODE_ENV=development tsx server/index.ts",
-    "build": "vite build",
-    "start": "cross-env NODE_ENV=production node dist/index.js",
+    "build": "node scripts/build.mjs",
+    "start": "cross-env NODE_ENV=production node dist/server.js",
     "check": "tsc",
     "test": "vitest run --config tests/setup/vitest.config.ts",
     "test:watch": "vitest --config tests/setup/vitest.config.ts",

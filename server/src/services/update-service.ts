@@ -383,10 +383,18 @@ export class UpdateService {
    */
   async restoreFromBackup(fileId: string): Promise<void> {
     const filePath = this.getFilePath(fileId);
-    const backupPath = this.getBackupPath(fileId);
 
     try {
-      await fs.copyFile(backupPath, filePath);
+      const backupFiles = (await fs.readdir(this.backupDir))
+        .filter(file => file.startsWith(`${fileId}-`) && file.endsWith('.json'))
+        .sort((left, right) => right.localeCompare(left));
+      const latestBackup = backupFiles[0];
+      if (!latestBackup) {
+        throw new Error(`No backup found for ${fileId}`);
+      }
+
+      const backupContent = await fs.readFile(path.join(this.backupDir, latestBackup), 'utf-8');
+      await AtomicFileWriter.writeFile(filePath, backupContent);
     } catch (error) {
       throw new Error(`Failed to restore from backup: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }

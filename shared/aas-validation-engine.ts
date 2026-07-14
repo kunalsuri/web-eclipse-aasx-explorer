@@ -2411,7 +2411,7 @@ export class ValidationEngine {
       }
 
       // Recursively validate nested elements
-      if (element.value && Array.isArray(element.value)) {
+      if (this.hasNestedValueElements(element)) {
         this.validateSubmodelElementReferences(
           element.value,
           `${path}.value`,
@@ -2627,7 +2627,7 @@ export class ValidationEngine {
       }
 
       // Recursively validate nested elements
-      if (element.value && Array.isArray(element.value)) {
+      if (this.hasNestedValueElements(element)) {
         this.validateSubmodelElementKeyStructures(
           element.value,
           `${path}.value`,
@@ -2707,7 +2707,7 @@ export class ValidationEngine {
       }
 
       // Recursively validate nested elements
-      if (element.value && Array.isArray(element.value)) {
+      if (this.hasNestedValueElements(element)) {
         this.validateSubmodelElementsRecursive(
           element.value,
           `${path}.value`,
@@ -2769,7 +2769,7 @@ export class ValidationEngine {
       }
 
       // Recursively validate nested elements
-      if (element.value && Array.isArray(element.value)) {
+      if (this.hasNestedValueElements(element)) {
         this.validatePropertyTypesRecursive(
           element.value,
           `${path}.value`,
@@ -2834,7 +2834,7 @@ export class ValidationEngine {
       }
 
       // Recursively validate nested elements
-      if (element.value && Array.isArray(element.value)) {
+      if (this.hasNestedValueElements(element)) {
         this.validateCardinalityRecursive(
           element.value,
           `${path}.value`,
@@ -2842,6 +2842,15 @@ export class ValidationEngine {
         );
       }
     });
+  }
+
+  /** Only collection/list value arrays contain nested SubmodelElements. */
+  private hasNestedValueElements(element: any): element is { value: any[] } {
+    return (
+      (element.modelType === "SubmodelElementCollection" ||
+        element.modelType === "SubmodelElementList") &&
+      Array.isArray(element.value)
+    );
   }
 
   /**

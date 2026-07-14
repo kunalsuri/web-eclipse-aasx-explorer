@@ -11,9 +11,9 @@ import { UpdatePropertyCommand } from '@/features/aas-explorer/services/commands
 import { updateService } from '@/features/aas-explorer/services/update-service';
 
 // Mock services
-vi.mock('../../features/aas-explorer/services/update-service');
+vi.mock('@/features/aas-explorer/services/update-service');
 
-describe.skip('Undo/Redo Flow - Integration', () => {
+describe('Undo/Redo Flow - Integration', () => {
   const mockFileId = 'test-file-id';
   const mockElementPath = [
     { type: 'submodel' as const, id: 'sm1' },

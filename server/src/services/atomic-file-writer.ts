@@ -7,6 +7,30 @@ import fs from 'fs/promises';
 import path from 'path';
 import { nanoid } from 'nanoid';
 
+const MAX_RENAME_ATTEMPTS = 5;
+const RENAME_RETRY_BASE_DELAY_MS = 10;
+const TRANSIENT_RENAME_ERRORS = new Set(['EPERM', 'EBUSY', 'ENOTEMPTY']);
+
+async function renameWithRetry(tempPath: string, filePath: string): Promise<void> {
+  for (let attempt = 1; attempt <= MAX_RENAME_ATTEMPTS; attempt += 1) {
+    try {
+      await fs.rename(tempPath, filePath);
+      return;
+    } catch (error) {
+      const code = (error as NodeJS.ErrnoException).code;
+      const shouldRetry =
+        code !== undefined &&
+        TRANSIENT_RENAME_ERRORS.has(code) &&
+        attempt < MAX_RENAME_ATTEMPTS;
+
+      if (!shouldRetry) throw error;
+
+      const delay = RENAME_RETRY_BASE_DELAY_MS * 2 ** (attempt - 1);
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+}
+
 export class AtomicFileWriter {
   /**
    * Write data to file atomically
@@ -25,7 +49,7 @@ export class AtomicFileWriter {
       await fs.writeFile(tempPath, data, 'utf-8');
 
       // Atomic rename
-      await fs.rename(tempPath, filePath);
+      await renameWithRetry(tempPath, filePath);
     } catch (error) {
       // Clean up temp file on error
       try {

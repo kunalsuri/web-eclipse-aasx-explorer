@@ -15,6 +15,15 @@ measure that quantitatively (golden-master differential testing, official AAS
 conformance suite, mechanical API-surface diffing) instead of relying on
 self-reported percentages. Read it alongside task 4 below.
 
+> **Recovery update — 2026-07-14:** Task 4's V1/V2 scope decision was resolved by
+> the user's request for full translation accuracy. Commit `86c32d7` implements
+> legacy XML migration and requires complete deep equality for all eight committed
+> C# golden environments. Current gates are `npm run check` passing and `npm test`
+> at 610 passed / 0 failed / 0 skipped. A clean production build/start path was
+> also repaired and smoke-tested at HTTP 200. The remaining roadmap items are not
+> erased by these results; see tasks 5–12 and the current source-backed feature
+> catalog in `ai/analysis/FEATURE_CATALOG.md`.
+
 ---
 
 ## 1. Executive Summary
@@ -321,15 +330,15 @@ golden-master fixtures and a differential test
 (`tests/integration/golden-master/aasx-parser.test.ts`), which is the first
 real step on task 4 below — see "What task 4's new golden-master test found"
 beneath the table, plus a deeper follow-up finding recorded further below
-("2026-07-14: task 4 is bigger than it looked"). Task 4 remains **BLOCKED**
-on a scoping decision — nothing has changed there since that finding.
+("2026-07-14: task 4 is bigger than it looked"). Task 4 was subsequently
+completed by the 2026-07-14 recovery update at the top of this document.
 
 | # | Task | Area | Priority | Status | Notes |
 |---|------|------|----------|--------|-------|
 | 1 | Delete orphaned literal-port plugin files (`plugin-manager.ts`, `plugin-action-invoker.ts`, `plugin-event-handler.ts`, `plugin-standard-actions.ts`, `plugin-visual-extension.ts`) | `server/src/services` | P0 | **DONE** (PR #17) | Also found and deleted 2 more of the same pattern during the fix: `server/src/plugins/document-shelf-plugin.ts`, `technical-data-plugin.ts` — confirmed unimported anywhere, superseded by `DocumentShelfPanel.tsx`/`TechnicalDataPanel.tsx`. 7 files removed total |
 | 2 | Fix remaining ~234 real `npm run check` errors | repo-wide | P0 | **DONE** (PR #17) | `npm run check` → 0 errors. Root causes: 89 of the 234 were `tsconfig.json` only excluding `**/*.test.ts`, not `**/*.test.tsx` (jest-dom matcher types on 8 test files); rest were real — enum literal/member mismatches, missing type guards on `SubmodelElement \| Submodel` unions, a stale `LangStringSet` type reference, `Express.Request` augmentation drift, missing `xml2js` dependency. `npm test` unchanged at 548 passed / 8 failed / 39 skipped (no regressions; the 8 failures are the task-4 finding below) |
 | 3 | Run `npm audit`, triage 31 vulnerabilities (2 critical, 16 high) | deps | P1 | **DONE** ([PR #18](https://github.com/kunalsuri/web-eclipse-aasx-explorer/pull/18), [PR #21](https://github.com/kunalsuri/web-eclipse-aasx-explorer/pull/21)) | `npm audit` confirmed 31 (1 low/12 moderate/16 high/2 critical) — GitHub's 76 count on the PR appears to double-count advisories per dependency path, npm's own count is authoritative. **PR #18**: fixed 24 of 31 — `npm audit fix` (no `--force`) got 18 including both criticals (`fast-xml-parser` — real attack surface, uploaded `.aasx` XML; `vitest` — dev-only UI-server RCE); `drizzle-orm` bumped 0.39.1→0.45.2 (real SQL-injection CVE fix, plain registry install); `xlsx` (SheetJS, no npm-registry fix at all — maintainers only publish patches via their own CDN post-MFA-incident) replaced entirely with `exceljs@4.4.0` since it's a real attack surface (`excel-import-service.ts` runs `XLSX.read()`/now `ExcelJS.Workbook#load()` on **user-uploaded** file buffers) — both `excel-import-service.ts` and `excel-export-service.ts` rewritten, `exportEnvironment` is now `async`, verified with a manual export→import round-trip smoke test plus `npm run check`/`npm test`; exceljs's own nested vulnerable `uuid@8.3.2` pinned to `uuid@^13.0.2` via a `package.json` `overrides` entry. **PR #21**: the 5 remaining (all one `vite`/`drizzle-kit`/`esbuild` dev-tooling chain, see the now-superseded subsection below) turned out worth revisiting instead of permanently accepting — actually ran the `vite` 5→8 major bump end-to-end (not just risk-assessed it), verified clean (`npm run check`, `npm test` 548/8/39, `npm run build`, a manual dev-server smoke test), and it resolved the high-severity finding. **Net result: 31 → 4 vulnerabilities, 0 high/critical remaining** — only `drizzle-kit`'s still-unfixed-upstream `@esbuild-kit` chain (4 moderate), a genuinely accepted risk (dev-server-only, `drizzle-kit` isn't in the runtime path). Also closed 6 now-redundant Dependabot PRs (#8, #9, #10, #11, #12, #13) that were pure duplicates of what #18 already fixed; 2 more Dependabot PRs opened after #21 merged (#19 `esbuild`, #20 `vite`/`vitest`) and auto-closed themselves as already-satisfied |
-| 4 | Build a regenerable C#↔TS parity matrix (script, not prose) — **prefer golden-master differential testing over a symbol-diff matrix alone; see companion doc** | tooling | P1 | **BLOCKED** | Fixtures + differential test exist (`tests/fixtures/golden-master/`, `tests/integration/golden-master/aasx-parser.test.ts`). Scoping decision pending — see "2026-07-14: task 4 is bigger than it looked" below before starting implementation |
+| 4 | Build a regenerable C#↔TS parity matrix (script, not prose) — **prefer golden-master differential testing over a symbol-diff matrix alone; see companion doc** | tooling | P1 | **DONE** (`86c32d7`) | `tests/integration/golden-master/aasx-parser.test.ts` now parses all eight committed legacy V1/V2 fixtures and deep-compares each complete environment with its C# golden output; the OPC origin-marker discovery bug and legacy XML migration gap were fixed |
 | 5 | Add an independent verification subagent that gates "phase complete" claims | `.claude/agents/` | P1 | TODO | Read/bash/test tools only; no code-writing |
 | 6 | Run `admin-shell-io/aas-test-engines` against this repo's REST API + validation engine | validation / API | P1 | TODO | Establishes objective, standards-body-graded correctness |
 | 7 | Re-verify actual AASd-* constraint correctness against IDTA-01001-3-0 Part 1 text, not just internal test count | `shared/validation-rules/*` | P1 | TODO | "150/150" is a count of implemented functions, not proof of spec fidelity |
@@ -337,7 +346,7 @@ on a scoping decision — nothing has changed there since that finding.
 | 9 | Dictionary integration (ECLASS, IEC CDD) | `server/src/services` | P1 | TODO | Cross-reference `AasxPredefinedConcepts` (48 C# files) as source of truth |
 | 10 | Remaining plugins (13 more) | `client/src/plugins/*` | P2 | TODO | See §4.1 plugin list |
 | 11 | XML/AML/RDF import-export completeness check against C# `AasxAmlImExport`, `AasxBammRdfImExport` | `server/src/services` | P2 | TODO | |
-| 12 | Update `.kiro/CONSOLIDATED-SUMMARY.md` to reflect verified (not self-reported) numbers | docs | P1 | TODO | Unblocked now that tasks 1–2 are done, but not yet started — do this once PR #17 is merged to `main`, and combine with a real answer on task 4 (the "97-100% complete" editing-UI claims specifically need re-checking against working code, not just a clean typecheck) |
+| 12 | Update `.kiro/CONSOLIDATED-SUMMARY.md` to reflect verified (not self-reported) numbers | docs | P1 | **IN PROGRESS** | A current-evidence warning and verified gate snapshot were added on 2026-07-14. The historical feature percentages still require a full source-backed rewrite; use `ai/analysis/FEATURE_CATALOG.md` meanwhile |
 
 ### Task 3: the vite/esbuild chain — first accepted as risk, then actually fixed (PR #21)
 
@@ -489,17 +498,16 @@ which produced a confusing false-positive.
    it will very likely fail from this sandbox's shell, and that's expected, not
    a sign of a broken repo.
 
-**Current state as of 2026-07-14 (end of this session):** Tasks 1, 2, and 3
+**Current state as of 2026-07-14 (recovery update):** Tasks 1–4
 are done and merged to `main` ([PR #17](https://github.com/kunalsuri/web-eclipse-aasx-explorer/pull/17),
 [PR #18](https://github.com/kunalsuri/web-eclipse-aasx-explorer/pull/18),
-[PR #21](https://github.com/kunalsuri/web-eclipse-aasx-explorer/pull/21)).
-`npm run check` is 0 errors, `npm test` is 548/8/39 (the 8 are the known
-task-4 golden-master gap), `npm audit` is 4 moderate/0 high/0 critical. All
+[PR #21](https://github.com/kunalsuri/web-eclipse-aasx-explorer/pull/21)), plus
+task 4 in commit `86c32d7`.
+`npm run check` passes, `npm test` is 610/0/0, and `npm audit` is
+4 moderate/0 high/0 critical. All
 Dependabot PRs as of this writing are closed (either merged-equivalent or
-auto-closed as redundant) — no open PRs on the repo. **Next concrete step,
-by priority:** task 4 (AAS-XML deserializer) is **BLOCKED on a scoping
-decision from the user** — see "2026-07-14: task 4 is bigger than it looked"
-above; do not start implementing it without that decision. If task 4 is
-still undecided, the next unblocked work is task 5 (independent verification
-subagent), task 6 (`aas-test-engines`), or task 7 (AASd-* spec re-verification)
-— see the task tracker in §8 for the full list.
+auto-closed as redundant) — no open PRs were recorded in that earlier check.
+The 39 skipped tests were subsequently activated and repaired during the same
+recovery. **Next concrete step, by priority:** task 6 (`aas-test-engines`) and
+task 7 (AASd-* spec re-verification). Tasks 8–11 remain
+the feature-parity backlog; task 12 remains a full historical-summary rewrite.

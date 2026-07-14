@@ -28,6 +28,8 @@
 
 | ID | Feature | Priority | Effort | Depends on | Spec | Status |
 |---|---|---|---|---|---|---|
+| F10-XML | AAS V3 XML structural round-trip contract | P1 | M | F10 import/export infrastructure | `ai/lab/specs/FEATURE_activate_xml_round_trip.md` | in progress `[inferred]` |
+| F05-EDIT | Property editing and undo/redo workflow coverage | P1 | S | F05/F06 editing infrastructure | `ai/lab/specs/FEATURE_activate_editing_workflows.md` | in progress `[inferred]` |
 <!-- Example row (delete once you add real ones):
 | F1 | Short feature name | P1 | M | — | `ai/lab/specs/SPEC_<id>.md` | idea |
 -->

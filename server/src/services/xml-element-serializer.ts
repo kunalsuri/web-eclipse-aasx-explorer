@@ -45,6 +45,12 @@ export class XMLElementSerializer {
       case 'SubmodelElementList':
         lines.push(...this.serializeList(element as any));
         break;
+      case 'Entity':
+        lines.push(...this.serializeEntity(element as any));
+        break;
+      case 'Operation':
+        lines.push(...this.serializeOperation(element as any));
+        break;
       default:
         // Fallback for unsupported types
         lines.push(this.indentLine(`<!-- Unsupported element type: ${element.modelType} -->`));
@@ -83,11 +89,11 @@ export class XMLElementSerializer {
     if (prop.value) {
       lines.push(this.indentLine('<value>'));
       this.indent++;
-      for (const [lang, text] of Object.entries(prop.value)) {
+      for (const langString of this.normalizeLangStrings(prop.value)) {
         lines.push(this.indentLine('<langString>'));
         this.indent++;
-        lines.push(this.indentLine(`<language>${this.escapeXml(lang)}</language>`));
-        lines.push(this.indentLine(`<text>${this.escapeXml(String(text))}</text>`));
+        lines.push(this.indentLine(`<language>${this.escapeXml(langString.language)}</language>`));
+        lines.push(this.indentLine(`<text>${this.escapeXml(langString.text)}</text>`));
         this.indent--;
         lines.push(this.indentLine('</langString>'));
       }
@@ -246,6 +252,60 @@ export class XMLElementSerializer {
     return lines;
   }
 
+  private serializeEntity(entity: any): string[] {
+    const lines: string[] = [this.indentLine('<entity>')];
+    this.indent++;
+    this.addCommonFields(lines, entity);
+    lines.push(this.indentLine(`<entityType>${entity.entityType}</entityType>`));
+    if (entity.globalAssetId) {
+      lines.push(this.indentLine(`<globalAssetId>${this.escapeXml(entity.globalAssetId)}</globalAssetId>`));
+    }
+    if (Array.isArray(entity.statements) && entity.statements.length > 0) {
+      lines.push(this.indentLine('<statements>'));
+      this.indent++;
+      for (const statement of entity.statements) {
+        lines.push(...this.serializeElement(statement));
+      }
+      this.indent--;
+      lines.push(this.indentLine('</statements>'));
+    }
+    this.indent--;
+    lines.push(this.indentLine('</entity>'));
+    return lines;
+  }
+
+  private serializeOperation(operation: any): string[] {
+    const lines: string[] = [this.indentLine('<operation>')];
+    this.indent++;
+    this.addCommonFields(lines, operation);
+    this.serializeOperationVariables(lines, 'inputVariables', operation.inputVariables);
+    this.serializeOperationVariables(lines, 'outputVariables', operation.outputVariables);
+    this.serializeOperationVariables(lines, 'inoutputVariables', operation.inoutputVariables);
+    this.indent--;
+    lines.push(this.indentLine('</operation>'));
+    return lines;
+  }
+
+  private serializeOperationVariables(lines: string[], tagName: string, variables: any): void {
+    if (!Array.isArray(variables) || variables.length === 0) return;
+
+    lines.push(this.indentLine(`<${tagName}>`));
+    this.indent++;
+    for (const variable of variables) {
+      lines.push(this.indentLine('<operationVariable>'));
+      this.indent++;
+      lines.push(this.indentLine('<value>'));
+      this.indent++;
+      lines.push(...this.serializeElement(variable.value));
+      this.indent--;
+      lines.push(this.indentLine('</value>'));
+      this.indent--;
+      lines.push(this.indentLine('</operationVariable>'));
+    }
+    this.indent--;
+    lines.push(this.indentLine(`</${tagName}>`));
+  }
+
   private addCommonFields(lines: string[], element: any): void {
     if (element.idShort) {
       lines.push(this.indentLine(`<idShort>${this.escapeXml(element.idShort)}</idShort>`));
@@ -258,11 +318,11 @@ export class XMLElementSerializer {
     if (element.description) {
       lines.push(this.indentLine('<description>'));
       this.indent++;
-      for (const [lang, text] of Object.entries(element.description)) {
+      for (const langString of this.normalizeLangStrings(element.description)) {
         lines.push(this.indentLine('<langString>'));
         this.indent++;
-        lines.push(this.indentLine(`<language>${this.escapeXml(lang)}</language>`));
-        lines.push(this.indentLine(`<text>${this.escapeXml(String(text))}</text>`));
+        lines.push(this.indentLine(`<language>${this.escapeXml(langString.language)}</language>`));
+        lines.push(this.indentLine(`<text>${this.escapeXml(langString.text)}</text>`));
         this.indent--;
         lines.push(this.indentLine('</langString>'));
       }
@@ -300,6 +360,22 @@ export class XMLElementSerializer {
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&apos;');
+  }
+
+  private normalizeLangStrings(value: unknown): Array<{ language: string; text: string }> {
+    if (Array.isArray(value)) {
+      return value.filter(
+        (item): item is { language: string; text: string } =>
+          typeof item?.language === 'string' && typeof item?.text === 'string'
+      );
+    }
+    if (value && typeof value === 'object') {
+      return Object.entries(value).map(([language, text]) => ({
+        language,
+        text: String(text),
+      }));
+    }
+    return [];
   }
 
   private indentLine(line: string): string {

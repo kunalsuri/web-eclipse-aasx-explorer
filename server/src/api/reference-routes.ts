@@ -6,6 +6,7 @@
 
 import { Router, type Request, type Response } from 'express';
 import { referenceSuggestionService } from '../services/reference-suggestion-service';
+import { loadReferenceEnvironment } from './reference-suggestion-routes';
 import type { KeyTypes } from '../../../shared/aas-v3-types';
 
 const router = Router();
@@ -123,9 +124,7 @@ router.post('/clear-cache', async (req: Request, res: Response) => {
  * This should be implemented based on your storage mechanism
  */
 async function getEnvironmentFromStorage(req: Request): Promise<any> {
-  // TODO: Implement based on your storage mechanism
-  // For now, return a mock or throw an error
-  throw new Error('getEnvironmentFromStorage not implemented');
+  return loadReferenceEnvironment(req);
 }
 
 export default router;

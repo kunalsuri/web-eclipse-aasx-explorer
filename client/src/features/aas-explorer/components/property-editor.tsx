@@ -342,8 +342,8 @@ function renderTypeSpecificEditor(
           </Label>
           <Input
             id="property-value"
-            type="number"
-            step="1"
+            type="text"
+            inputMode="numeric"
             value={value ?? ''}
             onChange={(e) => onChange(e.target.value)}
             disabled={disabled}

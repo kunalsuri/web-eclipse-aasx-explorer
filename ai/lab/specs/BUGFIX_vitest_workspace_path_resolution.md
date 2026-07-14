@@ -1,6 +1,6 @@
 <!-- Copyright (c) 2026 Kunal Suri (CEA LIST). All rights reserved. -->
 # BUGFIX: Vitest workspace path resolution `[inferred]`
-> **Status:** approved · **Author:** Codex · **Date:** 2026-07-14 · **Issue:** —
+> **Status:** in-review · **Author:** Codex · **Date:** 2026-07-14 · **Issue:** —
 >
 > **Authorization:** The user explicitly requested an end-to-end codebase repair on
 > 2026-07-14 and asked that pending failures be fixed as soon as possible.
@@ -53,6 +53,6 @@ coverage, environment, or suite-selection behavior.
    reports no broken AI-knowledge paths.
 
 ## Knowledge update on completion
-- [ ] `FEATURE_MAP.md` gotcha line added (so the next agent knows the trap)
-- [ ] `WORKLOG.md` row appended (type `bugfix`, linking this doc + review)
-- [ ] EVAL written if the hunt taught something worth keeping
+- [x] `MODULE_MAP.md` test-path note added
+- [x] `WORKLOG.md` row appended (type `bugfix`, linking this doc + review)
+- [x] EVAL not required; the durable trap is captured in the module map

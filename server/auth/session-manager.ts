@@ -3,7 +3,10 @@ import { Session } from '@shared/schema';
 import { generateSecureToken, hashToken, getTokenExpirationDate } from './jwt-utils';
 import fs from 'fs/promises';
 import path from 'path';
-import { SERVER_START_TIME } from '../index';
+
+// Captured when the session subsystem is initialized during server startup.
+// Keeping this state here avoids a circular dependency on the server entry point.
+const SERVER_START_TIME = new Date();
 
 export class SessionManager {
   private readonly sessions: Map<string, Session>;

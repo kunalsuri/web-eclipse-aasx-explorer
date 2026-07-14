@@ -1,5 +1,18 @@
 # Consolidated Project Summary
 
+> [!WARNING]
+> **Historical planning snapshot — not a current parity verdict.** The percentages
+> below were generated on October 31, 2025 and conflict with current source-backed
+> evidence. On 2026-07-14, the verified gates were: `npm run check` passed;
+> `npm test` reported 610 passed, 0 failed, and 0 skipped; `npm run build` passed;
+> and the production server returned HTTP 200. All eight committed legacy V1/V2
+> AASX fixtures also deep-equal the complete C# golden environments. Use
+> `ai/analysis/FEATURE_CATALOG.md` for current wiring status and treat this file's
+> XML, editing, plugin, and dictionary completion claims as backlog hypotheses
+> until re-audited. External AAS conformance, AASd semantic
+> fidelity, concrete plugin ports, dictionary behavior, and AML/RDF completeness
+> remain open verification or implementation work.
+
 **Generated:** October 31, 2025  
 **Last Updated:** October 31, 2025 (Phase 1 & 2 Complete)  
 **Purpose:** Unified summary of all project implementations and analyses  

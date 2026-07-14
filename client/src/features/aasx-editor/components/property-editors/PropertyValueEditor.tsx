@@ -50,8 +50,10 @@ export function PropertyValueEditor({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setValue(property.value || "");
+    const nextValue = property.value || "";
+    setValue(nextValue);
     setValueType(property.valueType);
+    setError(validateValue(nextValue, property.valueType));
   }, [property]);
 
   /**

@@ -5,6 +5,7 @@
  */
 
 import type { XMLFormat } from './xml-deserialization-service';
+import { parseStringPromise } from 'xml2js';
 
 export interface ValidationResult {
   isValid: boolean;
@@ -62,7 +63,7 @@ export class SchemaValidator {
 
     try {
       // Basic XML well-formedness check
-      this.checkWellFormed(xmlContent, errors);
+      await this.checkWellFormed(xmlContent, errors);
 
       // Check required elements
       this.checkRequiredElements(xmlContent, errors, warnings);
@@ -94,8 +95,7 @@ export class SchemaValidator {
   /**
    * Check if XML is well-formed
    */
-  private checkWellFormed(xml: string, errors: SchemaError[]): void {
-    // Check for basic XML structure
+  private async checkWellFormed(xml: string, errors: SchemaError[]): Promise<void> {
     if (!xml.includes('<?xml')) {
       errors.push({
         line: 1,
@@ -105,15 +105,13 @@ export class SchemaValidator {
       });
     }
 
-    // Check for balanced tags (simplified)
-    const openTags = xml.match(/<[^/][^>]*>/g) || [];
-    const closeTags = xml.match(/<\/[^>]+>/g) || [];
-
-    if (openTags.length !== closeTags.length) {
+    try {
+      await parseStringPromise(xml);
+    } catch (error) {
       errors.push({
         line: 0,
         column: 0,
-        message: 'Unbalanced XML tags',
+        message: error instanceof Error ? error.message : 'Malformed XML',
         path: '',
       });
     }
@@ -128,7 +126,7 @@ export class SchemaValidator {
     warnings: SchemaWarning[]
   ): void {
     // Check for environment root
-    if (!xml.includes('<environment')) {
+    if (!/<(?:[A-Za-z_][\w.-]*:)?environment(?:\s|>)/.test(xml)) {
       errors.push({
         line: 0,
         column: 0,
@@ -138,7 +136,7 @@ export class SchemaValidator {
     }
 
     // Warn if no shells
-    if (!xml.includes('<assetAdministrationShells>')) {
+    if (!/<(?:[A-Za-z_][\w.-]*:)?assetAdministrationShells(?:\s|>)/.test(xml)) {
       warnings.push({
         line: 0,
         column: 0,
@@ -148,7 +146,7 @@ export class SchemaValidator {
     }
 
     // Warn if no submodels
-    if (!xml.includes('<submodels>')) {
+    if (!/<(?:[A-Za-z_][\w.-]*:)?submodels(?:\s|>)/.test(xml)) {
       warnings.push({
         line: 0,
         column: 0,
@@ -164,7 +162,10 @@ export class SchemaValidator {
   private checkNamespace(xml: string, format: XMLFormat, errors: SchemaError[]): void {
     const expectedNamespace = 'https://admin-shell.io/aas/3/0';
 
-    if (!xml.includes(`xmlns="${expectedNamespace}"`)) {
+    const namespacePattern = new RegExp(
+      `xmlns(?::[A-Za-z_][\\w.-]*)?="${expectedNamespace.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"`
+    );
+    if (!namespacePattern.test(xml)) {
       errors.push({
         line: 0,
         column: 0,

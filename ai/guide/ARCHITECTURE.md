@@ -32,7 +32,7 @@
   (`ai/repo-profile.json` confirms `fork.isFork: false`).
 
 ## How they connect  `[inferred]`
-- **Frontend ↔ backend:** REST over HTTP — client `api/` hooks (TanStack Query)
+- **Frontend ↔ backend:** REST over HTTP — `client/src/api/` hooks (TanStack Query)
   call `server/src/api/*-routes.ts` and `server/aasx-routes.ts` endpoints mounted
   by `server/routes.ts`. Both sides also import the same domain types/logic
   directly from `shared/` at build time (not over the wire) via `@shared/*`.
@@ -54,8 +54,8 @@
 - **Plugin system is early-stage — UNSURE, needs human:** `server/src/services/`
   has `plugin-registry.ts`, `plugin-loader.ts`, `plugin-api.ts`,
   `plugin-aas-api.ts`, `plugin-options-manager.ts` and `shared/plugin-manifest.ts`
-  / `plugin-types.ts` define the contracts, but no `server/src/plugins/`
-  directory or concrete plugin implementation (e.g. a "document-shelf" or
+  / `plugin-types.ts` define the contracts, but no server-side plugins directory
+  or concrete plugin implementation (e.g. a "document-shelf" or
   "technical-data" plugin) was found in source — only in `docs/` prose and
   `.agents/architecture.md`. `.kiro/CONSOLIDATED-SUMMARY.md` tracks this as
   2/18 planned plugins implemented. Flagged in the AUDIT TODO.

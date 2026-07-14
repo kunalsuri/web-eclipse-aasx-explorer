@@ -56,6 +56,7 @@ export class XMLDeserializationService {
         explicitArray: false,
         mergeAttrs: true,
         trim: true,
+        tagNameProcessors: [(name: string) => name.replace(/^.*:/, '')],
       });
 
       // 3. Convert to AAS types
@@ -87,7 +88,7 @@ export class XMLDeserializationService {
    * Detect XML format and version
    */
   private async detectFormat(xml: string): Promise<XMLFormat> {
-    const namespaceMatch = xml.match(/xmlns="([^"]+)"/);
+    const namespaceMatch = xml.match(/xmlns(?::[A-Za-z_][\w.-]*)?="([^"]+)"/);
     if (!namespaceMatch) {
       throw new Error('No namespace found in XML');
     }
@@ -150,6 +151,7 @@ export class XMLDeserializationService {
       idShort: shell.idShort,
       displayName: this.deserializeLangStringSet(shell.displayName),
       description: this.deserializeLangStringSet(shell.description),
+      extensions: shell.extensions ? this.deserializeExtensions(shell.extensions) : undefined,
       assetInformation: shell.assetInformation ? {
         assetKind: shell.assetInformation.assetKind,
         globalAssetId: shell.assetInformation.globalAssetId,
@@ -192,17 +194,26 @@ export class XMLDeserializationService {
    * Deserialize submodel elements from XML
    */
   private deserializeSubmodelElements(elements: any): any[] {
-    // Handle both array and single element
-    const elementArray = Array.isArray(elements) ? elements : [elements];
-    return elementArray.map((elem: any) => this.deserializeElement(elem));
+    if (!elements) return [];
+    if (Array.isArray(elements)) {
+      return elements.flatMap(element => this.deserializeSubmodelElements(element));
+    }
+
+    const result: any[] = [];
+    for (const [tagName, rawValue] of Object.entries(elements)) {
+      for (const value of this.asArray(rawValue)) {
+        result.push(this.deserializeElement(value, tagName));
+      }
+    }
+    return result;
   }
 
   /**
    * Deserialize a single element from XML
    */
-  private deserializeElement(elem: any): any {
+  private deserializeElement(elem: any, tagName?: string): any {
     // Determine element type from XML tag
-    const modelType = this.getModelTypeFromXml(elem);
+    const modelType = this.getModelTypeFromXml(elem, tagName);
 
     const base = {
       modelType,
@@ -268,6 +279,22 @@ export class XMLDeserializationService {
           value: elem.value ? this.deserializeSubmodelElements(elem.value) : [],
         };
 
+      case 'Entity':
+        return {
+          ...base,
+          entityType: elem.entityType,
+          globalAssetId: elem.globalAssetId,
+          statements: elem.statements ? this.deserializeSubmodelElements(elem.statements) : [],
+        };
+
+      case 'Operation':
+        return {
+          ...base,
+          inputVariables: this.deserializeOperationVariables(elem.inputVariables),
+          outputVariables: this.deserializeOperationVariables(elem.outputVariables),
+          inoutputVariables: this.deserializeOperationVariables(elem.inoutputVariables),
+        };
+
       default:
         return base;
     }
@@ -276,7 +303,21 @@ export class XMLDeserializationService {
   /**
    * Get model type from XML element
    */
-  private getModelTypeFromXml(elem: any): string {
+  private getModelTypeFromXml(elem: any, tagName?: string): string {
+    const typesByTag: Record<string, string> = {
+      property: 'Property',
+      multiLanguageProperty: 'MultiLanguageProperty',
+      range: 'Range',
+      referenceElement: 'ReferenceElement',
+      blob: 'Blob',
+      file: 'File',
+      submodelElementCollection: 'SubmodelElementCollection',
+      submodelElementList: 'SubmodelElementList',
+      entity: 'Entity',
+      operation: 'Operation',
+    };
+    if (tagName && typesByTag[tagName]) return typesByTag[tagName];
+
     // Check for explicit modelType attribute
     if (elem.modelType) return elem.modelType;
 
@@ -290,6 +331,8 @@ export class XMLDeserializationService {
     if (keys.includes('file')) return 'File';
     if (keys.includes('submodelElementCollection')) return 'SubmodelElementCollection';
     if (keys.includes('submodelElementList')) return 'SubmodelElementList';
+    if (keys.includes('entity')) return 'Entity';
+    if (keys.includes('operation')) return 'Operation';
 
     return 'Property'; // Default fallback
   }
@@ -335,18 +378,41 @@ export class XMLDeserializationService {
   private deserializeLangStringSet(langStrings: any): any {
     if (!langStrings) return undefined;
 
-    const result: any = {};
     const langStringArray = Array.isArray(langStrings.langString)
       ? langStrings.langString
       : [langStrings.langString];
 
-    for (const ls of langStringArray) {
-      if (ls && ls.language && ls.text) {
-        result[ls.language] = ls.text;
-      }
-    }
+    const result = langStringArray
+      .filter((langString: any) => langString?.language && langString?.text !== undefined)
+      .map((langString: any) => ({
+        language: langString.language,
+        text: String(langString.text),
+      }));
+    return result.length > 0 ? result : undefined;
+  }
 
-    return Object.keys(result).length > 0 ? result : undefined;
+  private deserializeExtensions(extensions: any): any[] {
+    return this.asArray(extensions.extension).map(extension => ({
+      name: extension.name,
+      valueType: extension.valueType,
+      value: extension.value,
+    }));
+  }
+
+  private deserializeOperationVariables(variables: any): any[] | undefined {
+    if (!variables) return undefined;
+    const result = this.asArray(variables.operationVariable)
+      .map(variable => {
+        const value = this.deserializeSubmodelElements(variable?.value)[0];
+        return value ? { value } : undefined;
+      })
+      .filter((variable): variable is { value: any } => variable !== undefined);
+    return result.length > 0 ? result : undefined;
+  }
+
+  private asArray<T>(value: T | T[] | undefined): T[] {
+    if (value === undefined || value === null) return [];
+    return Array.isArray(value) ? value : [value];
   }
 }
 

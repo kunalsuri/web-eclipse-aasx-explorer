@@ -51,7 +51,10 @@ export default defineConfig({
     },
     
     // Test filtering
-    include: ['tests/**/*.test.{ts,tsx}'],
+    include: [
+      'tests/**/*.test.{ts,tsx}',
+      'client/src/**/__tests__/**/*.test.{ts,tsx}',
+    ],
     exclude: ['node_modules', 'dist', 'build'],
     
     // Timeouts

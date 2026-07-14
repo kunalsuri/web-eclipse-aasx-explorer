@@ -32,7 +32,7 @@ describe('XMLSerializationService', () => {
   // ==========================================================================
 
   describe('Extension Serialization', () => {
-    it.skip('should serialize Extension with all fields', async () => {
+    it('should serialize Extension with all fields', async () => {
       const environment: Environment = {
         assetAdministrationShells: [{
           id: 'test-aas',
@@ -48,13 +48,13 @@ describe('XMLSerializationService', () => {
       };
 
       const xml = await service.serializeEnvironment(environment);
-      expect(xml).toContain('<aas:extension>');
-      expect(xml).toContain('<aas:name>TestExtension</aas:name>');
-      expect(xml).toContain('<aas:valueType>xs:string</aas:valueType>');
-      expect(xml).toContain('<aas:value>TestValue</aas:value>');
+      expect(xml).toContain('<extension>');
+      expect(xml).toContain('<name>TestExtension</name>');
+      expect(xml).toContain('<valueType>xs:string</valueType>');
+      expect(xml).toContain('<value>TestValue</value>');
     });
 
-    it.skip('should deserialize Extension correctly', async () => {
+    it('should deserialize Extension correctly', async () => {
       const xml = `<?xml version="1.0" encoding="UTF-8"?>
         <aas:environment xmlns:aas="https://admin-shell.io/aas/3/0">
           <aas:assetAdministrationShells>
@@ -82,7 +82,7 @@ describe('XMLSerializationService', () => {
   });
 
   describe('Property Serialization', () => {
-    it.skip('should serialize Property with value', async () => {
+    it('should serialize Property with value', async () => {
       const environment: Environment = {
         submodels: [{
           id: 'test-submodel',
@@ -96,13 +96,13 @@ describe('XMLSerializationService', () => {
       };
 
       const xml = await service.serializeEnvironment(environment);
-      expect(xml).toContain('<aas:property>');
-      expect(xml).toContain('<aas:idShort>TestProperty</aas:idShort>');
-      expect(xml).toContain('<aas:valueType>xs:string</aas:valueType>');
-      expect(xml).toContain('<aas:value>TestValue</aas:value>');
+      expect(xml).toContain('<property>');
+      expect(xml).toContain('<idShort>TestProperty</idShort>');
+      expect(xml).toContain('<valueType>xs:string</valueType>');
+      expect(xml).toContain('<value>TestValue</value>');
     });
 
-    it.skip('should handle Property round-trip serialization', async () => {
+    it('should handle Property round-trip serialization', async () => {
       const original: Property = {
         modelType: AasSubmodelElements.Property,
         idShort: 'Temperature',
@@ -131,7 +131,7 @@ describe('XMLSerializationService', () => {
   });
 
   describe('MultiLanguageProperty Serialization', () => {
-    it.skip('should serialize MultiLanguageProperty', async () => {
+    it('should serialize MultiLanguageProperty', async () => {
       const mlp: MultiLanguageProperty = {
         modelType: AasSubmodelElements.MultiLanguageProperty,
         idShort: 'Description',
@@ -149,14 +149,14 @@ describe('XMLSerializationService', () => {
       };
 
       const xml = await service.serializeEnvironment(environment);
-      expect(xml).toContain('<aas:multiLanguageProperty>');
+      expect(xml).toContain('<multiLanguageProperty>');
       expect(xml).toContain('English description');
       expect(xml).toContain('Deutsche Beschreibung');
     });
   });
 
   describe('Range Serialization', () => {
-    it.skip('should serialize Range with min and max', async () => {
+    it('should serialize Range with min and max', async () => {
       const range: Range = {
         modelType: AasSubmodelElements.Range,
         idShort: 'TemperatureRange',
@@ -173,14 +173,14 @@ describe('XMLSerializationService', () => {
       };
 
       const xml = await service.serializeEnvironment(environment);
-      expect(xml).toContain('<aas:range>');
-      expect(xml).toContain('<aas:min>0</aas:min>');
-      expect(xml).toContain('<aas:max>100</aas:max>');
+      expect(xml).toContain('<range>');
+      expect(xml).toContain('<min>0</min>');
+      expect(xml).toContain('<max>100</max>');
     });
   });
 
   describe('SubmodelElementCollection Serialization', () => {
-    it.skip('should serialize nested SubmodelElementCollection', async () => {
+    it('should serialize nested SubmodelElementCollection', async () => {
       const collection: SubmodelElementCollection = {
         modelType: AasSubmodelElements.SubmodelElementCollection,
         idShort: 'Parameters',
@@ -208,12 +208,12 @@ describe('XMLSerializationService', () => {
       };
 
       const xml = await service.serializeEnvironment(environment);
-      expect(xml).toContain('<aas:submodelElementCollection>');
+      expect(xml).toContain('<submodelElementCollection>');
       expect(xml).toContain('Param1');
       expect(xml).toContain('Param2');
     });
 
-    it.skip('should handle recursive collections', async () => {
+    it('should handle recursive collections', async () => {
       const nestedCollection: SubmodelElementCollection = {
         modelType: AasSubmodelElements.SubmodelElementCollection,
         idShort: 'OuterCollection',
@@ -253,7 +253,7 @@ describe('XMLSerializationService', () => {
   });
 
   describe('Entity Serialization', () => {
-    it.skip('should serialize Entity with statements', async () => {
+    it('should serialize Entity with statements', async () => {
       const entity: Entity = {
         modelType: AasSubmodelElements.Entity,
         idShort: 'Component',
@@ -276,14 +276,14 @@ describe('XMLSerializationService', () => {
       };
 
       const xml = await service.serializeEnvironment(environment);
-      expect(xml).toContain('<aas:entity>');
-      expect(xml).toContain('<aas:entityType>CoManagedEntity</aas:entityType>');
+      expect(xml).toContain('<entity>');
+      expect(xml).toContain('<entityType>CoManagedEntity</entityType>');
       expect(xml).toContain('SerialNumber');
     });
   });
 
   describe('Operation Serialization', () => {
-    it.skip('should serialize Operation with variables', async () => {
+    it('should serialize Operation with variables', async () => {
       const operation: Operation = {
         modelType: AasSubmodelElements.Operation,
         idShort: 'Calculate',
@@ -315,9 +315,9 @@ describe('XMLSerializationService', () => {
       };
 
       const xml = await service.serializeEnvironment(environment);
-      expect(xml).toContain('<aas:operation>');
-      expect(xml).toContain('<aas:inputVariables>');
-      expect(xml).toContain('<aas:outputVariables>');
+      expect(xml).toContain('<operation>');
+      expect(xml).toContain('<inputVariables>');
+      expect(xml).toContain('<outputVariables>');
       expect(xml).toContain('InputParam');
       expect(xml).toContain('Result');
     });
@@ -328,13 +328,13 @@ describe('XMLSerializationService', () => {
   // ==========================================================================
 
   describe('Edge Cases', () => {
-    it.skip('should handle empty Environment', async () => {
+    it('should handle empty Environment', async () => {
       const environment: Environment = {};
       const xml = await service.serializeEnvironment(environment);
-      expect(xml).toContain('<aas:environment');
+      expect(xml).toContain('<environment');
     });
 
-    it.skip('should handle Environment with empty arrays', async () => {
+    it('should handle Environment with empty arrays', async () => {
       const environment: Environment = {
         assetAdministrationShells: [],
         submodels: [],
@@ -345,7 +345,7 @@ describe('XMLSerializationService', () => {
       expect(deserialized).toBeDefined();
     });
 
-    it.skip('should handle Property with undefined optional fields', async () => {
+    it('should handle Property with undefined optional fields', async () => {
       const prop: Property = {
         modelType: AasSubmodelElements.Property,
         valueType: DataTypeDefXsd.String,
@@ -365,7 +365,7 @@ describe('XMLSerializationService', () => {
   });
 
   describe('Validation', () => {
-    it.skip('should validate well-formed XML', async () => {
+    it('should validate well-formed XML', async () => {
       const xml = `<?xml version="1.0" encoding="UTF-8"?>
         <aas:environment xmlns:aas="https://admin-shell.io/aas/3/0">
         </aas:environment>`;
@@ -375,7 +375,7 @@ describe('XMLSerializationService', () => {
       expect(result.errors).toHaveLength(0);
     });
 
-    it.skip('should detect malformed XML', async () => {
+    it('should detect malformed XML', async () => {
       const xml = `<?xml version="1.0" encoding="UTF-8"?>
         <aas:environment xmlns:aas="https://admin-shell.io/aas/3/0">
           <unclosed-tag>
@@ -393,7 +393,7 @@ describe('XMLSerializationService', () => {
   // ==========================================================================
 
   describe('Complete Environment Round-Trip', () => {
-    it.skip('should handle complex Environment with all element types', async () => {
+    it('should handle complex Environment with all element types', async () => {
       const environment: Environment = {
         assetAdministrationShells: [{
           id: 'test-aas',
