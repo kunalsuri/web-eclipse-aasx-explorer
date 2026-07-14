@@ -59,6 +59,10 @@ describe('AASSearchBar', () => {
     await waitFor(() => {
       const input = screen.getByPlaceholderText(/Search by name/i);
       expect(input).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: 'Search AAS' })).toBeInTheDocument();
+      expect(
+        screen.getByText(/Search the current AAS environment/i)
+      ).toBeInTheDocument();
     });
   });
 
@@ -197,28 +201,6 @@ describe('AASSearchBar', () => {
 
   it('should call onResultSelect when result is clicked', async () => {
     const mockOnResultSelect = vi.fn();
-
-    // Mock useAASSearch with results
-    vi.mock('../../hooks/use-aas-search', () => ({
-      useAASSearch: () => ({
-        search: vi.fn(),
-        results: [
-          {
-            id: 'result-1',
-            type: 'Property',
-            idShort: 'TestProperty',
-            path: ['Submodel', 'TestProperty'],
-            matches: [],
-            score: 100,
-            element: {},
-          },
-        ],
-        isSearching: false,
-        error: null,
-        statistics: null,
-        clearResults: vi.fn(),
-      }),
-    }));
 
     render(<AASSearchBar fileId="test-file" onResultSelect={mockOnResultSelect} />);
 

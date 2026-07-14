@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { renderHook, waitFor } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
 import { usePropertyUpdate } from '../use-property-update';
 import { updateService } from '../../services/update-service';
 import { undoService } from '../../services/undo-service';
@@ -63,7 +63,9 @@ describe('usePropertyUpdate', () => {
       })
     );
 
-    await result.current.updateProperty(mockElement as any, 'new-value');
+    await act(async () => {
+      await result.current.updateProperty(mockElement as any, 'new-value');
+    });
 
     await waitFor(() => {
       expect(undoService.executeCommand).toHaveBeenCalled();
@@ -93,7 +95,9 @@ describe('usePropertyUpdate', () => {
       })
     );
 
-    await result.current.updateProperty(mockElement as any, 'new-value');
+    await act(async () => {
+      await result.current.updateProperty(mockElement as any, 'new-value');
+    });
 
     await waitFor(() => {
       expect(updateService.updatePropertyValue).toHaveBeenCalledWith(
@@ -122,9 +126,11 @@ describe('usePropertyUpdate', () => {
       })
     );
 
-    await expect(
-      result.current.updateProperty(mockElement as any, 'new-value')
-    ).rejects.toThrow('Update failed');
+    await act(async () => {
+      await expect(
+        result.current.updateProperty(mockElement as any, 'new-value')
+      ).rejects.toThrow('Update failed');
+    });
 
     await waitFor(() => {
       expect(result.current.state.error).toEqual(mockError);
@@ -150,7 +156,9 @@ describe('usePropertyUpdate', () => {
       })
     );
 
-    await result.current.updateProperty(mockElement as any, 'new-value');
+    await act(async () => {
+      await result.current.updateProperty(mockElement as any, 'new-value');
+    });
 
     await waitFor(() => {
       expect(onSuccess).toHaveBeenCalled();
@@ -176,9 +184,11 @@ describe('usePropertyUpdate', () => {
       })
     );
 
-    await expect(
-      result.current.updateProperty(mockElement as any, 'new-value')
-    ).rejects.toThrow();
+    await act(async () => {
+      await expect(
+        result.current.updateProperty(mockElement as any, 'new-value')
+      ).rejects.toThrow();
+    });
 
     await waitFor(() => {
       expect(onError).toHaveBeenCalledWith(mockError);
@@ -206,7 +216,9 @@ describe('usePropertyUpdate', () => {
       })
     );
 
-    await result.current.updateMultiLanguageProperty(mockElement as any, newValue);
+    await act(async () => {
+      await result.current.updateMultiLanguageProperty(mockElement as any, newValue);
+    });
 
     await waitFor(() => {
       expect(undoService.executeCommand).toHaveBeenCalled();
@@ -232,7 +244,9 @@ describe('usePropertyUpdate', () => {
       })
     );
 
-    await result.current.update(mockElement as any, newValue);
+    await act(async () => {
+      await result.current.update(mockElement as any, newValue);
+    });
 
     await waitFor(() => {
       expect(undoService.executeCommand).toHaveBeenCalled();

@@ -8,7 +8,7 @@ how do we measure that quantitatively instead of guessing?*
 > **Recovery update — 2026-07-14:** The XML-stub and legacy-fixture blockers
 > recorded below are historical findings. The current parser migrates all eight
 > committed V1/V2 fixtures and deep-compares their complete environments with the
-> C# goldens; `npm test` is 610 passed / 0 failed / 0 skipped. This does not replace
+> C# goldens; `npm test` is 755 passed / 0 failed / 0 skipped. This does not replace
 > the still-open official AAS conformance, AASd semantic-fidelity, or complete
 > C#-surface parity work described in this document. `[inferred]`
 

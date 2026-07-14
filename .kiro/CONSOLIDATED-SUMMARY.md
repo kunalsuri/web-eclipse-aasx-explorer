@@ -4,7 +4,7 @@
 > **Historical planning snapshot — not a current parity verdict.** The percentages
 > below were generated on October 31, 2025 and conflict with current source-backed
 > evidence. On 2026-07-14, the verified gates were: `npm run check` passed;
-> `npm test` reported 610 passed, 0 failed, and 0 skipped; `npm run build` passed;
+> `npm test` reported 755 passed, 0 failed, and 0 skipped; `npm run build` passed;
 > and the production server returned HTTP 200. All eight committed legacy V1/V2
 > AASX fixtures also deep-equal the complete C# golden environments. Use
 > `ai/analysis/FEATURE_CATALOG.md` for current wiring status and treat this file's

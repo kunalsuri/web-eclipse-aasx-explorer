@@ -22,7 +22,7 @@
 ## Evidence available to the fresh reviewer
 
 - `npm run check`: pass.
-- `npm test`: 610 passed, 0 failed, 0 skipped.
+- `npm test`: 755 passed, 0 failed, 0 skipped across 51 files.
 - `npm run build`: pass; emits `dist/public/index.html` and `dist/server.js`.
 - `node --check dist/server.js`: pass.
 - Production smoke: `npm start` served `/` at HTTP 200 on 127.0.0.1:5000.

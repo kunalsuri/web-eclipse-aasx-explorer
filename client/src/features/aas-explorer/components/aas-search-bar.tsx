@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/command';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { useAASSearch } from '../hooks/use-aas-search';
 import type { SearchResult } from '../../../../../shared/aas-search-types';
 
@@ -127,6 +128,10 @@ export function AASSearchBar({ fileId, onResultSelect, placeholder }: AASSearchB
 
       {/* Search dialog */}
       <CommandDialog open={open} onOpenChange={setOpen}>
+        <DialogTitle className="sr-only">Search AAS</DialogTitle>
+        <DialogDescription className="sr-only">
+          Search the current AAS environment by name, value, or description.
+        </DialogDescription>
         <CommandInput
           placeholder="Search by name, value, description..."
           value={query}

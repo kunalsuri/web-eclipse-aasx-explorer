@@ -10,11 +10,14 @@ The default Vitest include pattern collects only `tests/**`, silently excluding
 15 client suites under `client/src/**/__tests__`. An explicit diagnostic run of
 those suites exposed two failures: `PropertyValueEditor` does not validate an
 invalid initial boolean or fractional integer until the user changes or saves it.
+The same run reports an inaccessible search dialog and a nested mock that Vitest
+warns will become an error in a future release.
 
 ## Expected
 The default test command collects both centralized and colocated suites, and the
 editor shows the declared type's validation error as soon as an invalid property
-is loaded.
+is loaded. The activated suites should not introduce avoidable accessibility,
+mock-hoisting, or unwrapped React-state warnings.
 
 ## Reproduction
 Run the colocated suites with the same Vitest setup. Before the fix, 143 tests
@@ -26,6 +29,9 @@ pass and the two initial-value validation assertions fail.
 | `tests/setup/vitest.config.ts` | stable test gate | Include colocated client suites in the default command |
 | `client/src/features/aasx-editor/components/property-editors/PropertyValueEditor.tsx` | ours | Validate whenever the input property changes |
 | `client/src/features/aasx-editor/components/property-editors/__tests__/PropertyValueEditor.test.tsx` | ours | Existing permanent regressions become part of the gate |
+| `client/src/features/aas-explorer/components/aas-search-bar.tsx` | ours | Give the command dialog an accessible name and description |
+| `client/src/features/aas-explorer/components/__tests__/aas-search-bar.test.tsx` | ours | Lock the accessible dialog contract and remove a nested mock |
+| `client/src/features/aas-explorer/hooks/__tests__/use-property-update.test.ts` | ours | Wrap asynchronous hook state transitions in React `act` |
 | `ai/analysis/FEATURE_CATALOG.md` | n/a (docs) | Record the complete test layout |
 | `ai/lab/WORKLOG.md` | n/a (docs) | Append the ledger row |
 

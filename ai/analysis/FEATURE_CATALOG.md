@@ -16,12 +16,12 @@
   not-implemented responses.
 
 This is a single-file catalog. The optional backend/frontend split files remain
-scaffolds and are not authoritative. Test layout is hybrid: active default-suite
-tests live under `tests/`; 15 colocated `client/src/**/__tests__/` files exist,
-but `tests/setup/vitest.config.ts` does not include them. The centralized XML,
-property-editing, and undo/redo contracts are active in the default suite.
+scaffolds and are not authoritative. Test layout is hybrid: the default suite
+collects both centralized `tests/**` files and all 15 colocated
+`client/src/**/__tests__/` files. The XML, property-editing, search, clipboard,
+and undo/redo contracts are active in the default suite.
 
-Verification snapshot on 2026-07-14: `npm test` completed with 610 passed,
+Verification snapshot on 2026-07-14: `npm test` completed with 755 passed,
 0 failed, and 0 skipped tests. The eight legacy V1/V2 AASX fixtures now compare
 their complete TypeScript environments with the committed C# golden environments,
 not just element counts, and all eight comparisons pass.
@@ -147,7 +147,7 @@ role middleware.
 | Backend | `server/aasx-routes.ts` file/environment endpoints | `[inferred]` |
 | Domain | `shared/aas-parser.ts`, `shared/aas-v3-types.ts` | `[inferred]` |
 | Persistence | Parsed environment files under `data/aasx/` | `[inferred]` |
-| Tests | `tests/integration/golden-master/aasx-parser.test.ts` deep-compares all eight complete environments with C# goldens; colocated property/tree tests remain outside the default test include | `[inferred]` |
+| Tests | `tests/integration/golden-master/aasx-parser.test.ts` deep-compares all eight complete environments with C# goldens; colocated property/tree tests run in the default suite | `[inferred]` |
 
 - **Related:** F03, F05, F07, F08.
 
@@ -181,7 +181,7 @@ role middleware.
 | Client logic | `client/src/features/aas-explorer/hooks/use-clipboard.ts`, `client/src/features/aas-explorer/services/undo-service.ts`, `client/src/features/aas-explorer/services/bulk-operations-service.ts` | `[inferred]` |
 | Backend | `server/src/api/clipboard-routes.ts`, `server/src/services/clipboard-manager.ts` | `[inferred]` |
 | Persistence | Process memory on the server; localStorage fallback on the client | `[inferred]` |
-| Tests | `tests/unit/server/services/clipboard-manager.test.ts`, `tests/integration/ui/undo-redo-flow.test.tsx`; colocated clipboard/undo tests remain outside the default include | `[inferred]` |
+| Tests | `tests/unit/server/services/clipboard-manager.test.ts`, `tests/integration/ui/undo-redo-flow.test.tsx`, and colocated clipboard/undo suites all run by default | `[inferred]` |
 
 - **Related:** F05.
 
@@ -214,7 +214,7 @@ role middleware.
 | Backend | `server/aasx-routes.ts`, `server/src/api/reference-suggestion-routes.ts` | `[inferred]` |
 | Core | `server/src/services/aas-search-service.ts`, `server/src/services/reference-suggestion-service.ts`, `shared/aas-search-engine.ts` | `[inferred]` |
 | Persistence | In-memory indexes/caches; recent client searches use localStorage | `[inferred]` |
-| Tests | `tests/unit/server/api/reference-suggestion-routes.test.ts` covers environment selection; the colocated search-bar test remains outside the default config | `[inferred]` |
+| Tests | `tests/unit/server/api/reference-suggestion-routes.test.ts` covers environment selection; the colocated search-bar suite runs by default | `[inferred]` |
 
 - **Related:** F04, F05, F09.
 

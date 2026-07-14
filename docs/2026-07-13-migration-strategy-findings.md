@@ -19,7 +19,7 @@ self-reported percentages. Read it alongside task 4 below.
 > the user's request for full translation accuracy. Commit `86c32d7` implements
 > legacy XML migration and requires complete deep equality for all eight committed
 > C# golden environments. Current gates are `npm run check` passing and `npm test`
-> at 610 passed / 0 failed / 0 skipped. A clean production build/start path was
+> at 755 passed / 0 failed / 0 skipped. A clean production build/start path was
 > also repaired and smoke-tested at HTTP 200. The remaining roadmap items are not
 > erased by these results; see tasks 5–12 and the current source-backed feature
 > catalog in `ai/analysis/FEATURE_CATALOG.md`.
@@ -503,7 +503,7 @@ are done and merged to `main` ([PR #17](https://github.com/kunalsuri/web-eclipse
 [PR #18](https://github.com/kunalsuri/web-eclipse-aasx-explorer/pull/18),
 [PR #21](https://github.com/kunalsuri/web-eclipse-aasx-explorer/pull/21)), plus
 task 4 in commit `86c32d7`.
-`npm run check` passes, `npm test` is 610/0/0, and `npm audit` is
+`npm run check` passes, `npm test` is 755/0/0, and `npm audit` is
 4 moderate/0 high/0 critical. All
 Dependabot PRs as of this writing are closed (either merged-equivalent or
 auto-closed as redundant) — no open PRs were recorded in that earlier check.
