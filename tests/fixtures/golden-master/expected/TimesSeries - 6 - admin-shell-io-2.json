@@ -1,0 +1,1303 @@
+{
+  "sourceFile": "TimesSeries - 6 - admin-shell-io-2.aasx",
+  "sourceFileSizeBytes": 8926,
+  "sourceFileSha256": "d9c7382b56456412e3c48574303f6dd45717c4539e14d03b70db8e3fd1513100",
+  "parse": {
+    "success": true,
+    "error": null,
+    "diagnostics": [
+      "ValueType  not found for property sourceType",
+      "ValueType  not found for property sourceAddress",
+      "ValueType  not found for property sampleStatus",
+      "ValueType  not found for property sampleMode",
+      "ValueType  not found for property sampleRate",
+      "ValueType  not found for property maxSamples",
+      "ValueType  not found for property actualSamples",
+      "ValueType  not found for property maxSamplesInCollection",
+      "ValueType  not found for property actualSamplesInCollection",
+      "ValueType  not found for property lowDataIndex",
+      "ValueType  not found for property highDataIndex",
+      "ValueType  not found for property timeStamp",
+      "ValueType  not found for property varInt1",
+      "ValueType  not found for property varInt2",
+      "ValueType  not found for property varFloat3",
+      "ValueType  not found for property timeStamp",
+      "ValueType  not found for property varInt1",
+      "ValueType  not found for property varInt2",
+      "ValueType  not found for property varFloat3",
+      "ValueType  not found for property timeStamp",
+      "ValueType  not found for property varInt1",
+      "ValueType  not found for property varInt2",
+      "ValueType  not found for property varFloat3",
+      "ValueType  not found for property timeStamp",
+      "ValueType  not found for property varInt1",
+      "ValueType  not found for property varInt2",
+      "ValueType  not found for property varFloat3",
+      "ValueType  not found for property varInt1",
+      "ValueType  not found for property varInt2",
+      "ValueType  not found for property varFloat3",
+      "ValueType  not found for property sourceType",
+      "ValueType  not found for property sourceAddress",
+      "ValueType  not found for property sampleStatus",
+      "ValueType  not found for property sampleMode",
+      "ValueType  not found for property sampleRate",
+      "ValueType  not found for property maxSamples",
+      "ValueType  not found for property actualSamples",
+      "ValueType  not found for property maxSamplesInCollection",
+      "ValueType  not found for property actualSamplesInCollection",
+      "ValueType  not found for property lowDataIndex",
+      "ValueType  not found for property highDataIndex",
+      "ValueType  not found for property timeStamp",
+      "ValueType  not found for property varInt1",
+      "ValueType  not found for property varInt2",
+      "ValueType  not found for property varFloat3",
+      "ValueType  not found for property timeStamp",
+      "ValueType  not found for property varInt1",
+      "ValueType  not found for property varInt2",
+      "ValueType  not found for property varFloat3",
+      "ValueType  not found for property timeStamp",
+      "ValueType  not found for property varInt1",
+      "ValueType  not found for property varInt2",
+      "ValueType  not found for property varFloat3",
+      "ValueType  not found for property timeStamp",
+      "ValueType  not found for property varInt1",
+      "ValueType  not found for property varInt2",
+      "ValueType  not found for property varFloat3",
+      "ValueType  not found for property varInt1",
+      "ValueType  not found for property varInt2",
+      "ValueType  not found for property varFloat3",
+      "ValueType  not found for property sourceType",
+      "ValueType  not found for property sourceAddress",
+      "ValueType  not found for property sampleStatus",
+      "ValueType  not found for property sampleMode",
+      "ValueType  not found for property sampleRate",
+      "ValueType  not found for property maxSamples",
+      "ValueType  not found for property actualSamples",
+      "ValueType  not found for property maxSamplesInCollection",
+      "ValueType  not found for property actualSamplesInCollection",
+      "ValueType  not found for property lowDataIndex",
+      "ValueType  not found for property highDataIndex",
+      "ValueType  not found for property timeStamp",
+      "ValueType  not found for property varInt1",
+      "ValueType  not found for property varInt2",
+      "ValueType  not found for property varFloat3",
+      "ValueType  not found for property timeStamp",
+      "ValueType  not found for property varInt1",
+      "ValueType  not found for property varInt2",
+      "ValueType  not found for property varFloat3",
+      "ValueType  not found for property timeStamp",
+      "ValueType  not found for property varInt1",
+      "ValueType  not found for property varInt2",
+      "ValueType  not found for property varFloat3",
+      "ValueType  not found for property timeStamp",
+      "ValueType  not found for property varInt1",
+      "ValueType  not found for property varInt2",
+      "ValueType  not found for property varFloat3",
+      "ValueType  not found for property timeStamp",
+      "ValueType  not found for property varInt1",
+      "ValueType  not found for property varInt2",
+      "ValueType  not found for property varFloat3",
+      "ValueType  not found for property varInt1",
+      "ValueType  not found for property varInt2",
+      "ValueType  not found for property varFloat3",
+      "ValueType  not found for property sourceType",
+      "ValueType  not found for property sourceAddress",
+      "ValueType  not found for property username",
+      "ValueType  not found for property password",
+      "ValueType  not found for property opcNode1",
+      "ValueType  not found for property opcNode2",
+      "ValueType  not found for property sampleStatus",
+      "ValueType  not found for property sampleMode",
+      "ValueType  not found for property sampleRate",
+      "ValueType  not found for property maxSamples",
+      "ValueType  not found for property actualSamples",
+      "ValueType  not found for property maxSamplesInCollection",
+      "ValueType  not found for property actualSamplesInCollection",
+      "ValueType  not found for property lowDataIndex",
+      "ValueType  not found for property highDataIndex",
+      "ValueType  not found for property sourceType",
+      "ValueType  not found for property sourceAddress",
+      "ValueType  not found for property username",
+      "ValueType  not found for property password",
+      "ValueType  not found for property opcNode1",
+      "ValueType  not found for property opcNode2",
+      "ValueType  not found for property sampleStatus",
+      "ValueType  not found for property sampleMode",
+      "ValueType  not found for property sampleRate",
+      "ValueType  not found for property maxSamples",
+      "ValueType  not found for property actualSamples",
+      "ValueType  not found for property maxSamplesInCollection",
+      "ValueType  not found for property actualSamplesInCollection",
+      "ValueType  not found for property lowDataIndex",
+      "ValueType  not found for property highDataIndex"
+    ]
+  },
+  "validation": {
+    "success": true,
+    "error": null,
+    "isValid": false,
+    "errorCount": 1,
+    "errors": [
+      {
+        "cause": "Invariant violated:\nConcept descriptions must be either not set or have at least one item.",
+        "path": ""
+      }
+    ]
+  },
+  "summary": {
+    "assetAdministrationShellCount": 1,
+    "submodelCount": 4,
+    "conceptDescriptionCount": 0
+  },
+  "serialization": {
+    "success": true,
+    "error": null
+  },
+  "environment": {
+    "assetAdministrationShells": [
+      {
+        "idShort": "TimeSeriesAll",
+        "id": "https://example.com/ids/aas/6075_6030_4012_6948",
+        "assetInformation": {
+          "assetKind": "Instance",
+          "globalAssetId": "https://example.com/ids/asset/4465_6030_4012_0453"
+        },
+        "submodels": [
+          {
+            "type": "ModelReference",
+            "keys": [
+              {
+                "type": "Submodel",
+                "value": "https://example.com/ids/sm/2125_8082_3012_2297"
+              }
+            ]
+          },
+          {
+            "type": "ModelReference",
+            "keys": [
+              {
+                "type": "Submodel",
+                "value": "https://example.com/ids/sm/6333_8020_4012_3098"
+              }
+            ]
+          },
+          {
+            "type": "ModelReference",
+            "keys": [
+              {
+                "type": "Submodel",
+                "value": "https://example.com/ids/sm/8383_8020_4012_6218"
+              }
+            ]
+          }
+        ],
+        "modelType": "AssetAdministrationShell"
+      }
+    ],
+    "submodels": [
+      {
+        "idShort": "subTsJson",
+        "id": "https://example.com/ids/sm/2125_8082_3012_2297",
+        "kind": "Instance",
+        "submodelElements": [
+          {
+            "idShort": "StructureChange_of_whole_Submodel",
+            "semanticId": {
+              "type": "ExternalReference",
+              "keys": [
+                {
+                  "type": "GlobalReference",
+                  "value": "https://admin-shell.io/tmp/AAS/Events/StructureChangeOutwards"
+                }
+              ]
+            },
+            "observed": {
+              "type": "ModelReference",
+              "keys": [
+                {
+                  "type": "Submodel",
+                  "value": "https://example.com/ids/sm/2125_8082_3012_2297"
+                }
+              ]
+            },
+            "direction": "input",
+            "state": "off",
+            "modelType": "BasicEventElement"
+          },
+          {
+            "idShort": "UpdateValue_of_whole_Submodel",
+            "semanticId": {
+              "type": "ExternalReference",
+              "keys": [
+                {
+                  "type": "GlobalReference",
+                  "value": "https://admin-shell.io/tmp/AAS/Events/UpdateValueOutwards"
+                }
+              ]
+            },
+            "observed": {
+              "type": "ModelReference",
+              "keys": [
+                {
+                  "type": "Submodel",
+                  "value": "https://example.com/ids/sm/2125_8082_3012_2297"
+                }
+              ]
+            },
+            "direction": "input",
+            "state": "off",
+            "modelType": "BasicEventElement"
+          },
+          {
+            "idShort": "TimeSeries_Phoenix",
+            "value": [
+              {
+                "idShort": "sourceType",
+                "valueType": "xs:string",
+                "value": "json",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "sourceAddress",
+                "valueType": "xs:string",
+                "value": "http://127.0.0.1:51710/data4",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "sampleStatus",
+                "valueType": "xs:string",
+                "value": "start",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "sampleMode",
+                "valueType": "xs:string",
+                "value": "continuous",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "sampleRate",
+                "valueType": "xs:string",
+                "value": "500",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "maxSamples",
+                "valueType": "xs:string",
+                "value": "100",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "actualSamples",
+                "valueType": "xs:string",
+                "value": "98",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "maxSamplesInCollection",
+                "valueType": "xs:string",
+                "value": "20",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "actualSamplesInCollection",
+                "valueType": "xs:string",
+                "value": "18",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "lowDataIndex",
+                "valueType": "xs:string",
+                "value": "233138",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "highDataIndex",
+                "valueType": "xs:string",
+                "value": "233141",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "data",
+                "value": [
+                  {
+                    "idShort": "data233138",
+                    "value": [
+                      {
+                        "idShort": "timeStamp",
+                        "valueType": "xs:string",
+                        "value": "21-07-13 17:04:21.907,17:04:22.410,17:04:22.918,17:04:23.423,17:04:23.937,17:04:24.440,17:04:24.945,17:04:25.447,17:04:25.959,17:04:26.462,17:04:26.966,17:04:27.469,17:04:27.974,17:04:28.479,17:04:28.984,17:04:29.488,17:04:30.050,17:04:30.552,17:04:31.060,17:04:31.562",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varInt1",
+                        "valueType": "xs:string",
+                        "value": "-10,-9,-7,-5,-3,-2,0,1,4,5,7,8,10,12,14,15,17,18,21,22",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varInt2",
+                        "valueType": "xs:string",
+                        "value": "8,9,0,2,4,5,7,8,0,1,3,4,6,8,10,0,2,3,6,7",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varFloat3",
+                        "valueType": "xs:string",
+                        "value": "0,75098723,0,2879033,0,53657293,-0,4121185,0,9589243,-0,14112,0,0,84147096,0,6569866,0,4121185,-0,53657293,0,9906074,-0,75098723,0,8366556,-0,13235176,0,95637596,-0,9880316,0,5514267,-0,6435381,0,96379536",
+                        "modelType": "Property"
+                      }
+                    ],
+                    "modelType": "SubmodelElementCollection"
+                  },
+                  {
+                    "idShort": "data233139",
+                    "value": [
+                      {
+                        "idShort": "timeStamp",
+                        "valueType": "xs:string",
+                        "value": "21-07-13 17:04:32.068,17:04:32.571,17:04:33.075,17:04:33.582,17:04:34.087,17:04:34.590,17:04:35.097,17:04:35.601,17:04:36.110,17:04:36.614,17:04:37.121,17:04:37.624,17:04:38.130,17:04:38.634,17:04:39.140,17:04:39.643,17:04:40.148,17:04:40.653,17:04:41.163,17:04:41.667",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varInt1",
+                        "valueType": "xs:string",
+                        "value": "24,25,27,29,31,32,34,35,38,39,41,42,44,46,48,49,51,52,55,56",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varInt2",
+                        "valueType": "xs:string",
+                        "value": "9,10,1,3,5,6,8,9,1,2,4,5,7,9,0,1,3,4,7,8",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varFloat3",
+                        "valueType": "xs:string",
+                        "value": "-0,8317748,0,8509035,-0,76825464,0,9866276,-0,99975514,0,43616477,-0,9661178,0,1673557,-0,8979277,0,7738907,-0,67677194,-0,38778165,-0,44411266,0,3132288,-0,92345846,0,035398304,0,10598751,-0,9482821,-0,99920684,-0,50636566",
+                        "modelType": "Property"
+                      }
+                    ],
+                    "modelType": "SubmodelElementCollection"
+                  },
+                  {
+                    "idShort": "data233140",
+                    "value": [
+                      {
+                        "idShort": "timeStamp",
+                        "valueType": "xs:string",
+                        "value": "21-07-13 17:04:42.173,17:04:42.676,17:04:43.181,17:04:43.687,17:04:44.192,17:04:44.696,17:04:45.201,17:04:45.704,17:04:46.215,17:04:46.718,17:04:47.224,17:04:47.727,17:04:48.232,17:04:48.737,17:04:49.243,17:04:49.746,17:04:50.250,17:04:50.753,17:04:51.261,17:04:51.764",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varInt1",
+                        "valueType": "xs:string",
+                        "value": "58,59,61,63,65,66,68,69,72,73,75,76,78,80,82,83,85,86,89,90",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varInt2",
+                        "valueType": "xs:string",
+                        "value": "10,0,2,4,6,7,9,10,2,3,5,6,8,10,1,2,4,5,8,9",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varFloat3",
+                        "valueType": "xs:string",
+                        "value": "-0,3216224,-0,7271425,0,8167426,-0,09718191,-0,6896979,-0,9819522,0,49871317,-0,995687,-0,1934734,-0,81160337,0,088368684,-0,7904332,0,9802396,-0,4910216,0,609044,-0,97464865,0,8064006,-0,061920337,0,21942526,-0,97845036",
+                        "modelType": "Property"
+                      }
+                    ],
+                    "modelType": "SubmodelElementCollection"
+                  },
+                  {
+                    "idShort": "data233141",
+                    "value": [
+                      {
+                        "idShort": "timeStamp",
+                        "valueType": "xs:string",
+                        "value": "21-07-13 17:04:52.271,17:04:52.774,17:04:53.279,17:04:53.787,17:04:54.293,17:04:54.798,17:04:55.306,17:04:55.810,17:04:56.318,17:04:56.821,17:04:57.327,17:04:57.830,17:04:58.334,17:04:58.840,17:04:59.346,17:04:59.848,17:05:00.353,17:05:00.856,17:05:01.370,17:05:01.875",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varInt1",
+                        "valueType": "xs:string",
+                        "value": "92,93,95,97,99,100,-99,-98,-95,-94,-92,-91,-89,-87,-85,-84,-82,-81,-78,-77",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varInt2",
+                        "valueType": "xs:string",
+                        "value": "0,1,3,5,7,8,10,0,3,4,6,7,9,0,2,3,5,6,9,10",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varFloat3",
+                        "valueType": "xs:string",
+                        "value": "0,99779725,-0,47555017,0,9765909,-0,936462,0,87757534,-0,80115265,-0,87757534,-0,07075223,-0,9765909,0,6019999,-0,99779725,0,35491017,-0,21942526,0,8817846,-0,8064006,-0,20214988,-0,609044,-0,46774516,-0,9802396,0,22805226",
+                        "modelType": "Property"
+                      }
+                    ],
+                    "modelType": "SubmodelElementCollection"
+                  }
+                ],
+                "modelType": "SubmodelElementCollection"
+              },
+              {
+                "idShort": "jsonData",
+                "value": [
+                  {
+                    "idShort": "varInt1",
+                    "valueType": "xs:string",
+                    "value": "-47",
+                    "modelType": "Property"
+                  },
+                  {
+                    "idShort": "varInt2",
+                    "valueType": "xs:string",
+                    "value": "7",
+                    "modelType": "Property"
+                  },
+                  {
+                    "idShort": "varFloat3",
+                    "valueType": "xs:string",
+                    "value": "-0,7331903",
+                    "modelType": "Property"
+                  }
+                ],
+                "modelType": "SubmodelElementCollection"
+              }
+            ],
+            "modelType": "SubmodelElementCollection"
+          },
+          {
+            "idShort": "TimeSeries_Bosch",
+            "value": [
+              {
+                "idShort": "sourceType",
+                "valueType": "xs:string",
+                "value": "json",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "sourceAddress",
+                "valueType": "xs:string",
+                "value": "http://127.0.0.1:51710/data4",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "sampleStatus",
+                "valueType": "xs:string",
+                "value": "start",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "sampleMode",
+                "valueType": "xs:string",
+                "value": "continuous",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "sampleRate",
+                "valueType": "xs:string",
+                "value": "1000",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "maxSamples",
+                "valueType": "xs:string",
+                "value": "50",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "actualSamples",
+                "valueType": "xs:string",
+                "value": "44",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "maxSamplesInCollection",
+                "valueType": "xs:string",
+                "value": "10",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "actualSamplesInCollection",
+                "valueType": "xs:string",
+                "value": "4",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "lowDataIndex",
+                "valueType": "xs:string",
+                "value": "215783",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "highDataIndex",
+                "valueType": "xs:string",
+                "value": "215786",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "data",
+                "value": [
+                  {
+                    "idShort": "data215783",
+                    "value": [
+                      {
+                        "idShort": "timeStamp",
+                        "valueType": "xs:string",
+                        "value": "21-07-13 17:04:26.864,17:04:27.871,17:04:28.881,17:04:29.948,17:04:30.955,17:04:31.965,17:04:32.973,17:04:33.984,17:04:34.995,17:04:36.005",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varInt1",
+                        "valueType": "xs:string",
+                        "value": "6,9,13,16,19,23,26,30,33,36",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varInt2",
+                        "valueType": "xs:string",
+                        "value": "2,5,9,1,4,8,0,4,7,10",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varFloat3",
+                        "valueType": "xs:string",
+                        "value": "-0,5440211,-0,2879033,-0,84622043,0,2709058,0,5290827,-0,15862267,0,90178835,-0,5587891,0,636738,0,92002606",
+                        "modelType": "Property"
+                      }
+                    ],
+                    "modelType": "SubmodelElementCollection"
+                  },
+                  {
+                    "idShort": "data215784",
+                    "value": [
+                      {
+                        "idShort": "timeStamp",
+                        "valueType": "xs:string",
+                        "value": "21-07-13 17:04:37.017,17:04:38.027,17:04:39.037,17:04:40.045,17:04:41.057,17:04:42.071,17:04:43.079,17:04:44.090,17:04:45.099,17:04:46.107",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varInt1",
+                        "valueType": "xs:string",
+                        "value": "40,43,47,50,53,57,60,64,67,70",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varInt2",
+                        "valueType": "xs:string",
+                        "value": "3,6,10,2,5,9,1,5,8,0",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varFloat3",
+                        "valueType": "xs:string",
+                        "value": "0,25382337,0,9995202,0,7331903,0,89399666,0,6832617,0,9948268,0,9268185,0,94543535,0,58061117,0,32999083",
+                        "modelType": "Property"
+                      }
+                    ],
+                    "modelType": "SubmodelElementCollection"
+                  },
+                  {
+                    "idShort": "data215785",
+                    "value": [
+                      {
+                        "idShort": "timeStamp",
+                        "valueType": "xs:string",
+                        "value": "21-07-13 17:04:47.121,17:04:48.130,17:04:49.140,17:04:50.148,17:04:51.155,17:04:52.168,17:04:53.176,17:04:54.190,17:04:55.202,17:04:56.213",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varInt1",
+                        "valueType": "xs:string",
+                        "value": "74,77,81,84,87,91,94,98,-100,-97",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varInt2",
+                        "valueType": "xs:string",
+                        "value": "4,7,0,3,6,10,2,6,9,1",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varFloat3",
+                        "valueType": "xs:string",
+                        "value": "0,86896574,-0,22805226,0,46774516,0,20214988,-0,8817846,-0,35491017,-0,6019999,0,07075223,0,80115265,0,936462",
+                        "modelType": "Property"
+                      }
+                    ],
+                    "modelType": "SubmodelElementCollection"
+                  },
+                  {
+                    "idShort": "data215786",
+                    "value": [
+                      {
+                        "idShort": "timeStamp",
+                        "valueType": "xs:string",
+                        "value": "21-07-13 17:04:57.225,17:04:58.232,17:04:59.244,17:05:00.251,17:05:01.262,17:05:02.279,17:05:03.303,17:05:04.324,17:05:05.337,17:05:06.346",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varInt1",
+                        "valueType": "xs:string",
+                        "value": "-93,-90,-86,-83,-80,-76,-73,-69,-66,-63",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varInt2",
+                        "valueType": "xs:string",
+                        "value": "5,8,1,4,7,0,3,7,10,2",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varFloat3",
+                        "valueType": "xs:string",
+                        "value": "0,47555017,0,97845036,0,061920337,0,97464865,0,4910216,0,7904332,0,81160337,0,995687,0,9819522,0,09718191",
+                        "modelType": "Property"
+                      }
+                    ],
+                    "modelType": "SubmodelElementCollection"
+                  }
+                ],
+                "modelType": "SubmodelElementCollection"
+              },
+              {
+                "idShort": "jsonData",
+                "value": [
+                  {
+                    "idShort": "varInt1",
+                    "valueType": "xs:string",
+                    "value": "-49",
+                    "modelType": "Property"
+                  },
+                  {
+                    "idShort": "varInt2",
+                    "valueType": "xs:string",
+                    "value": "5",
+                    "modelType": "Property"
+                  },
+                  {
+                    "idShort": "varFloat3",
+                    "valueType": "xs:string",
+                    "value": "-0,035398304",
+                    "modelType": "Property"
+                  }
+                ],
+                "modelType": "SubmodelElementCollection"
+              }
+            ],
+            "modelType": "SubmodelElementCollection"
+          },
+          {
+            "idShort": "TimeSeries_Festo",
+            "value": [
+              {
+                "idShort": "sourceType",
+                "valueType": "xs:string",
+                "value": "json",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "sourceAddress",
+                "valueType": "xs:string",
+                "value": "http://127.0.0.1:51710/data4",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "sampleStatus",
+                "valueType": "xs:string",
+                "value": "start",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "sampleMode",
+                "valueType": "xs:string",
+                "value": "continuous",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "sampleRate",
+                "valueType": "xs:string",
+                "value": "2500",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "maxSamples",
+                "valueType": "xs:string",
+                "value": "300",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "actualSamples",
+                "valueType": "xs:string",
+                "value": "299",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "maxSamplesInCollection",
+                "valueType": "xs:string",
+                "value": "50",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "actualSamplesInCollection",
+                "valueType": "xs:string",
+                "value": "49",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "lowDataIndex",
+                "valueType": "xs:string",
+                "value": "17257",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "highDataIndex",
+                "valueType": "xs:string",
+                "value": "17261",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "data",
+                "value": [
+                  {
+                    "idShort": "data17257",
+                    "value": [
+                      {
+                        "idShort": "timeStamp",
+                        "valueType": "xs:string",
+                        "value": "21-07-13 16:52:36.893,16:52:39.426,16:52:41.948,16:52:44.474,16:52:46.997,16:52:49.530,16:52:52.051,16:52:54.576,16:52:57.097,16:52:59.620,16:53:02.144,16:53:04.676,16:53:07.204,16:53:09.731,16:53:12.252,16:53:14.777,16:53:17.299,16:53:19.828,16:53:22.351,16:53:24.871,16:53:27.392,16:53:29.923,16:53:32.442,16:53:34.968,16:53:37.488,16:53:40.014,16:53:42.539,16:53:45.059,16:53:47.581,16:53:50.106,16:53:52.625,16:53:55.147,16:53:57.671,16:54:00.193,16:54:02.726,16:54:05.265,16:54:07.789,16:54:10.310,16:54:12.842,16:54:15.367,16:54:17.891,16:54:20.412,16:54:22.935,16:54:25.454,16:54:27.974,16:54:30.495,16:54:33.015,16:54:35.540,16:54:38.070,16:54:40.592",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varInt1",
+                        "valueType": "xs:string",
+                        "value": "26,35,43,52,60,69,77,86,94,-98,-90,-81,-73,-64,-56,-47,-39,-30,-22,-13,-5,4,12,21,29,38,46,55,63,72,80,89,97,-95,-87,-78,-70,-61,-53,-44,-36,-27,-19,-10,-2,7,15,24,32,41",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varInt2",
+                        "valueType": "xs:string",
+                        "value": "8,6,3,1,9,7,4,2,10,8,5,3,0,9,6,4,1,10,7,5,2,0,8,6,3,1,9,7,4,2,10,8,5,3,0,9,6,4,1,10,7,5,2,0,8,6,3,1,9,7",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varFloat3",
+                        "valueType": "xs:string",
+                        "value": "0,90178835,0,1673557,0,9995202,-0,9482821,0,9268185,-0,995687,-0,22805226,-0,061920337,-0,6019999,-0,07075223,0,97845036,-0,46774516,0,81160337,-0,94543535,0,50636566,-0,7331903,-0,7738907,0,5587891,-0,96379536,0,84622043,-0,4121185,0,6569866,0,8366556,-0,6435381,0,9866276,-0,8979277,0,3132288,-0,99920684,-0,09718191,-0,1934734,-0,4910216,0,21942526,-0,936462,-0,9765909,0,8817846,-0,9802396,-0,32999083,-0,8167426,-0,6832617,0,44411266,-0,92002606,0,76825464,-0,5290827,0,75098723,-0,14112,-0,53657293,0,95637596,-0,8317748,0,43616477,-0,67677194",
+                        "modelType": "Property"
+                      }
+                    ],
+                    "modelType": "SubmodelElementCollection"
+                  },
+                  {
+                    "idShort": "data17258",
+                    "value": [
+                      {
+                        "idShort": "timeStamp",
+                        "valueType": "xs:string",
+                        "value": "21-07-13 16:54:43.117,16:54:45.637,16:54:48.158,16:54:50.682,16:54:53.201,16:54:55.722,16:54:58.238,16:55:00.760,16:55:03.292,16:55:05.829,16:55:08.365,16:55:10.910,16:55:13.438,16:55:15.962,16:55:18.481,16:55:21.007,16:55:23.528,16:55:26.052,16:55:28.573,16:55:31.097,16:55:33.621,16:55:36.142,16:55:38.662,16:55:41.187,16:55:43.707,16:55:46.231,16:55:48.752,16:55:51.274,16:55:53.794,16:55:56.314,16:55:58.834,16:56:01.357,16:56:03.885,16:56:06.415,16:56:08.936,16:56:11.458,16:56:13.982,16:56:16.501,16:56:19.025,16:56:21.543,16:56:24.059,16:56:26.576,16:56:29.091,16:56:31.609,16:56:34.126,16:56:36.646,16:56:39.170,16:56:41.694,16:56:44.215,16:56:46.737",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varInt1",
+                        "valueType": "xs:string",
+                        "value": "49,58,66,75,83,92,100,-92,-84,-75,-67,-58,-50,-41,-33,-24,-16,-7,1,10,18,27,35,44,52,61,69,78,86,95,-98,-89,-81,-72,-64,-55,-47,-38,-30,-21,-13,-4,4,13,21,30,38,47,55,64",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varInt2",
+                        "valueType": "xs:string",
+                        "value": "4,2,10,8,5,3,0,9,6,4,1,10,7,5,2,0,8,6,3,1,9,7,4,2,10,8,5,3,0,9,6,4,1,10,7,5,2,0,8,6,3,1,9,7,4,2,10,8,5,3",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varFloat3",
+                        "valueType": "xs:string",
+                        "value": "0,035398304,-0,3216224,-0,9819522,0,088368684,-0,97464865,0,99779725,-0,80115265,-0,99779725,-0,20214988,-0,088368684,-0,58061117,0,3216224,-0,89399666,0,67677194,-0,636738,0,8317748,-0,2709058,0,53657293,0,84147096,-0,75098723,0,5514267,-0,76825464,0,1673557,-0,44411266,-0,9482821,0,8167426,-0,995687,0,9802396,-0,061920337,0,9765909,-0,07075223,-0,21942526,-0,46774516,0,1934734,-0,94543535,0,99920684,-0,7331903,0,8979277,0,5587891,0,6435381,0,84622043,-0,6569866,0,6569866,-0,84622043,-0,6435381,-0,5587891,-0,8979277,0,7331903,-0,99920684,0,94543535",
+                        "modelType": "Property"
+                      }
+                    ],
+                    "modelType": "SubmodelElementCollection"
+                  },
+                  {
+                    "idShort": "data17259",
+                    "value": [
+                      {
+                        "idShort": "timeStamp",
+                        "valueType": "xs:string",
+                        "value": "21-07-13 16:56:49.260,16:56:51.788,16:56:54.312,16:56:56.832,16:56:59.350,16:57:01.872,16:57:04.418,16:57:06.945,16:57:09.465,16:57:11.987,16:57:14.504,16:57:17.023,16:57:19.539,16:57:22.055,16:57:24.572,16:57:27.090,16:57:29.605,16:57:32.121,16:57:34.641,16:57:37.162,16:57:39.675,16:57:42.199,16:57:44.716,16:57:47.233,16:57:49.748,16:57:52.269,16:57:54.784,16:57:57.355,16:57:59.875,16:58:02.414,16:58:04.957,16:58:07.489,16:58:10.010,16:58:12.530,16:58:15.045,16:58:17.559,16:58:20.074,16:58:22.593,16:58:25.113,16:58:27.634,16:58:30.152,16:58:32.677,16:58:35.190,16:58:37.721,16:58:40.240,16:58:42.761,16:58:45.277,16:58:47.794,16:58:50.310,16:58:52.826",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varInt1",
+                        "valueType": "xs:string",
+                        "value": "72,81,89,98,-95,-86,-78,-69,-61,-52,-44,-35,-27,-18,-10,-1,7,16,24,33,41,50,58,67,75,84,92,-100,-92,-83,-75,-66,-58,-49,-41,-32,-24,-15,-7,2,10,19,27,36,44,53,61,70,78,87",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varInt2",
+                        "valueType": "xs:string",
+                        "value": "0,9,6,4,1,10,7,5,2,0,8,6,3,1,9,7,4,2,10,8,5,3,0,9,6,4,1,10,7,5,2,0,8,6,3,1,9,7,4,2,10,8,5,3,0,9,6,4,1,10",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varFloat3",
+                        "valueType": "xs:string",
+                        "value": "-0,1934734,0,46774516,0,21942526,0,07075223,-0,9765909,0,061920337,-0,9802396,0,995687,-0,8167426,0,9482821,0,44411266,-0,1673557,0,76825464,-0,5514267,0,75098723,-0,84147096,-0,53657293,0,2709058,-0,8317748,0,636738,-0,67677194,0,89399666,-0,3216224,0,58061117,0,088368684,0,20214988,0,99779725,0,80115265,-0,99779725,0,97464865,-0,088368684,0,9819522,0,3216224,-0,035398304,0,67677194,-0,43616477,0,8317748,-0,95637596,0,53657293,0,14112,-0,75098723,0,5290827,-0,76825464,0,92002606,-0,44411266,0,6832617,0,8167426,0,32999083,0,9802396,-0,8817846",
+                        "modelType": "Property"
+                      }
+                    ],
+                    "modelType": "SubmodelElementCollection"
+                  },
+                  {
+                    "idShort": "data17260",
+                    "value": [
+                      {
+                        "idShort": "timeStamp",
+                        "valueType": "xs:string",
+                        "value": "21-07-13 16:58:55.344,16:58:57.866,16:59:00.387,16:59:02.919,16:59:05.442,16:59:07.968,16:59:10.489,16:59:13.009,16:59:15.528,16:59:18.048,16:59:20.566,16:59:23.087,16:59:25.606,16:59:28.130,16:59:30.649,16:59:33.171,16:59:35.690,16:59:38.214,16:59:40.739,16:59:43.262,16:59:45.780,16:59:48.300,16:59:50.818,16:59:53.342,16:59:55.859,16:59:58.387,17:00:00.907,17:00:03.460,17:00:06.008,17:00:08.559,17:00:11.094,17:00:13.623,17:00:16.143,17:00:18.662,17:00:21.184,17:00:23.706,17:00:26.233,17:00:28.757,17:00:31.275,17:00:33.791,17:00:36.306,17:00:38.828,17:00:41.349,17:00:43.872,17:00:46.393,17:00:48.915,17:00:51.436,17:00:53.967,17:00:56.487,17:00:59.008",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varInt1",
+                        "valueType": "xs:string",
+                        "value": "95,-97,-89,-80,-72,-63,-55,-46,-38,-29,-21,-12,-4,5,13,22,30,39,47,56,64,73,81,90,98,-94,-86,-77,-69,-60,-52,-43,-35,-26,-18,-9,-1,8,16,25,33,42,50,59,67,76,84,93,-100,-91",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varInt2",
+                        "valueType": "xs:string",
+                        "value": "7,5,2,0,8,6,3,1,9,7,4,2,10,8,5,3,0,9,6,4,1,10,7,5,2,0,8,6,3,1,9,7,4,2,10,8,5,3,0,9,6,4,1,10,7,5,2,0,8,6",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varFloat3",
+                        "valueType": "xs:string",
+                        "value": "0,9765909,0,936462,-0,21942526,0,4910216,0,1934734,0,09718191,0,99920684,-0,3132288,0,8979277,-0,9866276,0,6435381,-0,8366556,-0,6569866,0,4121185,-0,84622043,0,96379536,-0,5587891,0,7738907,0,7331903,-0,50636566,0,94543535,-0,81160337,0,46774516,-0,97845036,0,07075223,0,6019999,0,061920337,0,22805226,0,995687,-0,9268185,0,9482821,-0,9995202,-0,1673557,-0,90178835,-0,5514267,0,2879033,-0,84147096,0,9906074,0,2709058,0,8509035,0,636738,-0,38778165,0,89399666,-0,7271425,0,58061117,-0,7904332,0,20214988,-0,47555017,0,80115265,0,35491017",
+                        "modelType": "Property"
+                      }
+                    ],
+                    "modelType": "SubmodelElementCollection"
+                  },
+                  {
+                    "idShort": "data17261",
+                    "value": [
+                      {
+                        "idShort": "timeStamp",
+                        "valueType": "xs:string",
+                        "value": "21-07-13 17:01:01.530,17:01:04.063,17:01:06.605,17:01:09.132,17:01:11.654,17:01:14.191,17:01:16.712,17:01:19.233,17:01:21.753,17:01:24.275,17:01:26.797,17:01:29.316,17:01:31.842,17:01:34.361,17:01:36.880,17:01:39.400,17:01:41.921,17:01:44.444,17:01:46.966,17:01:49.493,17:01:52.013,17:01:54.534,17:01:57.053,17:01:59.580,17:02:02.110,17:02:04.645,17:02:07.179,17:02:09.727,17:02:12.248,17:02:14.776,17:02:17.295,17:02:19.822,17:02:22.344,17:02:24.866,17:02:27.384,17:02:29.903,17:02:32.421,17:02:34.945,17:02:37.458,17:02:39.976,17:02:42.493,17:02:45.012,17:02:47.526,17:02:50.042,17:02:52.558,17:02:55.077,17:02:57.591,17:03:00.106,17:03:02.623,17:03:05.140",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varInt1",
+                        "valueType": "xs:string",
+                        "value": "-83,-74,-66,-57,-49,-40,-32,-23,-15,-6,2,11,19,28,36,45,53,62,70,79,87,96,-97,-88,-80,-71,-63,-54,-46,-37,-29,-20,-12,-3,5,14,22,31,39,48,56,65,73,82,90,99,-94,-85,-77,-68",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varInt2",
+                        "valueType": "xs:string",
+                        "value": "3,1,9,7,4,2,10,8,5,3,0,9,6,4,1,10,7,5,2,0,8,6,3,1,9,7,4,2,10,8,5,3,0,9,6,4,1,10,7,5,2,0,8,6,3,1,9,7,4,2",
+                        "modelType": "Property"
+                      },
+                      {
+                        "idShort": "varFloat3",
+                        "valueType": "xs:string",
+                        "value": "0,97464865,-0,86896574,0,9819522,-0,9948268,-0,035398304,-0,25382337,-0,43616477,0,15862267,-0,95637596,0,5440211,0,14112,0,1498772,0,5290827,-0,26237485,0,92002606,-0,629888,0,6832617,-0,8645514,0,32999083,-0,587795,-0,8817846,0,7086591,0,936462,-0,7958241,0,4910216,-0,9726301,0,09718191,-0,37960774,-0,3132288,0,026551154,-0,9866276,0,99177885,-0,8366556,0,9589243,0,4121185,-0,13235176,0,96379536,-0,99975514,0,7738907,-0,92345846,-0,50636566,-0,6896979,-0,81160337,0,609044,-0,97845036,0,87757534,0,6019999,-0,8064006,0,22805226,-0,49871317",
+                        "modelType": "Property"
+                      }
+                    ],
+                    "modelType": "SubmodelElementCollection"
+                  }
+                ],
+                "modelType": "SubmodelElementCollection"
+              },
+              {
+                "idShort": "jsonData",
+                "value": [
+                  {
+                    "idShort": "varInt1",
+                    "valueType": "xs:string",
+                    "value": "-54",
+                    "modelType": "Property"
+                  },
+                  {
+                    "idShort": "varInt2",
+                    "valueType": "xs:string",
+                    "value": "0",
+                    "modelType": "Property"
+                  },
+                  {
+                    "idShort": "varFloat3",
+                    "valueType": "xs:string",
+                    "value": "-0,37960774",
+                    "modelType": "Property"
+                  }
+                ],
+                "modelType": "SubmodelElementCollection"
+              }
+            ],
+            "modelType": "SubmodelElementCollection"
+          }
+        ],
+        "modelType": "Submodel"
+      },
+      {
+        "idShort": "subTsOpcDa",
+        "id": "https://example.com/ids/sm/6333_8020_4012_3098",
+        "kind": "Instance",
+        "submodelElements": [
+          {
+            "idShort": "StructureChange_of_whole_Submodel",
+            "semanticId": {
+              "type": "ExternalReference",
+              "keys": [
+                {
+                  "type": "GlobalReference",
+                  "value": "https://admin-shell.io/tmp/AAS/Events/StructureChangeOutwards"
+                }
+              ]
+            },
+            "observed": {
+              "type": "ModelReference",
+              "keys": [
+                {
+                  "type": "Submodel",
+                  "value": "https://example.com/ids/sm/6333_8020_4012_3098"
+                }
+              ]
+            },
+            "direction": "input",
+            "state": "off",
+            "modelType": "BasicEventElement"
+          },
+          {
+            "idShort": "UpdateValue_of_whole_Submodel",
+            "semanticId": {
+              "type": "ExternalReference",
+              "keys": [
+                {
+                  "type": "GlobalReference",
+                  "value": "https://admin-shell.io/tmp/AAS/Events/UpdateValueOutwards"
+                }
+              ]
+            },
+            "observed": {
+              "type": "ModelReference",
+              "keys": [
+                {
+                  "type": "Submodel",
+                  "value": "https://example.com/ids/sm/6333_8020_4012_3098"
+                }
+              ]
+            },
+            "direction": "input",
+            "state": "off",
+            "modelType": "BasicEventElement"
+          },
+          {
+            "idShort": "Time-Series_Bosch",
+            "value": [
+              {
+                "idShort": "sourceType",
+                "valueType": "xs:string",
+                "value": "opcda",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "sourceAddress",
+                "valueType": "xs:string",
+                "value": "opc.tcp://192.168.1.10",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "username",
+                "valueType": "xs:string",
+                "value": "admin",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "password",
+                "valueType": "xs:string",
+                "value": "480e0d65",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "opcNode1",
+                "valueType": "xs:string",
+                "value": "test,5,Arp.Plc.Eclr/MainInstance.test",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "opcNode2",
+                "valueType": "xs:string",
+                "value": "boolTest,5,Arp.Plc.Eclr/MainInstance.boolTest",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "sampleStatus",
+                "valueType": "xs:string",
+                "value": "start",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "sampleMode",
+                "valueType": "xs:string",
+                "value": "continuous",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "sampleRate",
+                "valueType": "xs:string",
+                "value": "1000",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "maxSamples",
+                "valueType": "xs:string",
+                "value": "200",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "actualSamples",
+                "valueType": "xs:string",
+                "value": "",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "maxSamplesInCollection",
+                "valueType": "xs:string",
+                "value": "20",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "actualSamplesInCollection",
+                "valueType": "xs:string",
+                "value": "",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "lowDataIndex",
+                "valueType": "xs:string",
+                "value": "",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "highDataIndex",
+                "valueType": "xs:string",
+                "value": "",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "data",
+                "modelType": "SubmodelElementCollection"
+              }
+            ],
+            "modelType": "SubmodelElementCollection"
+          }
+        ],
+        "modelType": "Submodel"
+      },
+      {
+        "idShort": "subTsOpcHa",
+        "id": "https://example.com/ids/sm/8383_8020_4012_6218",
+        "kind": "Instance",
+        "submodelElements": [
+          {
+            "idShort": "StructureChange_of_whole_Submodel",
+            "semanticId": {
+              "type": "ExternalReference",
+              "keys": [
+                {
+                  "type": "GlobalReference",
+                  "value": "https://admin-shell.io/tmp/AAS/Events/StructureChangeOutwards"
+                }
+              ]
+            },
+            "observed": {
+              "type": "ModelReference",
+              "keys": [
+                {
+                  "type": "Submodel",
+                  "value": "https://example.com/ids/sm/8383_8020_4012_6218"
+                }
+              ]
+            },
+            "direction": "input",
+            "state": "off",
+            "modelType": "BasicEventElement"
+          },
+          {
+            "idShort": "UpdateValue_of_whole_Submodel",
+            "semanticId": {
+              "type": "ExternalReference",
+              "keys": [
+                {
+                  "type": "GlobalReference",
+                  "value": "https://admin-shell.io/tmp/AAS/Events/UpdateValueOutwards"
+                }
+              ]
+            },
+            "observed": {
+              "type": "ModelReference",
+              "keys": [
+                {
+                  "type": "Submodel",
+                  "value": "https://example.com/ids/sm/8383_8020_4012_6218"
+                }
+              ]
+            },
+            "direction": "input",
+            "state": "off",
+            "modelType": "BasicEventElement"
+          },
+          {
+            "idShort": "Time-Series_Phoenix",
+            "value": [
+              {
+                "idShort": "sourceType",
+                "valueType": "xs:string",
+                "value": "opchd",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "sourceAddress",
+                "valueType": "xs:string",
+                "value": "opc.tcp://192.168.1.10",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "username",
+                "valueType": "xs:string",
+                "value": "admin",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "password",
+                "valueType": "xs:string",
+                "value": "480e0d65",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "opcNode1",
+                "valueType": "xs:string",
+                "value": "test,5,Arp.Plc.Eclr/MainInstance.test",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "opcNode2",
+                "valueType": "xs:string",
+                "value": "boolTest,5,Arp.Plc.Eclr/MainInstance.boolTest",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "sampleStatus",
+                "valueType": "xs:string",
+                "value": "start",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "sampleMode",
+                "valueType": "xs:string",
+                "value": "continuous",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "sampleRate",
+                "valueType": "xs:string",
+                "value": "1000",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "maxSamples",
+                "valueType": "xs:string",
+                "value": "2000",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "actualSamples",
+                "valueType": "xs:string",
+                "value": "",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "maxSamplesInCollection",
+                "valueType": "xs:string",
+                "value": "200",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "actualSamplesInCollection",
+                "valueType": "xs:string",
+                "value": "",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "lowDataIndex",
+                "valueType": "xs:string",
+                "value": "",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "highDataIndex",
+                "valueType": "xs:string",
+                "value": "",
+                "modelType": "Property"
+              },
+              {
+                "idShort": "data",
+                "modelType": "SubmodelElementCollection"
+              }
+            ],
+            "modelType": "SubmodelElementCollection"
+          }
+        ],
+        "modelType": "Submodel"
+      },
+      {
+        "idShort": "subSubscribe",
+        "id": "https://example.com/ids/sm/6191_1120_4012_2866",
+        "kind": "Instance",
+        "submodelElements": [
+          {
+            "idShort": "TimeSeries_Festo",
+            "qualifiers": [
+              {
+                "type": "SUBSCRIBE",
+                "valueType": "xs:string"
+              }
+            ],
+            "modelType": "SubmodelElementCollection"
+          },
+          {
+            "idShort": "TimeSeries_Bosch",
+            "qualifiers": [
+              {
+                "type": "SUBSCRIBE",
+                "valueType": "xs:string"
+              }
+            ],
+            "modelType": "SubmodelElementCollection"
+          },
+          {
+            "idShort": "TimeSeries_Phoenix",
+            "qualifiers": [
+              {
+                "type": "SUBSCRIBE",
+                "valueType": "xs:string"
+              }
+            ],
+            "modelType": "SubmodelElementCollection"
+          }
+        ],
+        "modelType": "Submodel"
+      }
+    ],
+    "conceptDescriptions": []
+  }
+}
