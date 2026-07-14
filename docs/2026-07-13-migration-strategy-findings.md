@@ -312,19 +312,23 @@ Status legend: `TODO` not started · `IN PROGRESS` · `BLOCKED` needs a decision
 `DONE`.
 
 **Update — 2026-07-14:** Tasks 1 and 2 are done — see [PR #17](https://github.com/kunalsuri/web-eclipse-aasx-explorer/pull/17)
-(merged to `main` as of this writing). `npm run check` is now genuinely
-**0 errors** (was 261). Also landed in earlier commits on `main` this same
-window (predating PR #17): golden-master fixtures and a differential test
+(merged to `main`). `npm run check` is now genuinely **0 errors** (was 261).
+Task 3 (`npm audit`) is also now done — see [PR #18](https://github.com/kunalsuri/web-eclipse-aasx-explorer/pull/18)
+and [PR #21](https://github.com/kunalsuri/web-eclipse-aasx-explorer/pull/21)
+(both merged): 31 vulnerabilities → **4 moderate, 0 high/critical**. Also
+landed in earlier commits on `main` this same window (predating PR #17):
+golden-master fixtures and a differential test
 (`tests/integration/golden-master/aasx-parser.test.ts`), which is the first
 real step on task 4 below — see "What task 4's new golden-master test found"
 beneath the table, plus a deeper follow-up finding recorded further below
-("2026-07-14: task 4 is bigger than it looked").
+("2026-07-14: task 4 is bigger than it looked"). Task 4 remains **BLOCKED**
+on a scoping decision — nothing has changed there since that finding.
 
 | # | Task | Area | Priority | Status | Notes |
 |---|------|------|----------|--------|-------|
 | 1 | Delete orphaned literal-port plugin files (`plugin-manager.ts`, `plugin-action-invoker.ts`, `plugin-event-handler.ts`, `plugin-standard-actions.ts`, `plugin-visual-extension.ts`) | `server/src/services` | P0 | **DONE** (PR #17) | Also found and deleted 2 more of the same pattern during the fix: `server/src/plugins/document-shelf-plugin.ts`, `technical-data-plugin.ts` — confirmed unimported anywhere, superseded by `DocumentShelfPanel.tsx`/`TechnicalDataPanel.tsx`. 7 files removed total |
 | 2 | Fix remaining ~234 real `npm run check` errors | repo-wide | P0 | **DONE** (PR #17) | `npm run check` → 0 errors. Root causes: 89 of the 234 were `tsconfig.json` only excluding `**/*.test.ts`, not `**/*.test.tsx` (jest-dom matcher types on 8 test files); rest were real — enum literal/member mismatches, missing type guards on `SubmodelElement \| Submodel` unions, a stale `LangStringSet` type reference, `Express.Request` augmentation drift, missing `xml2js` dependency. `npm test` unchanged at 548 passed / 8 failed / 39 skipped (no regressions; the 8 failures are the task-4 finding below) |
-| 3 | Run `npm audit`, triage 31 vulnerabilities (2 critical, 16 high) | deps | P1 | **DONE** (24 of 31 fixed); **BLOCKED** (5 remain, dev-tooling-only, see below) | `npm audit` confirmed 31 (1 low/12 moderate/16 high/2 critical) — GitHub's 76 count on the PR appears to double-count advisories per dependency path, npm's own count is authoritative. Fixed 24 total: `npm audit fix` (no `--force`) got 18 including both criticals (`fast-xml-parser` — real attack surface, uploaded `.aasx` XML; `vitest` — dev-only UI-server RCE); `drizzle-orm` bumped 0.39.1→0.45.2 (real SQL-injection CVE fix, plain registry install); `xlsx` (SheetJS, no npm-registry fix at all — maintainers only publish patches via their own CDN post-MFA-incident) replaced entirely with `exceljs@4.4.0` since it's a real attack surface (`excel-import-service.ts` runs `XLSX.read()`/now `ExcelJS.Workbook#load()` on **user-uploaded** file buffers) — both `excel-import-service.ts` and `excel-export-service.ts` rewritten, `exportEnvironment` is now `async` (call site in `aasx-routes.ts` updated to `await`), verified with a manual export→import round-trip smoke test (not just typecheck) plus `npm run check` (0 errors) and `npm test` (548/8/39, same pre-existing golden-master gap, no regression); exceljs's own nested vulnerable `uuid@8.3.2` pinned to `uuid@^13.0.2` via a `package.json` `overrides` entry (safe — exceljs only calls `uuid.v4()`, identical API v8→v13). 5 remain — see below |
+| 3 | Run `npm audit`, triage 31 vulnerabilities (2 critical, 16 high) | deps | P1 | **DONE** ([PR #18](https://github.com/kunalsuri/web-eclipse-aasx-explorer/pull/18), [PR #21](https://github.com/kunalsuri/web-eclipse-aasx-explorer/pull/21)) | `npm audit` confirmed 31 (1 low/12 moderate/16 high/2 critical) — GitHub's 76 count on the PR appears to double-count advisories per dependency path, npm's own count is authoritative. **PR #18**: fixed 24 of 31 — `npm audit fix` (no `--force`) got 18 including both criticals (`fast-xml-parser` — real attack surface, uploaded `.aasx` XML; `vitest` — dev-only UI-server RCE); `drizzle-orm` bumped 0.39.1→0.45.2 (real SQL-injection CVE fix, plain registry install); `xlsx` (SheetJS, no npm-registry fix at all — maintainers only publish patches via their own CDN post-MFA-incident) replaced entirely with `exceljs@4.4.0` since it's a real attack surface (`excel-import-service.ts` runs `XLSX.read()`/now `ExcelJS.Workbook#load()` on **user-uploaded** file buffers) — both `excel-import-service.ts` and `excel-export-service.ts` rewritten, `exportEnvironment` is now `async`, verified with a manual export→import round-trip smoke test plus `npm run check`/`npm test`; exceljs's own nested vulnerable `uuid@8.3.2` pinned to `uuid@^13.0.2` via a `package.json` `overrides` entry. **PR #21**: the 5 remaining (all one `vite`/`drizzle-kit`/`esbuild` dev-tooling chain, see the now-superseded subsection below) turned out worth revisiting instead of permanently accepting — actually ran the `vite` 5→8 major bump end-to-end (not just risk-assessed it), verified clean (`npm run check`, `npm test` 548/8/39, `npm run build`, a manual dev-server smoke test), and it resolved the high-severity finding. **Net result: 31 → 4 vulnerabilities, 0 high/critical remaining** — only `drizzle-kit`'s still-unfixed-upstream `@esbuild-kit` chain (4 moderate), a genuinely accepted risk (dev-server-only, `drizzle-kit` isn't in the runtime path). Also closed 6 now-redundant Dependabot PRs (#8, #9, #10, #11, #12, #13) that were pure duplicates of what #18 already fixed; 2 more Dependabot PRs opened after #21 merged (#19 `esbuild`, #20 `vite`/`vitest`) and auto-closed themselves as already-satisfied |
 | 4 | Build a regenerable C#↔TS parity matrix (script, not prose) — **prefer golden-master differential testing over a symbol-diff matrix alone; see companion doc** | tooling | P1 | **BLOCKED** | Fixtures + differential test exist (`tests/fixtures/golden-master/`, `tests/integration/golden-master/aasx-parser.test.ts`). Scoping decision pending — see "2026-07-14: task 4 is bigger than it looked" below before starting implementation |
 | 5 | Add an independent verification subagent that gates "phase complete" claims | `.claude/agents/` | P1 | TODO | Read/bash/test tools only; no code-writing |
 | 6 | Run `admin-shell-io/aas-test-engines` against this repo's REST API + validation engine | validation / API | P1 | TODO | Establishes objective, standards-body-graded correctness |
@@ -335,16 +339,16 @@ beneath the table, plus a deeper follow-up finding recorded further below
 | 11 | XML/AML/RDF import-export completeness check against C# `AasxAmlImExport`, `AasxBammRdfImExport` | `server/src/services` | P2 | TODO | |
 | 12 | Update `.kiro/CONSOLIDATED-SUMMARY.md` to reflect verified (not self-reported) numbers | docs | P1 | TODO | Unblocked now that tasks 1–2 are done, but not yet started — do this once PR #17 is merged to `main`, and combine with a real answer on task 4 (the "97-100% complete" editing-UI claims specifically need re-checking against working code, not just a clean typecheck) |
 
-### Task 3: 5 remaining vulnerabilities — all one dev-tooling dependency chain
+### Task 3: the vite/esbuild chain — first accepted as risk, then actually fixed (PR #21)
 
-After the fixes above, `npm audit` reports 5 (4 moderate, 1 high), all
+After PR #18's fixes, `npm audit` reported 5 (4 moderate, 1 high), all
 downstream of one root cause: **`drizzle-kit` still depends on the
 deprecated, abandoned `@esbuild-kit/esm-loader`/`@esbuild-kit/core-utils`
 packages**, which pull a vulnerable `esbuild` (`GHSA-67mh-4wv8-2f99` — a
 website can send requests to, and read responses from, a running dev
-server). `vite` independently bundles its own (already-patched, from the
+server). `vite` independently bundled its own (already-patched, from the
 earlier `npm audit fix` pass) `esbuild`, but npm's dependency graph still
-flags `vite` in the same remediation path because forcing the fix requires
+flagged `vite` in the same remediation path because forcing the fix required
 `vite@8.1.4`.
 
 Checked upstream status directly (`drizzle-team/drizzle-orm` GitHub issues,
@@ -354,28 +358,31 @@ the oldest open since November 2024, the newest from April 2026 — none
 merged as of this session. npm's own suggested "fix" for `drizzle-kit` is to
 **downgrade** to `0.18.1`, which is npm's resolver routing around a
 dependency range rather than a real upstream fix, and would lose 13+ minor
-versions of functionality — not applied.
+versions of functionality — not applied, and still not applied as of PR #21.
 
-**Decision: left as-is, accepted risk, not a code change.** Rationale:
-- Both remaining vulnerable paths (`esbuild` via `vite`'s dev server,
-  `esbuild` via `drizzle-kit`'s `@esbuild-kit` loader) are **dev-server-only
-  exploits** — a malicious website sending requests to a `vite`/`drizzle-kit`
-  dev process running on the developer's own machine. Not reachable in the
-  built production bundle or from a deployed server.
-- `drizzle-kit` itself is a dev-time-only CLI (`npm run db:push`); per
-  `AGENTS.md`'s storage-duality note, this repo's actual runtime persistence
-  is flat JSON in `data/`, not a live Postgres connection, so `drizzle-kit`
-  isn't even in the production request path.
-- The only real fix (`vite@8.1.4`, a 3-major-version jump) has meaningfully
-  higher regression risk to the build than the vulnerability's real-world
-  exposure justifies right now; `drizzle-kit` has *no* real fix to apply yet
-  — the dependency it needs to drop is still present in every published
-  version as of this check.
+**First decision this session: left as-is, accepted risk, no code change**,
+on the reasoning that both remaining paths are dev-server-only exploits (not
+reachable in the production bundle or a deployed server), `drizzle-kit` isn't
+in this repo's actual runtime path (storage is flat JSON, not live
+Postgres), and the only real fix for the `vite` half (a 3-major-version jump)
+looked like more regression risk than the exposure justified.
 
-**Revisit when:** any of the open `drizzle-kit`/`@esbuild-kit` removal PRs
-merge and ship in a release, or if the dev server is ever exposed outside
-localhost (e.g. a shared dev environment), at which point this risk
-acceptance should be re-evaluated.
+**Revised in the same session, after actually testing it (PR #21):**
+prompted by Dependabot's still-open PR #14 proposing the same `vite` bump,
+the upgrade was run end-to-end instead of left as an assumption — see the
+task tracker row above for the full result. It worked cleanly (verified with
+typecheck, full test suite, a real build, and a dev-server smoke test), and
+it resolved the `vite`/`esbuild` half of this finding entirely. **Lesson for
+future sessions: "this looks risky" is a reason to test it in a throwaway
+branch, not a reason to permanently defer it** — the actual regression risk
+here turned out to be zero, once checked instead of estimated.
+
+**What's still deferred, and why:** only the `drizzle-kit`/`@esbuild-kit`
+portion (4 moderate) remains, because unlike `vite`, there genuinely is no
+fix to test yet — `drizzle-kit` has not merged any of the open PRs dropping
+`@esbuild-kit`. This part of the original rationale still holds: dev-server
+only, `drizzle-kit` isn't in the runtime path, revisit when upstream merges
+one of those PRs or ships a release without the dependency.
 
 ### What task 4's new golden-master test found
 
@@ -436,26 +443,63 @@ blocking on it.
 
 ---
 
-## 9. How to resume this in a future session
+## 9. Operational note: local `git push`/`git fetch` fails in this dev environment
+
+Discovered and worked around repeatedly across this session's later work
+(the npm-audit and vite-8-upgrade PRs): `git push`, `git fetch`, and even a
+bare `curl https://github.com` **fail from this machine's own local shell**
+with a TLS/certificate error (`SSL certificate ... unable to get local
+issuer certificate`, or `schannel: ... CRYPT_E_NO_REVOCATION_CHECK`). This
+is not a `gh` CLI problem — `gh api`/`gh pr create`/`gh pr close` all work
+fine, because `gh` doesn't go through the same TLS path. Root cause traced
+to `NODE_EXTRA_CA_CERTS` pointing at `C:\ProgramData\Norton\Antivirus\
+wscert.pem` plus an active `SSLKEYLOGFILE` proxy hook in the environment —
+strongly indicative of **Norton's HTTPS/TLS-inspection feature** intercepting
+the connection and the revocation check on its injected certificate failing.
+
+**What this means for a future session:** git operations that only touch the
+local repo (commit, branch, diff, log) work fine. Anything that talks to
+`github.com` directly over git's own HTTPS transport (`push`, `fetch`,
+`pull`) will fail in this sandbox. Do not spend time re-diagnosing this —
+either use `gh` for anything that needs GitHub (PR creation, branch
+existence checks via `gh api repos/.../branches/<name>`, etc.), or ask the
+user to run the `git push`/`git pull` themselves from their own terminal
+(confirmed working there — see PR #18 and #21, both pushed manually by the
+user after the same failure here). **Verify a claimed push actually landed**
+via `gh api repos/kunalsuri/web-eclipse-aasx-explorer/branches/<name>`
+rather than trusting local remote-tracking refs — this session hit a case
+where a stale local tracking ref existed before the real push had happened,
+which produced a confusing false-positive.
+
+---
+
+## 10. How to resume this in a future session
 
 1. Re-read this file first.
 2. If you need the C# source again: it was cloned to `/workspace/eclipse-aasx-package-explorer`
-   in this session's ephemeral container — that path will not exist in a new
-   session. Re-add via the repo-add tool (`kunalsuri/eclipse-aasx-package-explorer`)
-   and re-clone (shallow clone recommended, `--depth 1`).
+   in an earlier session's ephemeral container — that path will not exist in a new
+   session. It's also available locally as a sibling checkout at
+   `C:\Users\kunal\Documents\GitHub\eclipse-aasx-package-explorer` (used directly
+   in the 2026-07-14 session for task 4's investigation, see §8 above) — check there
+   first before re-cloning.
 3. Before trusting any existing "X% complete" claim in `.kiro/CONSOLIDATED-SUMMARY.md`
    or the `analysis-output/` folder, run `npm run check` and `npm test` yourself —
    do not propagate un-reverified numbers forward again.
-4. Start with Task 1–2 in the table above (the typecheck gate) before any new
-   feature work — every other number in this project's tracking depends on that
-   gate being real.
+4. See §9 immediately above before attempting any `git push`/`git fetch`/`git pull` —
+   it will very likely fail from this sandbox's shell, and that's expected, not
+   a sign of a broken repo.
 
-**2026-07-14 update:** Tasks 1–2 are done as of [PR #17](https://github.com/kunalsuri/web-eclipse-aasx-explorer/pull/17)
-— confirm it has merged to `main` before relying on a green `npm run check`
-elsewhere. If it's still open, re-run `npm run check` yourself rather than
-assuming. Next concrete steps, in order: (a) implement a real AAS-XML
-deserializer in `shared/aas-parser.ts` to replace the stub — see "What task
-4's new golden-master test found" above, the golden-master suite already
-exists as its acceptance test; (b) task 3 (`npm audit`); (c) task 12
-(re-baseline `.kiro/CONSOLIDATED-SUMMARY.md`) once (a) and the gate are both
-confirmed merged and stable.
+**Current state as of 2026-07-14 (end of this session):** Tasks 1, 2, and 3
+are done and merged to `main` ([PR #17](https://github.com/kunalsuri/web-eclipse-aasx-explorer/pull/17),
+[PR #18](https://github.com/kunalsuri/web-eclipse-aasx-explorer/pull/18),
+[PR #21](https://github.com/kunalsuri/web-eclipse-aasx-explorer/pull/21)).
+`npm run check` is 0 errors, `npm test` is 548/8/39 (the 8 are the known
+task-4 golden-master gap), `npm audit` is 4 moderate/0 high/0 critical. All
+Dependabot PRs as of this writing are closed (either merged-equivalent or
+auto-closed as redundant) — no open PRs on the repo. **Next concrete step,
+by priority:** task 4 (AAS-XML deserializer) is **BLOCKED on a scoping
+decision from the user** — see "2026-07-14: task 4 is bigger than it looked"
+above; do not start implementing it without that decision. If task 4 is
+still undecided, the next unblocked work is task 5 (independent verification
+subagent), task 6 (`aas-test-engines`), or task 7 (AASd-* spec re-verification)
+— see the task tracker in §8 for the full list.

@@ -112,3 +112,26 @@ parity matrix"). See that file's task table for tracking; this document exists
 to preserve the reasoning behind that item so a future session understands
 *why* a symbol-diff matrix alone is not sufficient and a golden-master harness
 is the higher-priority build.
+
+## 2026-07-14 update: the harness got built, and it worked exactly as intended
+
+Steps 1–4 of the recommendation above are now done: the C# harness
+(`AasxGoldenMasterHarness`, in the C# repo), the 8 real `.aasx` fixtures, and
+the TypeScript differential test (`tests/integration/golden-master/
+aasx-parser.test.ts`) all exist and run. This is the mechanism working
+exactly as designed — it caught a real fidelity gap that no amount of
+self-reported "% complete" would have surfaced: the TypeScript AASX parser's
+XML path is a stub that silently returns an empty environment for every
+real-world fixture, and worse, a follow-up dig revealed the fixtures
+themselves are legacy AAS V1.0/V2.0 XML (not V3), meaning the actual gap is
+a whole legacy-format migration engine, not a simple parser. See
+`docs/2026-07-13-migration-strategy-findings.md` §8, task 4, for the full
+finding and the pending scoping decision — this is the concrete evidence
+that golden-master differential testing was worth building before quoting
+any parity number, exactly as recommended above.
+
+Step 5 ("only after that harness exists should status docs quote any parity
+percentage") is **still not done** — `.kiro/CONSOLIDATED-SUMMARY.md` has not
+yet been re-baselined (task 12 in the main tracker), and per that task's own
+notes, doing so productively requires task 4's scoping decision first, since
+the harness's own findings are what task 12 needs to report honestly.
