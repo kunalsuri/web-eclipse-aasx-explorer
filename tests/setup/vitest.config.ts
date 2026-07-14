@@ -2,6 +2,8 @@ import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 
+const workspaceRoot = process.cwd();
+
 export default defineConfig({
   plugins: [react()],
   test: {
@@ -15,8 +17,8 @@ export default defineConfig({
     
     // Setup files
     setupFiles: [
-      './tests/setup/global-setup.ts',
-      './tests/setup/client-setup.ts',
+      path.resolve(workspaceRoot, 'tests/setup/global-setup.ts'),
+      path.resolve(workspaceRoot, 'tests/setup/client-setup.ts'),
     ],
     
     // Coverage configuration
@@ -62,10 +64,10 @@ export default defineConfig({
   
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, '../../client/src'),
-      '@shared': path.resolve(__dirname, '../../shared'),
-      '@tests': path.resolve(__dirname, '../../tests'),
-      '@assets': path.resolve(__dirname, '../../attached_assets'),
+      '@': path.resolve(workspaceRoot, 'client/src'),
+      '@shared': path.resolve(workspaceRoot, 'shared'),
+      '@tests': path.resolve(workspaceRoot, 'tests'),
+      '@assets': path.resolve(workspaceRoot, 'attached_assets'),
     },
   },
 });

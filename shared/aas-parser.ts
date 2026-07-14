@@ -4,9 +4,9 @@
  */
 
 import JSZip from "jszip";
-import { XMLParser } from "fast-xml-parser";
 import type { Environment } from "./aas-v3-types";
 import { deserializeEnvironment } from "./aas-serialization";
+import { parseAasXmlEnvironment } from "./aas-xml-migration";
 
 // ============================================================================
 // Types
@@ -152,46 +152,71 @@ interface EnvironmentFileInfo {
 async function findEnvironmentFile(
     zip: JSZip
 ): Promise<EnvironmentFileInfo | null> {
-    // Common paths for AAS environment files
+    // Common paths for actual AAS environment package parts. `aasx/aasx-origin`
+    // is an OPC marker that points to relationships; it is not environment XML.
     const commonPaths = [
-        "aasx/aasx-origin",
-        "aasx/xml/content.xml",
         "aasx/json/content.json",
-        "content.xml",
         "content.json",
+        "aasx/aas/aas.aas.xml",
+        "aasx/xml/content.xml",
+        "content.xml",
     ];
 
-    // Check common paths first
+    // Check common paths first, but validate their contents rather than trusting
+    // an extension or conventional name.
     for (const path of commonPaths) {
         const file = zip.file(path);
-        if (file) {
+        if (file && !zip.files[path].dir) {
             const type = path.endsWith(".json") ? "json" : "xml";
-            return { path, type };
+            const content = await file.async("string");
+            if (isEnvironmentContent(content, type)) return { path, type };
         }
     }
 
-    // Search all files
-    const files = Object.keys(zip.files);
+    const files = Object.keys(zip.files).filter((path) => !zip.files[path].dir);
 
-    // Look for JSON files first (easier to parse)
+    // Prefer a valid JSON environment when both representations are present.
     for (const path of files) {
-        if (path.endsWith(".json") && !zip.files[path].dir) {
-            return { path, type: "json" };
-        }
-    }
-
-    // Look for XML files
-    for (const path of files) {
-        if (path.endsWith(".xml") && !zip.files[path].dir) {
-            // Check if it looks like an AAS file
+        if (path.toLowerCase().endsWith(".json")) {
             const content = await zip.file(path)?.async("string");
-            if (content && (content.includes("aasEnvironment") || content.includes("assetAdministrationShells"))) {
+            if (content && isEnvironmentContent(content, "json")) {
+                return { path, type: "json" };
+            }
+        }
+    }
+
+    for (const path of files) {
+        if (path.toLowerCase().endsWith(".xml")) {
+            const content = await zip.file(path)?.async("string");
+            if (content && isEnvironmentContent(content, "xml")) {
                 return { path, type: "xml" };
             }
         }
     }
 
     return null;
+}
+
+function isEnvironmentContent(content: string, type: "xml" | "json"): boolean {
+    if (type === "xml") {
+        return /<(?:[A-Za-z_][\w.-]*:)?(?:aasenv|aasEnvironment|environment)\b/i.test(
+            content
+        );
+    }
+
+    try {
+        const parsed = JSON.parse(content);
+        const environment = parsed.environment ?? parsed;
+        return Boolean(
+            environment &&
+            typeof environment === "object" &&
+            (Array.isArray(environment.assetAdministrationShells) ||
+                Array.isArray(environment.submodels) ||
+                Array.isArray(environment.conceptDescriptions))
+        );
+    } catch {
+        return false;
+    }
 }
 
 /**
@@ -233,113 +258,12 @@ function parseJsonEnvironment(content: string): Environment {
  */
 function parseXmlEnvironment(content: string): Environment {
     try {
-        const parser = new XMLParser({
-            ignoreAttributes: false,
-            attributeNamePrefix: "@_",
-            textNodeName: "#text",
-            parseAttributeValue: true,
-            trimValues: true,
-        });
-
-        const parsed = parser.parse(content);
-
-        // The XML structure varies, try to find the environment
-        let envData = parsed.aasEnvironment || parsed.environment || parsed;
-
-        // Convert XML structure to AAS Environment
-        const environment = convertXmlToEnvironment(envData);
-
-        return environment;
+        return parseAasXmlEnvironment(content);
     } catch (error) {
         throw new Error(
             `Failed to parse XML environment: ${error instanceof Error ? error.message : String(error)}`
         );
     }
-}
-
-/**
- * Convert XML parsed data to Environment
- * This is a simplified conversion - full implementation would be more complex
- */
-function convertXmlToEnvironment(xmlData: any): Environment {
-    const environment: Environment = {
-        assetAdministrationShells: [],
-        submodels: [],
-        conceptDescriptions: [],
-    };
-
-    // Extract Asset Administration Shells
-    if (xmlData.assetAdministrationShells) {
-        const shells = Array.isArray(xmlData.assetAdministrationShells)
-            ? xmlData.assetAdministrationShells
-            : [xmlData.assetAdministrationShells];
-
-        environment.assetAdministrationShells = shells.map((shell: any) =>
-            convertXmlToAAS(shell)
-        );
-    }
-
-    // Extract Submodels
-    if (xmlData.submodels) {
-        const submodels = Array.isArray(xmlData.submodels)
-            ? xmlData.submodels
-            : [xmlData.submodels];
-
-        environment.submodels = submodels.map((sm: any) => convertXmlToSubmodel(sm));
-    }
-
-    // Extract Concept Descriptions
-    if (xmlData.conceptDescriptions) {
-        const cds = Array.isArray(xmlData.conceptDescriptions)
-            ? xmlData.conceptDescriptions
-            : [xmlData.conceptDescriptions];
-
-        environment.conceptDescriptions = cds.map((cd: any) =>
-            convertXmlToConceptDescription(cd)
-        );
-    }
-
-    return environment;
-}
-
-/**
- * Convert XML AAS to TypeScript AAS
- * Simplified - full implementation would handle all fields
- */
-function convertXmlToAAS(xmlAas: any): any {
-    return {
-        id: xmlAas.id || xmlAas["@_id"],
-        idShort: xmlAas.idShort,
-        assetInformation: {
-            assetKind: xmlAas.assetInformation?.assetKind || "Instance",
-            globalAssetId: xmlAas.assetInformation?.globalAssetId,
-        },
-        submodels: xmlAas.submodels || [],
-    };
-}
-
-/**
- * Convert XML Submodel to TypeScript Submodel
- * Simplified - full implementation would handle all fields
- */
-function convertXmlToSubmodel(xmlSm: any): any {
-    return {
-        id: xmlSm.id || xmlSm["@_id"],
-        idShort: xmlSm.idShort,
-        kind: xmlSm.kind || "Instance",
-        submodelElements: xmlSm.submodelElements || [],
-    };
-}
-
-/**
- * Convert XML Concept Description to TypeScript Concept Description
- * Simplified - full implementation would handle all fields
- */
-function convertXmlToConceptDescription(xmlCd: any): any {
-    return {
-        id: xmlCd.id || xmlCd["@_id"],
-        idShort: xmlCd.idShort,
-    };
 }
 
 /**

@@ -17,6 +17,7 @@ import { describe, it, expect } from "vitest";
 import fs from "fs/promises";
 import path from "path";
 import { parseAasxBuffer } from "@shared/aas-parser";
+import type { Environment } from "@shared/aas-v3-types";
 
 const FIXTURES_DIR = path.resolve(__dirname, "../../fixtures/golden-master");
 const EXPECTED_DIR = path.join(FIXTURES_DIR, "expected");
@@ -31,6 +32,7 @@ interface GoldenMaster {
   sourceFile: string;
   parse: { success: boolean };
   summary: GoldenSummary | null;
+  environment?: Environment;
 }
 
 async function listFixtures(): Promise<string[]> {
@@ -97,6 +99,22 @@ describe("Golden Master - AASX Parser", async () => {
         submodelCount: env.submodels?.length ?? 0,
         conceptDescriptionCount: env.conceptDescriptions?.length ?? 0,
       }).toEqual(golden.summary);
+    }
+  );
+
+  it.each(fixtures)(
+    "produces the same migrated environment as the C# reference for %s",
+    async (fileName) => {
+      const golden = await loadGoldenMaster(fileName);
+      if (!golden.environment) {
+        return;
+      }
+
+      const arrayBuffer = await readFixtureAsArrayBuffer(fileName);
+      const result = await parseAasxBuffer(arrayBuffer, fileName);
+
+      expect(result.success).toBe(true);
+      expect(result.package!.environment).toEqual(golden.environment);
     }
   );
 });
