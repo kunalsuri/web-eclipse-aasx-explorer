@@ -1,5 +1,6 @@
 /**
- * AAS V3.0 Semantic Constraints (AASd-053 to AASd-097)
+ * AAS V3.0 Semantic Constraints (AASd-053 to AASd-076; AASd-077 and AASd-090
+ * are defined in aasd-advanced-constraints.ts)
  *
  * Semantic validation rules that ensure proper semantic references,
  * ConceptDescription integrity, and IEC 61360 data specification compliance.

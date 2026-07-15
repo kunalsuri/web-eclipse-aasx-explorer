@@ -43,10 +43,23 @@ Those two dead-code stubs are removed as cleanup, but they were never part of
 the registered 150 and are not counted as "fixed."
 
 Conclusion: these 33 IDs are fabricated — picked from unused numeric slots in
-the real spec's ID space (the codebase's genuine constraint IDs already skip
-numbers exactly where the real spec does, e.g. 107, 114, 116, 118-121, 130,
-131) — purely to make the registered total round out to 150. "Implement
-spec-derived validators" is not executable for IDs with no spec derivation.
+the real spec's ID space — purely to make the registered total round out to
+150. **Correction (post-review, ai/lab/reviews/REVIEW_W-017.md Finding 1):** an
+earlier draft of this doc additionally claimed the codebase's genuine
+constraint IDs "already skip numbers exactly where the real spec does, e.g.
+107, 114, 116, 118-121, 130, 131" as supporting evidence. That claim is false
+and has been removed — all seven of those IDs are in fact defined, exported,
+and registered elsewhere in this codebase (`aasd-advanced-constraints.ts`,
+`aasd-constraints.ts`); the apparent gap was only in one category file's own
+subset array (`AASdReferenceConstraints`), not in the full registry. The
+surviving evidence for the fabrication claim is: (1) the three independent
+external source lookups described above found zero matches for all 33 IDs,
+and (2) the removed rules' names/descriptions ("Additional Structural
+Constraint 31," "Semantic Constraint 78," "Advanced semantic validation") are
+generic/auto-generated-looking, in contrast to every surviving rule's specific,
+descriptive name (e.g. "SubmodelElementList Type Consistency" for AASd-045,
+"Blob MIME Type Required" for AASd-050). "Implement spec-derived validators"
+is not executable for IDs with no spec derivation.
 The audit's fallback remedy applies: remove them from the completed/registered
 count.
 
