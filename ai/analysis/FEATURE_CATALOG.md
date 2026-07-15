@@ -193,9 +193,16 @@ role middleware.
 
 - **Business goal:** Apply AAS V3/AASd constraints and communicate actionable findings.
 - **Status:** Partial. The viewer validates locally and server validation/preset
-  endpoints are mounted, but 35 of the 150 registered AASd IDs are direct no-op
-  validators (`AASd-031..044`, `AASd-050`, `AASd-078..097`). The count therefore
-  proves registry coverage, not 150 implemented constraint semantics.
+  endpoints are mounted. As of 2026-07-15, the registry has 117 AASd IDs, all with
+  real behavioral logic — 33 previously-registered IDs (`AASd-031..044`,
+  `AASd-078..089`, `AASd-091..097`) were removed as fabricated placeholders that
+  did not correspond to any real IDTA constraint (confirmed against the
+  aas-core-works reference metamodel; see `ai/analysis/audit-reports/DEFECT_TRACEABILITY.md`
+  ADV-2026-07-14-03). The registered-count-equals-completeness gap this created
+  is closed, but the 117 have not been separately audited for content fidelity
+  against IDTA-01001 spec text (e.g. `AASd-050`'s and `AASd-090`'s registered
+  implementations may not match the official constraint text for those IDs — a
+  candidate for a future audit).
 
 | Layer | Touch list | Confidence |
 |---|---|---|

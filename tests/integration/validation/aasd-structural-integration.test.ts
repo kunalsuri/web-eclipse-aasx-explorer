@@ -19,8 +19,10 @@ describe("AASd Structural Constraints Integration", () => {
       rule.id.match(/^AASd-\d{3}$/) && rule.category === "structure"
     );
     
-    // Verify we have a reasonable number of structural constraints
-    expect(structuralConstraints.length).toBeGreaterThan(30);
+    // Verify we have a reasonable number of structural constraints. 14
+    // fabricated placeholder IDs (AASd-031..044) were removed as non-standard -
+    // see ADV-2026-07-14-03 in ai/analysis/audit-reports/DEFECT_TRACEABILITY.md.
+    expect(structuralConstraints.length).toBeGreaterThan(25);
     
     // Verify some key constraints are present
     const constraintIds = structuralConstraints.map(c => c.id);

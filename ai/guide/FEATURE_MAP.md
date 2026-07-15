@@ -46,7 +46,7 @@
 - **Business goal:** Validate an AAS against IDTA AASd-* constraints.
 - **Touches:** `shared/aas-validation-engine.ts`, `shared/validation-rules/*`, `server/src/services/validation-preset-manager.ts`.
 - **Verify with:** `npm run test:unit -- tests/unit/shared/validation`.
-- **Gotchas:** 150 AASd-* rules total (verified directly, see [MODULE_MAP.md](MODULE_MAP.md) — don't sum per-category-file counts, two files overlap); cardinality rules are deliberately `info` severity, not `error`. Use the `aas-validation-engineer` subagent.
+- **Gotchas:** 117 AASd-* rules total, all with real behavioral logic (verified directly, see [MODULE_MAP.md](MODULE_MAP.md) — don't sum per-category-file counts, two files overlap); 33 previously-registered IDs (AASd-031..044, AASd-078..089, AASd-091..097) were removed 2026-07-15 as fabricated non-IDTA placeholders, see `ai/analysis/audit-reports/DEFECT_TRACEABILITY.md` ADV-2026-07-14-03; cardinality rules are deliberately `info` severity, not `error`. Use the `aas-validation-engineer` subagent.
 - **Related:** AAS Explorer, AASX Editor.
 
 ### Search and Reference Suggestions  `[inferred]`

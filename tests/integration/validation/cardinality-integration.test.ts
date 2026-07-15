@@ -109,8 +109,11 @@ describe("Cardinality Constraints Integration", () => {
 
   it("should report correct total constraint count", () => {
     const count = getConstraintCount();
-    // Should have 150 constraints (143 existing + 7 new cardinality)
-    expect(count).toBe(150);
+    // 117 registered constraints (110 existing + 7 cardinality). 33 fabricated
+    // placeholder IDs (AASd-031..044, AASd-078..089, AASd-091..097) were removed
+    // as non-standard - see ADV-2026-07-14-03 in
+    // ai/analysis/audit-reports/DEFECT_TRACEABILITY.md.
+    expect(count).toBe(117);
   });
 
   it("should have all cardinality constraints with info severity", () => {

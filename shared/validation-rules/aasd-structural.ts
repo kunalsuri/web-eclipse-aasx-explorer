@@ -1373,136 +1373,6 @@ export const AASd_030: ValidationRule = {
   },
 };
 
-// Add remaining constraints to reach 44 total
-/**
- * AASd-031 through AASd-049: Additional structural constraints
- */
-export const AASd_031: ValidationRule = {
-  id: "AASd-031",
-  name: "Additional Structural Constraint 31",
-  description: "Additional structural validation",
-  severity: "info",
-  category: "structure",
-  validate: (): ValidationError[] => [],
-};
-
-export const AASd_032: ValidationRule = {
-  id: "AASd-032",
-  name: "Additional Structural Constraint 32",
-  description: "Additional structural validation",
-  severity: "info",
-  category: "structure",
-  validate: (): ValidationError[] => [],
-};
-
-export const AASd_033: ValidationRule = {
-  id: "AASd-033",
-  name: "Additional Structural Constraint 33",
-  description: "Additional structural validation",
-  severity: "info",
-  category: "structure",
-  validate: (): ValidationError[] => [],
-};
-
-export const AASd_034: ValidationRule = {
-  id: "AASd-034",
-  name: "Additional Structural Constraint 34",
-  description: "Additional structural validation",
-  severity: "info",
-  category: "structure",
-  validate: (): ValidationError[] => [],
-};
-
-export const AASd_035: ValidationRule = {
-  id: "AASd-035",
-  name: "Additional Structural Constraint 35",
-  description: "Additional structural validation",
-  severity: "info",
-  category: "structure",
-  validate: (): ValidationError[] => [],
-};
-
-export const AASd_036: ValidationRule = {
-  id: "AASd-036",
-  name: "Additional Structural Constraint 36",
-  description: "Additional structural validation",
-  severity: "info",
-  category: "structure",
-  validate: (): ValidationError[] => [],
-};
-
-export const AASd_037: ValidationRule = {
-  id: "AASd-037",
-  name: "Additional Structural Constraint 37",
-  description: "Additional structural validation",
-  severity: "info",
-  category: "structure",
-  validate: (): ValidationError[] => [],
-};
-
-export const AASd_038: ValidationRule = {
-  id: "AASd-038",
-  name: "Additional Structural Constraint 38",
-  description: "Additional structural validation",
-  severity: "info",
-  category: "structure",
-  validate: (): ValidationError[] => [],
-};
-
-export const AASd_039: ValidationRule = {
-  id: "AASd-039",
-  name: "Additional Structural Constraint 39",
-  description: "Additional structural validation",
-  severity: "info",
-  category: "structure",
-  validate: (): ValidationError[] => [],
-};
-
-export const AASd_040: ValidationRule = {
-  id: "AASd-040",
-  name: "Additional Structural Constraint 40",
-  description: "Additional structural validation",
-  severity: "info",
-  category: "structure",
-  validate: (): ValidationError[] => [],
-};
-
-export const AASd_041: ValidationRule = {
-  id: "AASd-041",
-  name: "Additional Structural Constraint 41",
-  description: "Additional structural validation",
-  severity: "info",
-  category: "structure",
-  validate: (): ValidationError[] => [],
-};
-
-export const AASd_042: ValidationRule = {
-  id: "AASd-042",
-  name: "Additional Structural Constraint 42",
-  description: "Additional structural validation",
-  severity: "info",
-  category: "structure",
-  validate: (): ValidationError[] => [],
-};
-
-export const AASd_043: ValidationRule = {
-  id: "AASd-043",
-  name: "Additional Structural Constraint 43",
-  description: "Additional structural validation",
-  severity: "info",
-  category: "structure",
-  validate: (): ValidationError[] => [],
-};
-
-export const AASd_044: ValidationRule = {
-  id: "AASd-044",
-  name: "Additional Structural Constraint 44",
-  description: "Additional structural validation",
-  severity: "info",
-  category: "structure",
-  validate: (): ValidationError[] => [],
-};
-
 export const AASd_045: ValidationRule = {
   id: "AASd-045",
   name: "SubmodelElementList Type Consistency",
@@ -1760,18 +1630,11 @@ export const AASd_049: ValidationRule = {
   },
 };
 
-export const AASd_050: ValidationRule = {
-  id: "AASd-050",
-  name: "Additional Structural Constraint 50",
-  description: "Additional structural validation",
-  severity: "info",
-  category: "structure",
-  validate: (): ValidationError[] => [],
-};
-
 // Export structural constraints (excluding those already in basic/advanced)
 // Already in basic: AASd-002, AASd-021, AASd-022
-// Already in advanced: AASd-005, AASd-006, AASd-007, AASd-008, AASd-014
+// Already in advanced: AASd-005, AASd-006, AASd-007, AASd-008, AASd-014, AASd-050
+// AASd-031..044 removed: not real IDTA constraint IDs (ADV-2026-07-14-03) - see
+// ai/analysis/audit-reports/DEFECT_TRACEABILITY.md
 export const AASdStructuralConstraints: ValidationRule[] = [
   AASd_001,
   // AASd_002, // Already in basic
@@ -1803,20 +1666,6 @@ export const AASdStructuralConstraints: ValidationRule[] = [
   AASd_028,
   AASd_029,
   AASd_030,
-  AASd_031,
-  AASd_032,
-  AASd_033,
-  AASd_034,
-  AASd_035,
-  AASd_036,
-  AASd_037,
-  AASd_038,
-  AASd_039,
-  AASd_040,
-  AASd_041,
-  AASd_042,
-  AASd_043,
-  AASd_044,
   AASd_045,
   AASd_046,
   AASd_047,
