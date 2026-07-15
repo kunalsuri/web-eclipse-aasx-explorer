@@ -31,7 +31,7 @@
 | `client/src/features/idta-templates/` | Browse/instantiate IDTA submodel templates | `client/src/features/idta-templates/index.ts` | ours | [inferred] |
 | `client/src/features/observability/` | Client-side logging/telemetry UI | `client/src/features/observability/index.ts` | ours | [inferred] |
 | `client/src/features/package-creator/` | Create new AASX packages | `client/src/features/package-creator/components/` | ours | [inferred] |
-| `client/src/features/plugin-manager/` | Plugin list/settings UI — plugin system is early-stage (`.kiro/CONSOLIDATED-SUMMARY.md` tracks 2/18 planned plugins implemented; no actual plugin implementations were found despite `.agents/architecture.md` referencing a server-side plugins directory — **UNSURE, needs human**, see AUDIT TODO) | `client/src/features/plugin-manager/index.tsx` | ours | [inferred] |
+| `client/src/features/plugin-manager/` | Plugin list/settings UI, reachable at `/plugins` since 2026-07-15 (ADV-2026-07-14-05: `client/src/pages/plugin-manager-page.tsx` + `/api/plugins` mounted). Registry is always empty at runtime — nothing calls `pluginLoader.loadAll()` — so this is a working UI over zero loaded plugins, not a broken feature; `.kiro/CONSOLIDATED-SUMMARY.md`'s "2/18 planned plugins" is not current fact | `client/src/features/plugin-manager/index.tsx` | ours | [inferred] |
 | `client/src/features/user-profile/` | User profile/settings UI | `client/src/features/user-profile/components/` | ours | [inferred] |
 | `client/src/components/` | Shared UI components (shadcn/Radix wrappers + app-level shared components) | — | stable | [inferred] |
 | `client/src/stores/` | Zustand global state stores | — | ours | [inferred] |

@@ -76,6 +76,8 @@ use client-side `ProtectedRoute`; this does not imply server-side API protection
 | `/api/dictionary/*` | `server/src/api/dictionary-routes.ts` | Dictionary search/import/cache |
 | `/api/v1/*` | `server/src/api/delete-routes.ts` | Shell/submodel/element deletion |
 | `/api/v1/references/*` | `server/src/api/reference-suggestion-routes.ts` | Reference suggestions |
+| `/api/plugins/*` | `server/src/api/plugin-routes.ts` | Plugin list/enable/disable/settings (mounted 2026-07-15, ADV-2026-07-14-05) |
+| `/api/xml/*` | `server/src/api/xml-routes.ts` | Stateless XML export/import/validate (mounted 2026-07-15, ADV-2026-07-14-05) |
 | `/api/logs` | `server/logging-endpoint.ts` | Client log submission/retrieval |
 
 Except for profile endpoints, these mounted feature APIs do not apply
@@ -84,9 +86,20 @@ role middleware.
 
 ### Implemented routers not mounted
 
-`server/src/api/plugin-routes.ts`, `server/src/api/idta-templates-routes.ts`,
-`server/src/api/xml-routes.ts`, `server/src/api/reference-routes.ts`, and
-`server/src/api/aasx/update.ts` are not imported by `server/routes.ts`.
+As of 2026-07-15 (ADV-2026-07-14-05), `plugin-routes.ts` and `xml-routes.ts`
+are mounted (above). Three remain deliberately unmounted, each for a distinct
+reason recorded in `ai/analysis/audit-reports/DEFECT_TRACEABILITY.md`:
+- `server/src/api/aasx/update.ts` — a second property/element-update surface
+  that persists only to the JSON sidecar (`element-manager.ts`/
+  `update-service.ts`), bypassing `AasxPackageService`. Mounting it would
+  reopen ADV-2026-07-14-02 (edits lost on download) through a second,
+  uncoordinated code path.
+- `server/src/api/reference-routes.ts` — duplicates
+  `reference-suggestion-routes.ts` (mounted, and specifically bug-fixed for
+  environment loading) with a stale, never-implemented environment-loading
+  stub.
+- `server/src/api/idta-templates-routes.ts` — every handler returns
+  `501 Not Implemented`; there is no real behavior to expose yet.
 
 ## §3 Full-stack touch lists
 
@@ -250,9 +263,12 @@ role middleware.
 ### F10 — AAS export and import `[inferred]`
 
 - **Business goal:** Exchange AAS content in JSON, CSV, Excel, and XML forms.
-- **Status:** API-only / partial. JSON/CSV/Excel endpoints are mounted; export dialogs
-  are not composed, XML routes are unmounted, and Excel import previews rather than
-  applies updates.
+- **Status:** API-only / partial. JSON/CSV/Excel endpoints and, as of 2026-07-15,
+  `/api/xml/*` (export/import/validate, stateless) are mounted. Export/import
+  dialogs (`export-dialog.tsx`, `client/src/components/xml/XMLExportDialog.tsx`,
+  `XMLImportDialog.tsx`) are still not composed into any reachable page — the
+  API surface is reachable but nothing in the live UI calls it yet. Excel
+  import previews rather than applies updates.
 
 | Layer | Touch list | Confidence |
 |---|---|---|
@@ -298,19 +314,27 @@ role middleware.
 ### F13 — Plugin extensibility `[inferred]`
 
 - **Business goal:** Register/load extensions and expose permissioned plugin APIs/settings.
-- **Status:** Infrastructure-only. Tests use synthetic plugins, but plugin UI and routes
-  are not wired and no concrete source plugin implementation exists.
+- **Status:** Partial. As of 2026-07-15 (ADV-2026-07-14-05), `PluginManager`
+  is reachable at `/plugins` and calls the now-mounted `/api/plugins/*`
+  successfully — but nothing calls `pluginLoader.loadAll()` anywhere in the
+  app, so the registry is empty at runtime (`GET /api/plugins` returns
+  `{"plugins":[]}`) and no concrete plugin implementation is loaded. Tests use
+  synthetic plugins constructed directly against the registry/loader classes.
+  `DocumentShelfPanel.tsx` and `TechnicalDataPanel.tsx` remain completely
+  orphaned — not imported by `PluginManager`, `aas-explorer-integrated.tsx`,
+  or `property-panel.tsx` — and are not part of this fix's scope.
 
 | Layer | Touch list | Confidence |
 |---|---|---|
-| UI | `client/src/features/plugin-manager/`, `client/src/components/DocumentShelfPanel.tsx`, `client/src/components/TechnicalDataPanel.tsx` | `[inferred]` |
-| Backend | `server/src/api/plugin-routes.ts`, `server/src/services/plugin-registry.ts`, `server/src/services/plugin-loader.ts`, `server/src/services/plugin-api.ts` | `[inferred]` |
+| UI | `client/src/pages/plugin-manager-page.tsx`, `client/src/features/plugin-manager/`; orphaned: `client/src/components/DocumentShelfPanel.tsx`, `client/src/components/TechnicalDataPanel.tsx` | `[inferred]` |
+| Backend | `server/src/api/plugin-routes.ts` (mounted at `/api/plugins`), `server/src/services/plugin-registry.ts`, `server/src/services/plugin-loader.ts`, `server/src/services/plugin-api.ts` | `[inferred]` |
 | Contracts | `shared/plugin-manifest.ts`, `shared/plugin-types.ts` | `[inferred]` |
 | Persistence | Optional runtime plugin settings/storage under `data/`; current route state is in memory | `[inferred]` |
 | Tests | `tests/unit/server/services/plugin-registry.test.ts`, `tests/integration/plugin-system.test.ts` | `[inferred]` |
 
-- **Related:** None currently reachable. Do not reuse the contradictory historical
-  “2/18 plugins” count as a source fact.
+- **Related:** F03. Do not reuse the contradictory historical “2/18 plugins”
+  count as a source fact — no plugin is ever loaded at runtime regardless of
+  how many exist on disk, since nothing calls `pluginLoader.loadAll()`.
 
 ### F14 — IDTA template discovery `[inferred]`
 
