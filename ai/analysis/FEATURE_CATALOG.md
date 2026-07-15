@@ -122,18 +122,19 @@ role middleware.
 ### F03 — AASX package management `[inferred]`
 
 - **Business goal:** Create or upload packages, parse them, and manage stored files.
-- **Status:** Partial. The manager is reachable, but a newly created “package” is an
-  environment JSON sidecar recorded under an `.aasx` download name. Uploaded package
-  downloads return the original bytes, not later environment edits. Server endpoints
-  are also not protected by auth middleware.
+- **Status:** Partial. Packages are genuine OPC/ZIP `.aasx` (`shared/aasx-package.ts`,
+  `server/src/services/aasx-package-service.ts`): create, upload, property edits,
+  whole-environment saves, submodel/element add/delete, and element duplication all
+  persist transactionally into the real package and survive download/reopen. Server
+  endpoints are still not protected by auth middleware.
 
 | Layer | Touch list | Confidence |
 |---|---|---|
 | UI | `client/src/pages/aasx-manager-page.tsx`, `client/src/features/aasx-manager/` | `[inferred]` |
-| Backend | `server/aasx-routes.ts`, `server/src/services/aas-package-creator.ts` | `[inferred]` |
-| Domain | `shared/aas-parser.ts`, `shared/aas-v3-types.ts` | `[inferred]` |
-| Persistence | `data/aasx/` original uploads plus separate metadata and parsed-environment files; no OPC-aware package write path | `[inferred]` |
-| Tests | `tests/unit/server/services/aas-package-creator.test.ts` checks generated environments; `tests/integration/golden-master/aasx-parser.test.ts` deep-compares all eight complete environments with the committed C# goldens. No create/download/reopen or edit/download/reopen test exists | `[inferred]` |
+| Backend | `server/aasx-routes.ts`, `server/src/services/aas-package-creator.ts`, `server/src/services/aasx-package-service.ts` | `[inferred]` |
+| Domain | `shared/aas-parser.ts`, `shared/aas-v3-types.ts`, `shared/aasx-package.ts` | `[inferred]` |
+| Persistence | `data/aasx/` stores genuine OPC/ZIP `.aasx` packages plus metadata and parsed-environment sidecars; `AasxPackageService.save` writes transactionally (temp file, reopen-validate, atomic replace) | `[inferred]` |
+| Tests | `tests/unit/shared/aasx-package.test.ts` and `tests/integration/aasx-package-roundtrip.test.ts` cover create/download/reopen, property edit, submodel/element add+delete, and failed-write rollback; `tests/unit/server/services/aas-package-creator.test.ts` checks generated environments; `tests/integration/golden-master/aasx-parser.test.ts` deep-compares all eight complete environments with the committed C# goldens | `[inferred]` |
 
 - **Related:** F04, F07, F10.
 

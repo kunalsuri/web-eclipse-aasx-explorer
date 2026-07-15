@@ -37,9 +37,9 @@
 
 ### AASX Manager / Package Creator  `[inferred]`
 - **Business goal:** List, manage, and create AASX packages server-side.
-- **Touches:** `client/src/features/aasx-manager/`, `client/src/features/package-creator/`, `server/src/services/aas-package-creator.ts`, `server/aasx-routes.ts`, `data/aasx/`, `data/aasx-backups/`.
+- **Touches:** `client/src/features/aasx-manager/`, `client/src/features/package-creator/`, `server/src/services/aas-package-creator.ts`, `server/src/services/aasx-package-service.ts`, `shared/aasx-package.ts`, `server/aasx-routes.ts`, `data/aasx/`, `data/aasx-backups/`.
 - **Verify with:** `npm run test:integration`.
-- **Gotchas:** Writes go through `server/src/services/atomic-file-writer.ts`, a separate path from `server/storage.ts`'s `FileStorage`; do not replace the retrying atomic rename with delete-then-write. Backup restore selects the newest existing timestamped backup and writes it atomically.
+- **Gotchas:** Writes go through `server/src/services/atomic-file-writer.ts`, a separate path from `server/storage.ts`'s `FileStorage`; do not replace the retrying atomic rename with delete-then-write. Backup restore selects the newest existing timestamped backup and writes it atomically. Every mutation route in `server/aasx-routes.ts` (property patch, whole-environment PUT, submodel/element add/delete, duplicate) must persist through `saveEnvironment` -> `AasxPackageService.save`, which repacks the real `.aasx` transactionally; writing only the `<id>-environment.json` sidecar silently desyncs the downloadable package from the viewer (this was ADV-2026-07-14-02). `shared/aasx-package.ts` discovers the environment part via OPC origin/specification relationships, not file extension — never reintroduce `.xml`/`.json` extension filtering when touching supplementary-file extraction.
 - **Related:** AAS Explorer.
 
 ### Validation Engine  `[inferred]`

@@ -40,6 +40,7 @@ Status values: `idea` → `spec drafted` → `in progress` → `shipped` (or `dr
 
 | ID | Feature | Spec | WORKLOG | PR | Shipped |
 |---|---|---|---|---|---|
+| F01 | AAS package create/open/save/close parity (genuine OPC/ZIP `.aasx`, transactional save across all mutation routes) | `ai/lab/specs/SPEC_F01_package_create_open_save_close.md` | `W-015`, `W-016` | — | 2026-07-15 |
 <!-- Example row (delete once you ship something):
 | F1 | Short feature name | `ai/lab/specs/SPEC_<id>.md` | `W-<n>` | #<pr> | <date> |
 -->
