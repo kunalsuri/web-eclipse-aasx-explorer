@@ -30,6 +30,7 @@
 |---|---|---|---|---|---|---|
 | F10-XML | AAS V3 XML structural round-trip contract | P1 | M | F10 import/export infrastructure | `ai/lab/specs/FEATURE_activate_xml_round_trip.md` | in progress `[inferred]` |
 | F05-EDIT | Property editing and undo/redo workflow coverage | P1 | S | F05/F06 editing infrastructure | `ai/lab/specs/FEATURE_activate_editing_workflows.md` | in progress `[inferred]` |
+| F01 | AAS package create/open/save/close parity | P1 | M | — | `ai/lab/specs/SPEC_F01_package_create_open_save_close.md` | in progress `[inferred]` — ADV-2026-07-14-01/02/04 resolved (`W-015`, `W-016`); spec's T6 C# differential package-fixture tests (`tests/fixtures/f01-package-parity/`) and `node install.mjs verify . --strict` (BLOCKED-ENV, tool not present in this repo) remain outstanding before full definition-of-done is met — see `ai/lab/reviews/REVIEW_W-015.md` Finding 1 |
 <!-- Example row (delete once you add real ones):
 | F1 | Short feature name | P1 | M | — | `ai/lab/specs/SPEC_<id>.md` | idea |
 -->
@@ -40,7 +41,6 @@ Status values: `idea` → `spec drafted` → `in progress` → `shipped` (or `dr
 
 | ID | Feature | Spec | WORKLOG | PR | Shipped |
 |---|---|---|---|---|---|
-| F01 | AAS package create/open/save/close parity (genuine OPC/ZIP `.aasx`, transactional save across all mutation routes) | `ai/lab/specs/SPEC_F01_package_create_open_save_close.md` | `W-015`, `W-016` | — | 2026-07-15 |
 <!-- Example row (delete once you ship something):
 | F1 | Short feature name | `ai/lab/specs/SPEC_<id>.md` | `W-<n>` | #<pr> | <date> |
 -->
