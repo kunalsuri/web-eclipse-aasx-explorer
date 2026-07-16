@@ -86,6 +86,6 @@ This is the initial project structure created in Task 1. All files contain stub 
 
 ## References
 
-- Requirements: `.kiro/specs/aasx-web-reengineering/idta-templates/requirements.md`
-- Design: `.kiro/specs/aasx-web-reengineering/idta-templates/design.md`
-- Tasks: `.kiro/specs/aasx-web-reengineering/idta-templates/tasks.md`
+No requirements/design/tasks docs were ever created for this feature under the
+current spec convention. See `ai/analysis/FEATURE_CATALOG.md` F14 for its
+current (scaffold-only) status.

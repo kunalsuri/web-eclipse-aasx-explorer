@@ -81,7 +81,7 @@
 - **Business goal:** Extend the explorer via plugins.
 - **Touches:** `client/src/pages/plugin-manager-page.tsx`, `client/src/features/plugin-manager/`, `server/src/api/plugin-routes.ts`, `server/src/services/plugin-registry.ts`, `plugin-loader.ts`, `plugin-api.ts`, `plugin-aas-api.ts`, `shared/plugin-manifest.ts`, `plugin-types.ts`.
 - **Verify with:** `npm run test:unit -- tests/unit/server/services` (path a guess — confirm on audit).
-- **Gotchas:** As of 2026-07-15 (ADV-2026-07-14-05) `plugin-routes.ts` is mounted at `/api/plugins` and the page is reachable at `/plugins` — but `pluginLoader.loadAll()` is never called anywhere in the app, so the registry is always empty at runtime regardless of what's on disk. `.kiro/CONSOLIDATED-SUMMARY.md`'s "2/18 planned plugins" count is not evidence anything actually loads; do not treat it as current fact. `client/src/components/DocumentShelfPanel.tsx` and `TechnicalDataPanel.tsx` are unrelated orphaned components, still not wired into anything.
+- **Gotchas:** As of 2026-07-15 (ADV-2026-07-14-05) `plugin-routes.ts` is mounted at `/api/plugins` and the page is reachable at `/plugins` — but `pluginLoader.loadAll()` is never called anywhere in the app, so the registry is always empty at runtime regardless of what's on disk. A prior planning snapshot's "2/18 planned plugins" count (file removed 2026-07-16) was never evidence anything actually loads; see `ai/analysis/FEATURE_CATALOG.md` F13 for current status. `client/src/components/DocumentShelfPanel.tsx` and `TechnicalDataPanel.tsx` are unrelated orphaned components, still not wired into anything.
 - **Related:** none yet.
 
 ### Export/Import (CSV, Excel, XML)  `[inferred]`

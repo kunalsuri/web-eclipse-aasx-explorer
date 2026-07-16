@@ -22,10 +22,12 @@ Asset Administration Shell (AAS V3) package explorer/editor, developed at CEA-LI
 
 ## Why it exists  `[inferred]`
 This is a web reimplementation of a C# desktop application (referenced in
-`.kiro/specs/` as `x-external-proj`), giving Industry 4.0 digital-twin users a
+specs as `x-external-proj`), giving Industry 4.0 digital-twin users a
 browser-based tool to open, inspect, edit, and validate AASX packages without
-installing desktop software. Feature-parity against the desktop app is tracked
-phase-by-phase in `.kiro/CONSOLIDATED-SUMMARY.md`. A core differentiator is its
+installing desktop software. Feature-parity tracking against the desktop app
+previously lived in a `.kiro/CONSOLIDATED-SUMMARY.md` planning snapshot,
+removed 2026-07-16; current, source-backed status lives in
+`ai/analysis/FEATURE_CATALOG.md`. A core differentiator is its
 built-in AAS V3 constraint validation engine (`shared/aas-validation-engine.ts`,
 117 AASd-* rules, all with real behavioral logic — the registry previously
 claimed "150/150" but 33 of those IDs were fabricated placeholders with no
@@ -33,8 +35,8 @@ IDTA basis and were removed 2026-07-15, see [MODULE_MAP.md](MODULE_MAP.md) and
 `ai/analysis/audit-reports/DEFECT_TRACEABILITY.md` ADV-2026-07-14-03)
 and a plugin system for extending the explorer (early-stage: contracts and
 registry/loader services exist in `server/src/services/` and
-`shared/plugin-*.ts`, but `.kiro/CONSOLIDATED-SUMMARY.md` tracks only 2 of 18
-planned plugins as implemented).
+`shared/plugin-*.ts`, but concrete plugin implementations remain
+scaffold-stage — see `ai/analysis/FEATURE_CATALOG.md` F13 for current status).
 
 ## What we add vs. what we inherit  `[inferred]`
 Not a git fork (`ai/repo-profile.json` → `fork.isFork: false`) — there is no

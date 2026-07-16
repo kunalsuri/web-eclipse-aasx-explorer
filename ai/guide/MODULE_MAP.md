@@ -31,7 +31,7 @@
 | `client/src/features/idta-templates/` | Browse/instantiate IDTA submodel templates | `client/src/features/idta-templates/index.ts` | ours | [inferred] |
 | `client/src/features/observability/` | Client-side logging/telemetry UI | `client/src/features/observability/index.ts` | ours | [inferred] |
 | `client/src/features/package-creator/` | Create new AASX packages | `client/src/features/package-creator/components/` | ours | [inferred] |
-| `client/src/features/plugin-manager/` | Plugin list/settings UI, reachable at `/plugins` since 2026-07-15 (ADV-2026-07-14-05: `client/src/pages/plugin-manager-page.tsx` + `/api/plugins` mounted). Registry is always empty at runtime — nothing calls `pluginLoader.loadAll()` — so this is a working UI over zero loaded plugins, not a broken feature; `.kiro/CONSOLIDATED-SUMMARY.md`'s "2/18 planned plugins" is not current fact | `client/src/features/plugin-manager/index.tsx` | ours | [inferred] |
+| `client/src/features/plugin-manager/` | Plugin list/settings UI, reachable at `/plugins` since 2026-07-15 (ADV-2026-07-14-05: `client/src/pages/plugin-manager-page.tsx` + `/api/plugins` mounted). Registry is always empty at runtime — nothing calls `pluginLoader.loadAll()` — so this is a working UI over zero loaded plugins, not a broken feature; a prior planning snapshot's "2/18 planned plugins" (removed 2026-07-16) is not current fact — see `ai/analysis/FEATURE_CATALOG.md` F13 | `client/src/features/plugin-manager/index.tsx` | ours | [inferred] |
 | `client/src/features/user-profile/` | User profile/settings UI | `client/src/features/user-profile/components/` | ours | [inferred] |
 | `client/src/components/` | Shared UI components (shadcn/Radix wrappers + app-level shared components) | — | stable | [inferred] |
 | `client/src/stores/` | Zustand global state stores | — | ours | [inferred] |
@@ -57,7 +57,6 @@
 | `data/` | **Runtime state, not source** — flat-JSON storage (`data/users.json`, `data/sessions.json`, `data/config.json`, `data/preferences.json`) + `data/aasx/`, `data/aasx-backups/`, `data/logs/`. Generated/mutated at runtime by `server/storage.ts`; never hand-edit. | — | frozen | [inferred] |
 | `scripts/` | Production/ops entry points: `scripts/build.mjs` creates browser + server artifacts, `scripts/create-admin-user.ts` provisions an admin from environment variables, and `scripts/setup-local.ps1`/`scripts/setup-local.sh` support local setup | `scripts/build.mjs` | ours | [inferred] |
 | `config/` | Static config: `dictionary-config.json` (ECLASS/IEC CDD dictionary adapter config) | `config/dictionary-config.json` | stable | [inferred] |
-| `.kiro/` | Spec-driven planning artifacts (not app code) — `specs/<feature>/{requirements,design,tasks}.md`, `CONSOLIDATED-SUMMARY.md` (feature-parity/plugin/constraint-count roadmap vs. the C# desktop app) | `.kiro/CONSOLIDATED-SUMMARY.md` | n/a (docs) | [inferred] |
 | `docs/` | Standalone analysis docs (confidence-assessment/migration-strategy notes) | — | n/a (docs) | [inferred] |
 | `_external_source/` | Frozen C# reference snapshot plus source-mined feature inventory used for translation/parity analysis; never treat it as current web runtime code | `_external_source/CSHARP_TO_TYPESCRIPT_FEATURE_INVENTORY.md` | frozen | [inferred] |
 
