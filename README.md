@@ -286,8 +286,6 @@ re-eclipse-aasx-web/
 - [x] Authentication System
 
 
-> See our [Feature Prioritization](/.kiro/specs/aasx-web-reengineering/feature-prioritization.md) for detailed roadmap
-
 ---
 
 ## 🧪 Testing

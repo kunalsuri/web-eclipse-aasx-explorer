@@ -9,5 +9,5 @@ Rules:
 - Add new constraints to the correct existing category file in `shared/validation-rules/` — don't create a new file for a single rule.
 - Every constraint change needs a corresponding unit test in `tests/unit/shared/validation/aasd/`, and an integration test in `tests/integration/validation/` if it interacts with other constraints.
 - Respect existing severity conventions (`error` / `warning` / `info`) — cardinality-style "should have elements" rules are `info` by design because empty collections are valid AAS V3; don't silently upgrade severity.
-- If the total constraint count changes, update the table in `.kiro/CONSOLIDATED-SUMMARY.md` in the same change — it's the tracked source of truth other docs quote.
+- If the total constraint count changes, update the table in `ai/analysis/FEATURE_CATALOG.md` and `.agents/validation-engine.md` in the same change — those are the tracked source of truth other docs quote (the registry is 117 real AASd-* IDs, not the historical "150" claim).
 - Validate against the actual AAS V3 metamodel semantics, not assumptions — if a constraint's correct behavior per spec is unclear, say so rather than guessing.

@@ -29,7 +29,7 @@ Each rule has a `category` field; use `getConstraintsByCategory(category)` / `ge
 
 1. Add the rule to the relevant category file (matching the `ValidationRule` shape from `shared/validation-types.ts`), not a new file — categories are meaningful groupings, not arbitrary splits.
 2. Add unit tests under `tests/unit/shared/validation/aasd/` for the specific rule, and integration tests under `tests/integration/validation/` if it interacts with other rules.
-3. Update the constraint count/table in this file and `ai/analysis/FEATURE_CATALOG.md` if the total changes. `.kiro/CONSOLIDATED-SUMMARY.md` is a historical planning snapshot (see its warning banner) and is no longer the tracked source of truth.
+3. Update the constraint count/table in this file and `ai/analysis/FEATURE_CATALOG.md` if the total changes. The old `.kiro/CONSOLIDATED-SUMMARY.md` planning snapshot was removed 2026-07-16 (superseded by `ai/analysis/FEATURE_CATALOG.md`); it is no longer the tracked source of truth.
 
 ## Severity
 

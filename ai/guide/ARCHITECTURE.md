@@ -26,10 +26,12 @@
   `schema.ts`.
 - **`data/`** — flat-JSON runtime storage (not a database) written by
   `server/storage.ts` and `server/auth/session-manager.ts`.
-- **`.kiro/`** — spec-driven planning artifacts tracking feature-parity against a
-  separate C# desktop app (referenced in specs as `x-external-proj`); this repo is
-  a from-scratch web reimplementation, not a fork of that app's code
-  (`ai/repo-profile.json` confirms `fork.isFork: false`).
+
+This repo is a from-scratch web reimplementation of a separate C# desktop app
+(referenced in specs as `x-external-proj`), not a fork of that app's code
+(`ai/repo-profile.json` confirms `fork.isFork: false`). The `.kiro/` folder that
+previously tracked feature-parity against it was removed 2026-07-16 (superseded
+by `ai/analysis/FEATURE_CATALOG.md`).
 
 ## How they connect  `[inferred]`
 - **Frontend ↔ backend:** REST over HTTP — `client/src/api/` hooks (TanStack Query)
@@ -57,8 +59,10 @@
   / `plugin-types.ts` define the contracts, but no server-side plugins directory
   or concrete plugin implementation (e.g. a "document-shelf" or
   "technical-data" plugin) was found in source — only in `docs/` prose and
-  `.agents/architecture.md`. `.kiro/CONSOLIDATED-SUMMARY.md` tracks this as
-  2/18 planned plugins implemented. Flagged in the AUDIT TODO.
+  `.agents/architecture.md`. A prior planning snapshot (removed 2026-07-16)
+  tracked this as 2/18 planned plugins implemented; treat that count as
+  historical, not verified — see `ai/analysis/FEATURE_CATALOG.md` F13 instead.
+  Flagged in the AUDIT TODO.
 
 ## Diagrams
 Text-based (Mermaid) diagrams live in `ai/analysis/diagrams/`. Regenerate them via
