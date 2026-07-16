@@ -23,9 +23,9 @@
 
 ### AAS Explorer  `[inferred]`
 - **Business goal:** Browse a parsed AASX package's element tree.
-- **Touches:** `client/src/features/aas-explorer/`, `shared/aas-parser.ts`, `shared/aas-xml-migration.ts`, `shared/aas-v3-types.ts`.
+- **Touches:** `client/src/features/aas-explorer/`, `client/src/pages/aas-viewer-page.tsx`, `client/src/features/aas-explorer/utils/extract-technical-properties.ts`, `client/src/components/DocumentShelfPanel.tsx`, `client/src/components/TechnicalDataPanel.tsx`, `server/aasx-routes.ts` (`GET /api/aasx/:id/documents`), `server/src/models/document-entity.ts`, `shared/aas-parser.ts`, `shared/aas-xml-migration.ts`, `shared/aas-v3-types.ts`.
 - **Verify with:** `npm run test:unit -- tests/unit/client`, `npm run test:integration -- tests/integration/golden-master`.
-- **Gotchas:** Parsing is in-memory only (see [ARCHITECTURE.md](ARCHITECTURE.md) storage duality); not persisted via `server/storage.ts`. The OPC part named "aasx/aasx-origin" is a marker, not an AAS environment. Legacy V1/V2 XML migration is locked to complete deep equality with all eight committed C# golden environments.
+- **Gotchas:** Parsing is in-memory only (see [ARCHITECTURE.md](ARCHITECTURE.md) storage duality); not persisted via `server/storage.ts`. The OPC part named "aasx/aasx-origin" is a marker, not an AAS environment. Legacy V1/V2 XML migration is locked to complete deep equality with all eight committed C# golden environments. The viewer's Explorer tab composes `AasExplorerIntegrated` (clipboard/undo-redo); its edits persist server-side, so `onEnvironmentChange`/`onSaved` re-fetch the environment to reflect them (a passed-through env object would be stale). Document Shelf data is parsed server-side (`GET /api/aasx/:id/documents`); Technical Data is derived client-side from the in-memory environment (`extract-technical-properties.ts`).
 - **Related:** AASX Editor, AASX Manager.
 
 ### AASX Editor  `[inferred]`

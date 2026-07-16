@@ -1,8 +1,11 @@
-import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useState, useEffect, useMemo } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { AppLayout } from "@/features/app-shell";
-import { AasTreeView, PropertyPanel } from "@/features/aas-explorer";
+import { AasExplorerIntegrated } from "@/features/aas-explorer/components/aas-explorer-integrated";
+import { extractTechnicalProperties } from "@/features/aas-explorer/utils/extract-technical-properties";
+import { DocumentShelfPanel, type DocumentEntity } from "@/components/DocumentShelfPanel";
+import { TechnicalDataPanel } from "@/components/TechnicalDataPanel";
 import { ResponsiveBreadcrumb } from "@/features/aas-explorer/components/breadcrumb-navigation";
 import { useBreadcrumbNavigation } from "@/features/aas-explorer/hooks/use-breadcrumb";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,16 +21,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { 
-  FileJson, 
-  CheckCircle2, 
-  AlertCircle, 
+import {
+  FileJson,
+  CheckCircle2,
+  AlertCircle,
   Info,
   Package,
   Database,
   FileText,
   Upload,
-  Network
+  Network,
+  Table
 } from "lucide-react";
 import {
   createSampleEnvironment,
@@ -64,6 +68,15 @@ async function fetchEnvironment(fileId: string): Promise<Environment> {
   return data.environment;
 }
 
+async function fetchDocuments(fileId: string): Promise<DocumentEntity[]> {
+  const response = await fetch(`/api/aasx/${fileId}/documents`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch documents");
+  }
+  const data = await response.json();
+  return data.documents ?? [];
+}
+
 export function AasViewerPage() {
   const [location] = useLocation();
   const [environment, setEnvironment] = useState<Environment | null>(null);
@@ -71,12 +84,29 @@ export function AasViewerPage() {
   const [jsonOutput, setJsonOutput] = useState<string>("");
   const [selectedFileId, setSelectedFileId] = useState<string>("sample-aas");
   const [selectedNode, setSelectedNode] = useState<any>(null);
-  const [activeView, setActiveView] = useState<"tree" | "overview" | "validation">("overview");
+  const [activeView, setActiveView] = useState<
+    "tree" | "overview" | "validation" | "documents" | "technical"
+  >("overview");
+
+  const queryClient = useQueryClient();
 
   const { data: files } = useQuery({
     queryKey: ["aasx-files"],
     queryFn: fetchFiles,
   });
+
+  // VDI 2770 documents are derived server-side from the parsed environment.
+  const { data: documents = [] } = useQuery({
+    queryKey: ["aasx-documents", selectedFileId],
+    queryFn: () => fetchDocuments(selectedFileId),
+    enabled: Boolean(environment) && Boolean(selectedFileId),
+  });
+
+  // Technical properties are derived client-side from the in-memory environment.
+  const technicalProperties = useMemo(
+    () => extractTechnicalProperties(environment),
+    [environment]
+  );
 
   // Auto-load file from URL parameter
   useEffect(() => {
@@ -159,6 +189,31 @@ export function AasViewerPage() {
 
   const handleNodeSelect = (node: any) => {
     setSelectedNode(node);
+  };
+
+  // Edits from the integrated explorer (property edits, clipboard paste,
+  // undo/redo, delete, duplicate) persist server-side. Re-fetch the saved
+  // environment so the tree, JSON, validation, and derived panels reflect them.
+  const handleEnvironmentChange = async (updatedEnvironment?: Environment) => {
+    if (selectedFileId) {
+      try {
+        const fresh = await fetchEnvironment(selectedFileId);
+        setEnvironment(fresh);
+        setJsonOutput(serializeEnvironment(fresh));
+        setValidationResult(validateEnvironmentAdvanced(fresh));
+        queryClient.invalidateQueries({ queryKey: ["aasx-documents", selectedFileId] });
+        return;
+      } catch (error) {
+        console.error("Failed to refresh environment after edit:", error);
+      }
+    }
+
+    // Fallback for in-memory-only environments (no persisted file to re-read).
+    if (updatedEnvironment) {
+      setEnvironment(updatedEnvironment);
+      setJsonOutput(serializeEnvironment(updatedEnvironment));
+      setValidationResult(validateEnvironmentAdvanced(updatedEnvironment));
+    }
   };
 
   // Breadcrumb navigation
@@ -253,7 +308,7 @@ export function AasViewerPage() {
             </CardContent>
           </Card>
         ) : (
-          <Tabs value={activeView} onValueChange={(v) => setActiveView(v as "tree" | "overview" | "validation")} className="space-y-4">
+          <Tabs value={activeView} onValueChange={(v) => setActiveView(v as "tree" | "overview" | "validation" | "documents" | "technical")} className="space-y-4">
             <TabsList>
               <TabsTrigger value="overview">
                 <Info className="h-4 w-4 mr-2" />
@@ -261,7 +316,15 @@ export function AasViewerPage() {
               </TabsTrigger>
               <TabsTrigger value="tree">
                 <Network className="h-4 w-4 mr-2" />
-                Tree Navigation
+                Explorer
+              </TabsTrigger>
+              <TabsTrigger value="documents">
+                <FileText className="h-4 w-4 mr-2" />
+                Documents
+              </TabsTrigger>
+              <TabsTrigger value="technical">
+                <Table className="h-4 w-4 mr-2" />
+                Technical Data
               </TabsTrigger>
               <TabsTrigger value="validation">
                 {validationResult?.isValid ? (
@@ -447,43 +510,34 @@ export function AasViewerPage() {
               {/* Breadcrumb Navigation */}
               {selectedNode && breadcrumbItems.length > 0 && (
                 <div className="mb-4">
-                  <ResponsiveBreadcrumb 
-                    items={breadcrumbItems} 
+                  <ResponsiveBreadcrumb
+                    items={breadcrumbItems}
                     onNavigate={navigateBreadcrumb}
                   />
                 </div>
               )}
-              
-              <div className="grid gap-6 lg:grid-cols-2">
-                {/* Tree View */}
-                <Card className="h-[700px]">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Network className="h-5 w-5" />
-                      AAS Structure
-                    </CardTitle>
-                    <CardDescription>
-                      Navigate the hierarchical structure of the AAS Environment
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="p-0">
-                    <AasTreeView
-                      environment={environment}
-                      onNodeSelect={handleNodeSelect}
-                      selectedNodeId={selectedNode?.id}
-                      validationResult={validationResult}
-                    />
-                  </CardContent>
-                </Card>
 
-                {/* Property Panel */}
-                <div className="h-[700px]">
-                  <PropertyPanel 
-                    node={selectedNode} 
-                    fileId={selectedFileId}
-                    environment={environment}
-                  />
-                </div>
+              {/* Integrated explorer: tree + property editor + clipboard/undo/redo */}
+              <div className="h-[720px] rounded-lg border overflow-hidden">
+                <AasExplorerIntegrated
+                  environment={environment}
+                  fileId={selectedFileId}
+                  validationResult={validationResult}
+                  onNodeSelect={handleNodeSelect}
+                  onEnvironmentChange={handleEnvironmentChange}
+                />
+              </div>
+            </TabsContent>
+
+            <TabsContent value="documents" className="space-y-0">
+              <div className="h-[720px] rounded-lg border overflow-hidden">
+                <DocumentShelfPanel documents={documents} />
+              </div>
+            </TabsContent>
+
+            <TabsContent value="technical" className="space-y-0">
+              <div className="h-[720px] rounded-lg border overflow-hidden">
+                <TechnicalDataPanel properties={technicalProperties} />
               </div>
             </TabsContent>
 

@@ -12,7 +12,7 @@ import { FileText, Search, Download, Eye, Globe } from "lucide-react";
 // Types
 // ============================================================================
 
-interface DocumentEntity {
+export interface DocumentEntity {
   title: string;
   organization: string;
   furtherInfo: string;
@@ -23,7 +23,7 @@ interface DocumentEntity {
   smVersion: string;
 }
 
-interface FileInfo {
+export interface FileInfo {
   path: string;
   mimeType: string;
   aasId: string;

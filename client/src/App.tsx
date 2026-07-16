@@ -131,7 +131,6 @@ function App() {
         enableMetrics: true,
       },
       fileLogging: {
-        logDirectory: '/Users/ks248120/Documents/GitHub/cea-web-aasx-package-explorer/logs',
         maxFileSize: 10 * 1024 * 1024, // 10MB
         maxFiles: 5,
       },

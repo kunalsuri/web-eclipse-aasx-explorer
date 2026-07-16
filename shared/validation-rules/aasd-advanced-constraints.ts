@@ -244,45 +244,125 @@ export const AASd_014: ValidationRule = {
 };
 
 /**
- * AASd-050: Blob MIME type validation
+ * Recursively visit a list of submodel elements, descending into
+ * SubmodelElementCollection/List values, Entity statements, and
+ * AnnotatedRelationshipElement annotations. Mirrors the traversal used by
+ * AASd-049 in aasd-structural.ts so that HasDataSpecification/Referable
+ * checks reach every nested element, not just top-level ones.
+ */
+function traverseAllSubmodelElements(
+  elements: any[] | undefined,
+  basePath: string,
+  callback: (element: any, path: string) => void
+): void {
+  if (!elements) return;
+  elements.forEach((element: any, idx: number) => {
+    const path = `${basePath}[${idx}]`;
+    callback(element, path);
+
+    if (element.modelType === "SubmodelElementCollection" && Array.isArray(element.value)) {
+      traverseAllSubmodelElements(element.value, `${path}.value`, callback);
+    }
+    if (element.modelType === "SubmodelElementList" && Array.isArray(element.value)) {
+      traverseAllSubmodelElements(element.value, `${path}.value`, callback);
+    }
+    if (element.modelType === "Entity" && Array.isArray(element.statements)) {
+      traverseAllSubmodelElements(element.statements, `${path}.statements`, callback);
+    }
+    if (element.modelType === "AnnotatedRelationshipElement" && Array.isArray(element.annotations)) {
+      traverseAllSubmodelElements(element.annotations, `${path}.annotations`, callback);
+    }
+  });
+}
+
+/**
+ * The normative IRI of the DataSpecificationIec61360 template, per the IDTA
+ * AAS V3.0 metamodel changelog (Constraint AASd-050).
+ */
+const IEC61360_DATA_SPECIFICATION_IRI =
+  "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIEC61360/3/0";
+
+/**
+ * Normalize an IRI for comparison: lower-case and treat http/https as
+ * equivalent. Real-world AAS files (including this repo's own fixtures,
+ * see aasd-structural.ts AASd-049 tests) use both "http://" and "https://"
+ * and both "IEC61360" and "Iec61360" casing for this identifier, so a
+ * strictly case- and scheme-sensitive comparison would flag well-formed
+ * files as invalid.
+ */
+function normalizeDataSpecificationIri(iri: string): string {
+  return iri.trim().toLowerCase().replace(/^http:/, "https:");
+}
+
+/**
+ * AASd-050: If the DataSpecificationContent used for an element is
+ * DataSpecificationIec61360, the value of
+ * HasDataSpecification/embeddedDataSpecifications[].dataSpecification shall
+ * contain the global reference to the IRI of the corresponding data
+ * specification template
+ * https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIEC61360/3/0.
  */
 export const AASd_050: ValidationRule = {
   id: "AASd-050",
-  name: "Blob MIME Type Required",
-  description: "Blob must have a contentType (MIME type)",
+  name: "IEC 61360 Data Specification Template Reference",
+  description:
+    "If an EmbeddedDataSpecification's content is DataSpecificationIec61360, its dataSpecification reference must point to the IEC 61360 data specification template IRI",
   severity: "error",
   category: "schema",
   validate: (ctx: ValidationContext): ValidationError[] => {
     const errors: ValidationError[] = [];
+    const canonicalIri = normalizeDataSpecificationIri(IEC61360_DATA_SPECIFICATION_IRI);
 
-    function checkBlob(element: any, path: string): void {
-      if (element.modelType === "Blob") {
-        if (!element.contentType || element.contentType.trim() === "") {
+    function checkEmbeddedDataSpecs(element: any, path: string): void {
+      if (!element.embeddedDataSpecifications || !Array.isArray(element.embeddedDataSpecifications)) {
+        return;
+      }
+
+      element.embeddedDataSpecifications.forEach((spec: any, idx: number) => {
+        const content = spec?.dataSpecificationContent;
+        // Only DataSpecificationIec61360 content is constrained by AASd-050.
+        if (!content || content.modelType !== "DataSpecificationIec61360") {
+          return;
+        }
+
+        const keys: any[] | undefined = spec?.dataSpecification?.keys;
+        const referenceValue =
+          Array.isArray(keys) && keys.length > 0 ? keys[keys.length - 1]?.value : undefined;
+
+        if (!referenceValue || normalizeDataSpecificationIri(String(referenceValue)) !== canonicalIri) {
           errors.push({
-            path: `${path}.contentType`,
-            message: "Blob must have a contentType (MIME type)",
+            path: `${path}.embeddedDataSpecifications[${idx}].dataSpecification`,
+            message: referenceValue
+              ? `EmbeddedDataSpecification with DataSpecificationIec61360 content must reference the IRI "${IEC61360_DATA_SPECIFICATION_IRI}", found "${referenceValue}"`
+              : `EmbeddedDataSpecification with DataSpecificationIec61360 content must reference the IRI "${IEC61360_DATA_SPECIFICATION_IRI}", but dataSpecification has no reference key`,
             severity: "error",
             code: "AASd-050",
-            suggestion: "Add contentType, e.g., 'application/pdf', 'image/png'",
+            suggestion: `Set dataSpecification to a global reference whose key value is "${IEC61360_DATA_SPECIFICATION_IRI}"`,
           });
         }
-      }
+      });
+    }
 
-      // Recursively check
-      if (element.submodelElements) {
-        element.submodelElements.forEach((child: any, idx: number) => {
-          checkBlob(child, `${path}.submodelElements[${idx}]`);
-        });
-      }
+    if (ctx.environment.assetAdministrationShells) {
+      ctx.environment.assetAdministrationShells.forEach((aas, idx) => {
+        checkEmbeddedDataSpecs(aas, `assetAdministrationShells[${idx}]`);
+      });
     }
 
     if (ctx.environment.submodels) {
       ctx.environment.submodels.forEach((sm, idx) => {
-        if (sm.submodelElements) {
-          sm.submodelElements.forEach((elem, elemIdx) => {
-            checkBlob(elem, `submodels[${idx}].submodelElements[${elemIdx}]`);
-          });
-        }
+        checkEmbeddedDataSpecs(sm, `submodels[${idx}]`);
+        traverseAllSubmodelElements(
+          sm.submodelElements,
+          `submodels[${idx}].submodelElements`,
+          (element, path) => checkEmbeddedDataSpecs(element, path)
+        );
+      });
+    }
+
+    if (ctx.environment.conceptDescriptions) {
+      ctx.environment.conceptDescriptions.forEach((cd, idx) => {
+        checkEmbeddedDataSpecs(cd, `conceptDescriptions[${idx}]`);
       });
     }
 
@@ -389,54 +469,66 @@ export const AASd_077: ValidationRule = {
 };
 
 /**
- * AASd-090: For AnnotatedRelationshipElement, first and second must be defined
+ * DataElement subtypes per the AAS V3.0 metamodel (AasSubmodelElements enum
+ * values that extend DataElement in shared/aas-v3-types.ts).
+ */
+const DATA_ELEMENT_MODEL_TYPES = new Set([
+  "Property",
+  "MultiLanguageProperty",
+  "Range",
+  "ReferenceElement",
+  "Blob",
+  "File",
+]);
+
+/**
+ * Allowed values of Referable/category for data elements per AASd-090.
+ */
+const ALLOWED_DATA_ELEMENT_CATEGORIES = new Set(["CONSTANT", "PARAMETER", "VARIABLE"]);
+
+/**
+ * AASd-090: For data elements, category (inherited by Referable) shall be
+ * one of the following values: CONSTANT, PARAMETER or VARIABLE.
+ * Default: VARIABLE (an unset category is not a violation).
  */
 export const AASd_090: ValidationRule = {
   id: "AASd-090",
-  name: "AnnotatedRelationshipElement Endpoints Required",
-  description: "AnnotatedRelationshipElement must have first and second references",
+  name: "DataElement Category Value",
+  description:
+    "For data elements, category (inherited from Referable) must be CONSTANT, PARAMETER, or VARIABLE; unset defaults to VARIABLE",
   severity: "error",
   category: "schema",
   validate: (ctx: ValidationContext): ValidationError[] => {
     const errors: ValidationError[] = [];
 
-    function checkRelationship(element: any, path: string): void {
-      if (element.modelType === "AnnotatedRelationshipElement" || element.modelType === "RelationshipElement") {
-        if (!element.first) {
-          errors.push({
-            path: `${path}.first`,
-            message: `${element.modelType} must have 'first' reference defined`,
-            severity: "error",
-            code: "AASd-090",
-            suggestion: "Define the first endpoint of the relationship",
-          });
-        }
-        if (!element.second) {
-          errors.push({
-            path: `${path}.second`,
-            message: `${element.modelType} must have 'second' reference defined`,
-            severity: "error",
-            code: "AASd-090",
-            suggestion: "Define the second endpoint of the relationship",
-          });
-        }
+    function checkDataElementCategory(element: any, path: string): void {
+      if (!DATA_ELEMENT_MODEL_TYPES.has(element.modelType)) {
+        return;
       }
 
-      // Recursively check
-      if (element.submodelElements) {
-        element.submodelElements.forEach((child: any, idx: number) => {
-          checkRelationship(child, `${path}.submodelElements[${idx}]`);
+      // category is optional; an unset category defaults to VARIABLE and is valid.
+      if (element.category === undefined || element.category === null || element.category === "") {
+        return;
+      }
+
+      if (!ALLOWED_DATA_ELEMENT_CATEGORIES.has(element.category)) {
+        errors.push({
+          path: `${path}.category`,
+          message: `${element.modelType} category "${element.category}" is invalid; data element category must be one of CONSTANT, PARAMETER, or VARIABLE (default VARIABLE)`,
+          severity: "error",
+          code: "AASd-090",
+          suggestion: 'Set category to "CONSTANT", "PARAMETER", or "VARIABLE", or omit it to use the default "VARIABLE"',
         });
       }
     }
 
     if (ctx.environment.submodels) {
       ctx.environment.submodels.forEach((sm, idx) => {
-        if (sm.submodelElements) {
-          sm.submodelElements.forEach((elem, elemIdx) => {
-            checkRelationship(elem, `submodels[${idx}].submodelElements[${elemIdx}]`);
-          });
-        }
+        traverseAllSubmodelElements(
+          sm.submodelElements,
+          `submodels[${idx}].submodelElements`,
+          checkDataElementCategory
+        );
       });
     }
 
