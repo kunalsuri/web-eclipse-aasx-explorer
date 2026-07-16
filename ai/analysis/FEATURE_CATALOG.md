@@ -94,10 +94,12 @@ reason recorded in `ai/analysis/audit-reports/DEFECT_TRACEABILITY.md`:
   `update-service.ts`), bypassing `AasxPackageService`. Mounting it would
   reopen ADV-2026-07-14-02 (edits lost on download) through a second,
   uncoordinated code path.
-- `server/src/api/reference-routes.ts` — duplicates
-  `reference-suggestion-routes.ts` (mounted, and specifically bug-fixed for
-  environment loading) with a stale, never-implemented environment-loading
-  stub.
+- `server/src/api/reference-routes.ts` — duplicates `reference-suggestion-routes.ts`
+  (mounted) over the same underlying service, with a different base path and
+  route shapes. Its environment loading already delegates to the same fixed
+  function the canonical router uses (not a stub — corrected per
+  `ai/lab/reviews/REVIEW_W-018.md` Finding 1); the reason to leave it unmounted
+  is the redundant/inconsistent duplicate surface, not broken behavior.
 - `server/src/api/idta-templates-routes.ts` — every handler returns
   `501 Not Implemented`; there is no real behavior to expose yet.
 

@@ -36,12 +36,20 @@ Read each of the 5 unmounted routers and what they touch:
    (W-016, ADV-2026-07-14-02) — i.e. reopen that exact bug through a second,
    uncoordinated code path. **Not mounted.**
 4. `reference-routes.ts` — same `referenceSuggestionService` as the
-   already-mounted `reference-suggestion-routes.ts`, but its
-   `getEnvironmentFromStorage` helper is still the
-   `// TODO: implement based on your storage` stub that
-   `ai/lab/specs/BUGFIX_reference_suggestion_environment_loading.md` (W-012)
-   specifically replaced in the other file. Mounting both would expose the
-   stale, broken duplicate alongside the fixed one. **Not mounted.**
+   already-mounted `reference-suggestion-routes.ts`. **Correction (post-review,
+   `ai/lab/reviews/REVIEW_W-018.md` Finding 1):** an earlier draft of this doc
+   claimed `getEnvironmentFromStorage` was still the
+   `// TODO: implement based on your storage` stub W-012 replaced in the other
+   file. That claim is false — `getEnvironmentFromStorage` already delegates to
+   `loadReferenceEnvironment` (imported from `reference-suggestion-routes.ts`
+   itself), added in `d9f947a`, before this session started; only its stale
+   comment text (not its behavior) still reads like a stub. The real reason to
+   leave it unmounted: it is a genuine duplicate REST surface — different base
+   path (`/api/references` vs. `/api/v1/references`), different route shapes
+   (`/:id` vs. `/suggestions/:id`, no `by-semantic-id` equivalent on the
+   canonical router) — over the same underlying service. Mounting both would
+   give the client two inconsistent ways to reach identical functionality with
+   no clear canonical choice communicated to callers. **Not mounted.**
 5. `idta-templates-routes.ts` — every handler is
    `res.status(501).json({ error: 'Not implemented' })`. Mounting exposes an
    API with zero real behavior. **Not mounted** (the client page
