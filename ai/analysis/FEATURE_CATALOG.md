@@ -35,7 +35,7 @@ not just element counts, and all eight comparisons pass.
 | F03 | AASX package management | Create, upload, parse, list, download, and delete packages | `client/src/pages/aasx-manager-page.tsx` | Partial `[inferred]` |
 | F04 | AAS environment browsing | Load environments and inspect their overview, tree, metadata, and findings | `client/src/pages/aas-viewer-page.tsx` | Reachable `[inferred]` |
 | F05 | AAS property and structure editing | Change property values and manage submodels/elements | `client/src/features/aas-explorer/components/property-panel.tsx` | Partial `[inferred]` |
-| F06 | Clipboard, bulk operations, and undo/redo | Copy, paste, multi-select, batch-edit, and reverse edits | `client/src/features/aas-explorer/components/aas-explorer-integrated.tsx` | Infrastructure-only `[inferred]` |
+| F06 | Clipboard, bulk operations, and undo/redo | Copy, paste, multi-select, batch-edit, and reverse edits | `client/src/features/aas-explorer/components/aas-explorer-integrated.tsx` | Reachable (composed in the viewer Explorer tab) `[inferred]` |
 | F07 | AAS validation and reports | Apply AAS V3/AASd checks and export findings | `client/src/features/aas-explorer/components/validation-panel.tsx` | Partial `[inferred]` |
 | F08 | AAS search and reference suggestions | Find elements and choose valid reference targets | `server/aasx-routes.ts` | API-only / partial `[inferred]` |
 | F09 | Dictionary browsing | Search ECLASS/IEC CDD concepts and prepare ConceptDescription imports | `client/src/pages/dictionary-browser-page.tsx` | Partial `[inferred]` |
@@ -140,13 +140,14 @@ role middleware.
 ### F04 — AAS environment browsing `[inferred]`
 
 - **Business goal:** Inspect loaded AAS environments as summaries, trees, and detail panels.
-- **Status:** Reachable; the live page composes the basic tree/property panel rather
-  than the advanced integrated explorer.
+- **Status:** Reachable. The Explorer tab now composes the advanced integrated explorer
+  (`AasExplorerIntegrated`, see F06); the viewer additionally exposes Documents
+  (VDI 2770 shelf) and Technical Data tabs alongside overview/validation.
 
 | Layer | Touch list | Confidence |
 |---|---|---|
-| UI | `client/src/pages/aas-viewer-page.tsx`, `client/src/features/aas-explorer/components/aas-tree-view.tsx`, `client/src/features/aas-explorer/components/property-panel.tsx` | `[inferred]` |
-| Backend | `server/aasx-routes.ts` file/environment endpoints | `[inferred]` |
+| UI | `client/src/pages/aas-viewer-page.tsx`, `client/src/features/aas-explorer/components/aas-explorer-integrated.tsx`, `client/src/components/DocumentShelfPanel.tsx`, `client/src/components/TechnicalDataPanel.tsx`, `client/src/features/aas-explorer/utils/extract-technical-properties.ts` | `[inferred]` |
+| Backend | `server/aasx-routes.ts` file/environment endpoints plus `GET /api/aasx/:id/documents` (VDI 2770 parsing via `server/src/models/document-entity.ts`) | `[inferred]` |
 | Domain | `shared/aas-parser.ts`, `shared/aas-v3-types.ts` | `[inferred]` |
 | Persistence | Parsed environment files under `data/aasx/` | `[inferred]` |
 | Tests | `tests/integration/golden-master/aasx-parser.test.ts` deep-compares all eight complete environments with C# goldens; colocated property/tree tests run in the default suite | `[inferred]` |
@@ -157,9 +158,11 @@ role middleware.
 
 - **Business goal:** Persist property changes and manage the AAS element hierarchy.
 - **Status:** Partial. Ordinary Property edits use the mounted environment-property
-  endpoint; richer multi-language, element, reorder, restore, and version operations
-  target an unmounted router or unused integrated UI. All edits target the parsed
-  environment sidecar; the original package returned by Download is not repackaged.
+  endpoint and are now reachable through the integrated explorer (`property-panel.tsx`
+  gained an `onSaved` callback so the viewer re-fetches and reflects the persisted
+  edit). Richer multi-language, element, reorder, restore, and version operations still
+  target an unmounted router. All edits target the parsed environment sidecar; the
+  original package returned by Download is not repackaged.
 
 | Layer | Touch list | Confidence |
 |---|---|---|
@@ -174,9 +177,11 @@ role middleware.
 ### F06 — Clipboard, bulk operations, and undo/redo `[inferred]`
 
 - **Business goal:** Support compound editing workflows and reversible changes.
-- **Status:** Infrastructure-only for the live viewer. Clipboard APIs are mounted,
-  but `AasExplorerIntegrated` is not composed and several bulk/reorder client calls
-  have no mounted matching route.
+- **Status:** Reachable. `AasExplorerIntegrated` is now composed in the viewer's
+  Explorer tab (`client/src/pages/aas-viewer-page.tsx`), wiring keyboard shortcuts,
+  multi-select, clipboard, and undo/redo; its `onEnvironmentChange` re-fetches the
+  persisted environment so edits reflect. Clipboard APIs are mounted, but several
+  bulk/reorder client calls still have no mounted matching route.
 
 | Layer | Touch list | Confidence |
 |---|---|---|
@@ -282,7 +287,7 @@ role middleware.
 | UI/init | `client/src/App.tsx`, `client/src/features/observability/`, `client/src/features/user-profile/components/preferences-section.tsx` | `[inferred]` |
 | Client core | `client/src/lib/logger.ts`, `client/src/lib/tracing.ts`, `client/src/lib/metrics.ts` | `[inferred]` |
 | Backend | `server/logging-endpoint.ts`, `server/routes.ts` | `[inferred]` |
-| Persistence | Runtime log files; `App.tsx` also passes a stale absolute development log directory | `[inferred]` |
+| Persistence | Runtime log files; `App.tsx` no longer hardcodes a dev-machine log directory (fixed W-015) | `[inferred]` |
 | Tests | UNSURE — no automated observability/log endpoint tests found | `[inferred]` |
 
 - **Related:** F02, F11.
@@ -291,11 +296,13 @@ role middleware.
 
 - **Business goal:** Register/load extensions and expose permissioned plugin APIs/settings.
 - **Status:** Infrastructure-only. Tests use synthetic plugins, but plugin UI and routes
-  are not wired and no concrete source plugin implementation exists.
+  are not wired and no concrete source plugin implementation exists. Note:
+  `DocumentShelfPanel` and `TechnicalDataPanel` are no longer orphaned — they are now
+  wired directly into the AAS viewer (see F04), independent of the plugin runtime.
 
 | Layer | Touch list | Confidence |
 |---|---|---|
-| UI | `client/src/features/plugin-manager/`, `client/src/components/DocumentShelfPanel.tsx`, `client/src/components/TechnicalDataPanel.tsx` | `[inferred]` |
+| UI | `client/src/features/plugin-manager/` (the `DocumentShelfPanel`/`TechnicalDataPanel` components are now consumed by the AAS viewer, not the plugin system — see F04) | `[inferred]` |
 | Backend | `server/src/api/plugin-routes.ts`, `server/src/services/plugin-registry.ts`, `server/src/services/plugin-loader.ts`, `server/src/services/plugin-api.ts` | `[inferred]` |
 | Contracts | `shared/plugin-manifest.ts`, `shared/plugin-types.ts` | `[inferred]` |
 | Persistence | Optional runtime plugin settings/storage under `data/`; current route state is in memory | `[inferred]` |
@@ -389,7 +396,7 @@ Spot-check these five entries first because their source is substantial but thei
 runtime reachability or completeness is least certain:
 
 1. **F05 — Editing:** confirm which mutations the live viewer is intended to expose.
-2. **F06 — Clipboard/undo:** decide whether `AasExplorerIntegrated` should replace the basic viewer.
+2. **F06 — Clipboard/undo:** RESOLVED — `AasExplorerIntegrated` now replaces the basic tree/property pairing in the viewer's Explorer tab (W-017).
 3. **F09 — Dictionary:** separate the routed placeholder panel from richer unused hooks/components.
 4. **F10 — Export/import:** verify intended UI wiring and whether Excel import should apply updates.
 5. **F12 — Observability:** audit sample telemetry, the stale absolute path, and unauthenticated log retrieval.
