@@ -1,9 +1,64 @@
 /** Relationship-aware OPC/AASX package access. */
 import JSZip from "jszip";
-import path from "path";
 import type { Environment } from "./aas-v3-types";
 
-const posix = path.posix;
+/**
+ * `shared/` is imported by both the Node server and the browser client (via
+ * the `shared/index.ts` barrel), but Vite externalizes Node's `path` module
+ * for the browser and throws on any property access — so this file cannot
+ * import `path`/`path.posix`, even though every path here is already a
+ * forward-slash OPC package part name. Reimplemented minimally, matching
+ * `path.posix` semantics for the join/dirname/basename/extname/normalize
+ * calls this file actually makes.
+ */
+const posix = {
+  normalize(p: string): string {
+    if (p === "") return ".";
+    const isAbsolute = p.startsWith("/");
+    const trailingSlash = p.endsWith("/") && p !== "/";
+    const resolved: string[] = [];
+    for (const segment of p.split("/")) {
+      if (segment === "" || segment === ".") continue;
+      if (segment === "..") {
+        if (resolved.length > 0 && resolved[resolved.length - 1] !== "..") resolved.pop();
+        else if (!isAbsolute) resolved.push("..");
+      } else {
+        resolved.push(segment);
+      }
+    }
+    let result = resolved.join("/");
+    if (isAbsolute) result = "/" + result;
+    if (!result) result = isAbsolute ? "/" : ".";
+    if (trailingSlash && !result.endsWith("/")) result += "/";
+    return result;
+  },
+  join(...parts: string[]): string {
+    const joined = parts.filter((p) => p.length > 0).join("/");
+    return joined === "" ? "." : posix.normalize(joined);
+  },
+  dirname(p: string): string {
+    if (p === "") return ".";
+    let end = p.length;
+    while (end > 1 && p[end - 1] === "/") end--;
+    const trimmed = p.slice(0, end);
+    const lastSlash = trimmed.lastIndexOf("/");
+    if (lastSlash === -1) return ".";
+    if (lastSlash === 0) return "/";
+    return trimmed.slice(0, lastSlash);
+  },
+  basename(p: string): string {
+    let end = p.length;
+    while (end > 0 && p[end - 1] === "/") end--;
+    const trimmed = p.slice(0, end);
+    const lastSlash = trimmed.lastIndexOf("/");
+    return lastSlash === -1 ? trimmed : trimmed.slice(lastSlash + 1);
+  },
+  extname(p: string): string {
+    const base = posix.basename(p);
+    const lastDot = base.lastIndexOf(".");
+    return lastDot <= 0 ? "" : base.slice(lastDot);
+  },
+};
 export const AASX_RELATIONSHIPS = {
   origin: "http://www.admin-shell.io/aasx/relationships/aasx-origin",
   specification: "http://www.admin-shell.io/aasx/relationships/aas-spec",

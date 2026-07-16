@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { formatDistanceToNow } from "date-fns";
+import { authenticatedFetch } from "@/features/auth/utils/jwt-auth-utils";
 
 interface AasxFile {
   id: string;
@@ -25,7 +26,7 @@ interface AasxFile {
 }
 
 async function fetchFiles(): Promise<AasxFile[]> {
-  const response = await fetch("/api/aasx/files");
+  const response = await authenticatedFetch("/api/aasx/files");
   if (!response.ok) {
     throw new Error("Failed to fetch files");
   }
@@ -34,7 +35,7 @@ async function fetchFiles(): Promise<AasxFile[]> {
 }
 
 async function deleteFile(fileId: string): Promise<void> {
-  const response = await fetch(`/api/aasx/files/${fileId}`, {
+  const response = await authenticatedFetch(`/api/aasx/files/${fileId}`, {
     method: "DELETE",
   });
   if (!response.ok) {
@@ -43,7 +44,7 @@ async function deleteFile(fileId: string): Promise<void> {
 }
 
 async function parseFile(fileId: string): Promise<void> {
-  const response = await fetch(`/api/aasx/parse/${fileId}`, {
+  const response = await authenticatedFetch(`/api/aasx/parse/${fileId}`, {
     method: "POST",
   });
   if (!response.ok) {

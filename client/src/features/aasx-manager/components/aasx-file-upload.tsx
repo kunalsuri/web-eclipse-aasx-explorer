@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import { getAccessToken } from "@/features/auth/utils/jwt-auth-utils";
 
 interface AasxFileUploadProps {
   onUploadComplete?: (fileId: string) => void;
@@ -112,6 +113,10 @@ export function AasxFileUpload({ onUploadComplete, maxSizeMB = 200 }: AasxFileUp
       });
 
       xhr.open('POST', '/api/aasx/upload');
+      const accessToken = getAccessToken();
+      if (accessToken) {
+        xhr.setRequestHeader('Authorization', `Bearer ${accessToken}`);
+      }
       xhr.send(formData);
     } catch (err) {
       setError('Upload failed. Please try again.');

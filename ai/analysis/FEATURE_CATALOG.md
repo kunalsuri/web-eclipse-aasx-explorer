@@ -80,9 +80,11 @@ use client-side `ProtectedRoute`; this does not imply server-side API protection
 | `/api/xml/*` | `server/src/api/xml-routes.ts` | Stateless XML export/import/validate (mounted 2026-07-15, ADV-2026-07-14-05) |
 | `/api/logs` | `server/logging-endpoint.ts` | Client log submission/retrieval |
 
-Except for profile endpoints, these mounted feature APIs do not apply
-`validateAccessToken`, `authenticate`, session validation, CSRF validation, or
-role middleware.
+Except for profile endpoints and, as of 2026-07-16, `/api/aasx/*`
+(`ai/lab/specs/SPEC_aasx_routes_auth_middleware.md` — all 39 routes in
+`server/aasx-routes.ts` now require `validateAccessToken`), these mounted
+feature APIs do not apply `validateAccessToken`, `authenticate`, session
+validation, CSRF validation, or role middleware.
 
 ### Implemented routers not mounted
 
@@ -140,8 +142,10 @@ reason recorded in `ai/analysis/audit-reports/DEFECT_TRACEABILITY.md`:
 - **Status:** Partial. Packages are genuine OPC/ZIP `.aasx` (`shared/aasx-package.ts`,
   `server/src/services/aasx-package-service.ts`): create, upload, property edits,
   whole-environment saves, submodel/element add/delete, and element duplication all
-  persist transactionally into the real package and survive download/reopen. Server
-  endpoints are still not protected by auth middleware.
+  persist transactionally into the real package and survive download/reopen. As of
+  2026-07-16 every `server/aasx-routes.ts` route requires `validateAccessToken`
+  (`ai/lab/specs/SPEC_aasx_routes_auth_middleware.md`); CSRF protection and
+  per-package ownership checks remain explicitly out of scope for that change.
 
 | Layer | Touch list | Confidence |
 |---|---|---|
