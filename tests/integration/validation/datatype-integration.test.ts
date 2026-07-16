@@ -93,7 +93,9 @@ describe("Data Type Constraints Integration", () => {
 
   it("should report correct constraint count", () => {
     const count = getConstraintCount();
-    // Should have at least 138 constraints (126 existing + 12 new data type)
-    expect(count).toBeGreaterThanOrEqual(138);
+    // Should have at least 105 constraints (93 existing + 12 data type). 33
+    // fabricated placeholder IDs were removed - see ADV-2026-07-14-03 in
+    // ai/analysis/audit-reports/DEFECT_TRACEABILITY.md.
+    expect(count).toBeGreaterThanOrEqual(105);
   });
 });

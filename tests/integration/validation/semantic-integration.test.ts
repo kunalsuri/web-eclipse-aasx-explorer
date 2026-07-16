@@ -19,8 +19,10 @@ function createContext(environment: Environment): ValidationContext {
 
 describe("Semantic Constraints Integration", () => {
   it("should have semantic constraints", () => {
-    // Currently 43 implemented, spec calls for 45 total
-    expect(AASdSemanticConstraints.length).toBeGreaterThanOrEqual(43);
+    // 24 implemented (AASd-053..076). 19 fabricated placeholder IDs
+    // (AASd-078..089, AASd-091..097) were removed as non-standard - see
+    // ADV-2026-07-14-03 in ai/analysis/audit-reports/DEFECT_TRACEABILITY.md.
+    expect(AASdSemanticConstraints.length).toBeGreaterThanOrEqual(24);
   });
 
   it("should validate a complete valid AAS model with IEC 61360", () => {

@@ -1262,8 +1262,10 @@ describe("AASd Structural Constraints", () => {
 
   describe("All Structural Constraints", () => {
     it("should export structural constraints", () => {
-      // Currently 36 implemented, spec calls for 44 total
-      expect(AASdStructuralConstraints.length).toBeGreaterThanOrEqual(36);
+      // 27 implemented. 14 fabricated placeholder IDs (AASd-031..044) were
+      // removed as non-standard - see ADV-2026-07-14-03 in
+      // ai/analysis/audit-reports/DEFECT_TRACEABILITY.md.
+      expect(AASdStructuralConstraints.length).toBeGreaterThanOrEqual(27);
       
       // Check that all constraints have proper structure
       AASdStructuralConstraints.forEach((constraint) => {
@@ -1283,17 +1285,15 @@ describe("AASd Structural Constraints", () => {
     });
 
     it("should cover the expected constraint range", () => {
-      // Currently implemented structural constraints
+      // Currently implemented structural constraints. AASd-031..044 removed:
+      // not real IDTA constraint IDs (ADV-2026-07-14-03).
       const expectedIds = [
         "AASd-001", "AASd-003", "AASd-004", "AASd-009", "AASd-010",
         "AASd-011", "AASd-012", "AASd-013", "AASd-015", "AASd-016",
         "AASd-017", "AASd-018", "AASd-019", "AASd-020", "AASd-023",
         "AASd-024", "AASd-025", "AASd-026", "AASd-027", "AASd-028",
-        "AASd-029", "AASd-030", "AASd-031", "AASd-032", "AASd-033",
-        "AASd-034", "AASd-035", "AASd-036", "AASd-037", "AASd-038",
-        "AASd-039", "AASd-040", "AASd-041", "AASd-042", "AASd-043",
-        "AASd-044", "AASd-045", "AASd-046", "AASd-047", "AASd-048",
-        "AASd-049",
+        "AASd-029", "AASd-030", "AASd-045", "AASd-046", "AASd-047",
+        "AASd-048", "AASd-049",
       ];
 
       const actualIds = AASdStructuralConstraints.map(c => c.id).sort();

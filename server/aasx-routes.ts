@@ -1078,9 +1078,7 @@ router.post("/:id/submodel", async (req: Request, res: Response) => {
     environment.submodels.push(submodel);
 
     // Save environment
-    const tempPath = `${envPath}.tmp`;
-    await fs.writeFile(tempPath, JSON.stringify(environment, null, 2));
-    await fs.rename(tempPath, envPath);
+    await saveEnvironment(id, environment);
 
     res.json({
       success: true,
@@ -1117,9 +1115,7 @@ router.post("/:id/submodel/:submodelId/element", async (req: Request, res: Respo
     submodel.submodelElements.push(element);
 
     // Save environment
-    const tempPath = `${envPath}.tmp`;
-    await fs.writeFile(tempPath, JSON.stringify(environment, null, 2));
-    await fs.rename(tempPath, envPath);
+    await saveEnvironment(id, environment);
 
     res.json({
       success: true,
@@ -1151,9 +1147,7 @@ router.delete("/:id/submodel/:submodelId", async (req: Request, res: Response) =
     environment.submodels.splice(index, 1);
 
     // Save environment
-    const tempPath = `${envPath}.tmp`;
-    await fs.writeFile(tempPath, JSON.stringify(environment, null, 2));
-    await fs.rename(tempPath, envPath);
+    await saveEnvironment(id, environment);
 
     res.json({
       success: true,
@@ -1192,9 +1186,7 @@ router.delete("/:id/submodel/:submodelId/element/:elementIdShort", async (req: R
     submodel.submodelElements.splice(index, 1);
 
     // Save environment
-    const tempPath = `${envPath}.tmp`;
-    await fs.writeFile(tempPath, JSON.stringify(environment, null, 2));
-    await fs.rename(tempPath, envPath);
+    await saveEnvironment(id, environment);
 
     res.json({
       success: true,
@@ -1239,9 +1231,7 @@ router.post("/:id/element/duplicate", async (req: Request, res: Response) => {
     submodel.submodelElements.push(duplicate);
 
     // Save environment
-    const tempPath = `${envPath}.tmp`;
-    await fs.writeFile(tempPath, JSON.stringify(environment, null, 2));
-    await fs.rename(tempPath, envPath);
+    await saveEnvironment(id, environment);
 
     res.json({
       success: true,

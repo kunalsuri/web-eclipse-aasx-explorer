@@ -35,6 +35,27 @@ describe("F01 package lifecycle", () => {
     expect((parsed.package?.environment.submodels?.[0].submodelElements?.[0] as { value?: string }).value).toBe("after");
   });
 
+  it("add submodel -> save -> download -> reopen includes the new submodel", async () => {
+    const files = await workspace();
+    await AasxPackageService.create(files.packagePath, files.environmentPath, empty);
+    const environment = { ...empty, submodels: [{ id: "urn:sm", idShort: "SM", submodelElements: [] }] } as Environment;
+    await AasxPackageService.save(files.packagePath, files.environmentPath, environment);
+    const saved = await fs.readFile(files.packagePath);
+    const parsed = await parseAasxBuffer(arrayBufferOf(saved), "saved.aasx");
+    expect(parsed.package?.environment.submodels?.map((sm) => sm.id)).toEqual(["urn:sm"]);
+  });
+
+  it("delete element -> save -> download -> reopen no longer contains it", async () => {
+    const files = await workspace();
+    const environment = { ...empty, submodels: [{ id: "urn:sm", idShort: "SM", submodelElements: [{ modelType: "Property", idShort: "P", valueType: "xs:string", value: "v" }] }] } as Environment;
+    await AasxPackageService.create(files.packagePath, files.environmentPath, environment);
+    environment.submodels![0].submodelElements = [];
+    await AasxPackageService.save(files.packagePath, files.environmentPath, environment);
+    const saved = await fs.readFile(files.packagePath);
+    const parsed = await parseAasxBuffer(arrayBufferOf(saved), "saved.aasx");
+    expect(parsed.package?.environment.submodels?.[0].submodelElements).toEqual([]);
+  });
+
   it("a failed write leaves the previous package and sidecar byte-identical", async () => {
     const files = await workspace(); await AasxPackageService.create(files.packagePath, files.environmentPath, empty);
     const packageBefore = await fs.readFile(files.packagePath); const environmentBefore = await fs.readFile(files.environmentPath);

@@ -12,7 +12,7 @@ This project's history is almost entirely AI-agent-driven, using a consistent pa
 ## Practical implications for an agent session here
 
 - Before implementing a "big" feature, grep `.kiro/specs/` for a matching folder and read its `tasks.md`.
-- Before claiming something is "missing," check `.kiro/CONSOLIDATED-SUMMARY.md` — it may already be built (this codebase reached 78%+ feature parity and 150/150 validation constraints through exactly this process) or explicitly listed as a known gap with an estimate.
+- Before claiming something is "missing," check `.kiro/CONSOLIDATED-SUMMARY.md` — it may already be built, or explicitly listed as a known gap with an estimate. Treat its percentage/count claims (e.g. "78%+ feature parity," "150/150 validation constraints") as historical planning snapshots, not verified fact — see its own warning banner and `ai/analysis/audit-reports/DEFECT_TRACEABILITY.md` (the "150/150" claim included 33 fabricated non-IDTA constraint IDs, removed 2026-07-15; the real registered count is 117). Check `ai/analysis/FEATURE_CATALOG.md` for current, source-backed wiring status instead.
 - Prefer full, tested implementations over partial ones for anything spec-sized; it's fine to ask when a requirement is genuinely undefined, but the established norm here is to resolve smaller ambiguities yourself and keep going.
 - If you finish a phase, update `.kiro/CONSOLIDATED-SUMMARY.md`'s relevant table(s) in the same change.
 

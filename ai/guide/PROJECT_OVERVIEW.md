@@ -27,8 +27,10 @@ browser-based tool to open, inspect, edit, and validate AASX packages without
 installing desktop software. Feature-parity against the desktop app is tracked
 phase-by-phase in `.kiro/CONSOLIDATED-SUMMARY.md`. A core differentiator is its
 built-in AAS V3 constraint validation engine (`shared/aas-validation-engine.ts`,
-150 AASd-* rules — verified directly against `.kiro/CONSOLIDATED-SUMMARY.md`'s
-"150/150" claim, see [MODULE_MAP.md](MODULE_MAP.md))
+117 AASd-* rules, all with real behavioral logic — the registry previously
+claimed "150/150" but 33 of those IDs were fabricated placeholders with no
+IDTA basis and were removed 2026-07-15, see [MODULE_MAP.md](MODULE_MAP.md) and
+`ai/analysis/audit-reports/DEFECT_TRACEABILITY.md` ADV-2026-07-14-03)
 and a plugin system for extending the explorer (early-stage: contracts and
 registry/loader services exist in `server/src/services/` and
 `shared/plugin-*.ts`, but `.kiro/CONSOLIDATED-SUMMARY.md` tracks only 2 of 18
