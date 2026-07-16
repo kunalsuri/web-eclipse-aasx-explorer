@@ -1,12 +1,13 @@
-import { 
-  LayoutDashboard, 
-  User, 
-  Settings, 
+import {
+  LayoutDashboard,
+  User,
+  Settings,
   Folder,
   HelpCircle,
   Package,
   Database,
   Book,
+  Puzzle,
   type LucideIcon
 } from "lucide-react";
 
@@ -45,6 +46,11 @@ export const navigationConfig: NavSection[] = [
         title: "Dictionary",
         href: "/dictionary",
         icon: Book,
+      },
+      {
+        title: "Plugins",
+        href: "/plugins",
+        icon: Puzzle,
       },
     ],
   },

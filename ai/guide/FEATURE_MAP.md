@@ -37,16 +37,16 @@
 
 ### AASX Manager / Package Creator  `[inferred]`
 - **Business goal:** List, manage, and create AASX packages server-side.
-- **Touches:** `client/src/features/aasx-manager/`, `client/src/features/package-creator/`, `server/src/services/aas-package-creator.ts`, `server/aasx-routes.ts`, `data/aasx/`, `data/aasx-backups/`.
+- **Touches:** `client/src/features/aasx-manager/`, `client/src/features/package-creator/`, `server/src/services/aas-package-creator.ts`, `server/src/services/aasx-package-service.ts`, `shared/aasx-package.ts`, `server/aasx-routes.ts`, `data/aasx/`, `data/aasx-backups/`.
 - **Verify with:** `npm run test:integration`.
-- **Gotchas:** Writes go through `server/src/services/atomic-file-writer.ts`, a separate path from `server/storage.ts`'s `FileStorage`; do not replace the retrying atomic rename with delete-then-write. Backup restore selects the newest existing timestamped backup and writes it atomically.
+- **Gotchas:** Writes go through `server/src/services/atomic-file-writer.ts`, a separate path from `server/storage.ts`'s `FileStorage`; do not replace the retrying atomic rename with delete-then-write. Backup restore selects the newest existing timestamped backup and writes it atomically. Every mutation route in `server/aasx-routes.ts` (property patch, whole-environment PUT, submodel/element add/delete, duplicate) must persist through `saveEnvironment` -> `AasxPackageService.save`, which repacks the real `.aasx` transactionally; writing only the `<id>-environment.json` sidecar silently desyncs the downloadable package from the viewer (this was ADV-2026-07-14-02). `shared/aasx-package.ts` discovers the environment part via OPC origin/specification relationships, not file extension — never reintroduce `.xml`/`.json` extension filtering when touching supplementary-file extraction.
 - **Related:** AAS Explorer.
 
 ### Validation Engine  `[inferred]`
 - **Business goal:** Validate an AAS against IDTA AASd-* constraints.
 - **Touches:** `shared/aas-validation-engine.ts`, `shared/validation-rules/*`, `server/src/services/validation-preset-manager.ts`.
 - **Verify with:** `npm run test:unit -- tests/unit/shared/validation`.
-- **Gotchas:** 150 AASd-* rules total (verified directly, see [MODULE_MAP.md](MODULE_MAP.md) — don't sum per-category-file counts, two files overlap); cardinality rules are deliberately `info` severity, not `error`. Use the `aas-validation-engineer` subagent.
+- **Gotchas:** 117 AASd-* rules total, all with real behavioral logic (verified directly, see [MODULE_MAP.md](MODULE_MAP.md) — don't sum per-category-file counts, two files overlap); 33 previously-registered IDs (AASd-031..044, AASd-078..089, AASd-091..097) were removed 2026-07-15 as fabricated non-IDTA placeholders, see `ai/analysis/audit-reports/DEFECT_TRACEABILITY.md` ADV-2026-07-14-03; cardinality rules are deliberately `info` severity, not `error`. Use the `aas-validation-engineer` subagent.
 - **Related:** AAS Explorer, AASX Editor.
 
 ### Search and Reference Suggestions  `[inferred]`
@@ -79,9 +79,9 @@
 
 ### Plugin Manager  `[inferred]`
 - **Business goal:** Extend the explorer via plugins.
-- **Touches:** `client/src/features/plugin-manager/`, `server/src/services/plugin-registry.ts`, `plugin-loader.ts`, `plugin-api.ts`, `plugin-aas-api.ts`, `shared/plugin-manifest.ts`, `plugin-types.ts`.
+- **Touches:** `client/src/pages/plugin-manager-page.tsx`, `client/src/features/plugin-manager/`, `server/src/api/plugin-routes.ts`, `server/src/services/plugin-registry.ts`, `plugin-loader.ts`, `plugin-api.ts`, `plugin-aas-api.ts`, `shared/plugin-manifest.ts`, `plugin-types.ts`.
 - **Verify with:** `npm run test:unit -- tests/unit/server/services` (path a guess — confirm on audit).
-- **Gotchas:** Early-stage — registry/loader/contracts exist but no concrete plugin implementation was found in source; `.kiro/CONSOLIDATED-SUMMARY.md` tracks 2/18 planned plugins. See AUDIT TODO.
+- **Gotchas:** As of 2026-07-15 (ADV-2026-07-14-05) `plugin-routes.ts` is mounted at `/api/plugins` and the page is reachable at `/plugins` — but `pluginLoader.loadAll()` is never called anywhere in the app, so the registry is always empty at runtime regardless of what's on disk. `.kiro/CONSOLIDATED-SUMMARY.md`'s "2/18 planned plugins" count is not evidence anything actually loads; do not treat it as current fact. `client/src/components/DocumentShelfPanel.tsx` and `TechnicalDataPanel.tsx` are unrelated orphaned components, still not wired into anything.
 - **Related:** none yet.
 
 ### Export/Import (CSV, Excel, XML)  `[inferred]`

@@ -13,6 +13,7 @@ import { DashboardPage } from "@/pages/dashboard-page";
 import { AasxManagerPage } from "@/pages/aasx-manager-page";
 import { AasViewerPage } from "@/pages/aas-viewer-page";
 import { DictionaryBrowserPage } from "@/pages/dictionary-browser-page";
+import { PluginManagerPage } from "@/pages/plugin-manager-page";
 import ProfilePage from "@/pages/profile-page";
 import PreferencesPage from "@/pages/preferences-page";
 import WorkspacesPage from "@/pages/workspaces-page";
@@ -102,6 +103,7 @@ function Router() {
         <ProtectedRoute path="/aasx-manager" component={AasxManagerPage} />
         <ProtectedRoute path="/aas-viewer" component={AasViewerPage} />
         <ProtectedRoute path="/dictionary" component={DictionaryBrowserPage} />
+        <ProtectedRoute path="/plugins" component={PluginManagerPage} />
         <ProtectedRoute path="/profile" component={ProfilePage} />
         <ProtectedRoute path="/profile/preferences" component={PreferencesPage} />
         <ProtectedRoute path="/workspaces" component={WorkspacesPage} />

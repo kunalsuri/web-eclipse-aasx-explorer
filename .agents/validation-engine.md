@@ -1,13 +1,24 @@
 # AAS V3 Validation Engine
 
-`shared/aas-validation-engine.ts` runs a fixed set of 150 constraints (all implemented — 100% coverage as of the last audit in `.kiro/CONSOLIDATED-SUMMARY.md`) over a parsed `Environment`. Constraints are aggregated in `shared/validation-rules/index.ts` (`AllAASdConstraints`) from seven category files, each independently testable:
+`shared/aas-validation-engine.ts` runs a fixed set of 117 constraints over a
+parsed `Environment`, and every registered constraint now has real behavioral
+logic — no no-op placeholders remain (see ADV-2026-07-14-03 in
+`ai/analysis/audit-reports/DEFECT_TRACEABILITY.md`: 33 fabricated IDs that did
+not correspond to any real IDTA constraint — AASd-031..044, AASd-078..089,
+AASd-091..097 — were removed on 2026-07-15; the codebase previously registered
+150 IDs, of which those 33 always returned no diagnostics). "117 registered"
+is not the same claim as "117/117 of the official IDTA spec" — the spec has
+additional constraint IDs (some deliberately unimplemented, some deprecated;
+see the gaps in the reference-constraint ID list) that this engine does not
+cover. Constraints are aggregated in `shared/validation-rules/index.ts`
+(`AllAASdConstraints`) from seven category files, each independently testable:
 
 | Category | Count | File |
 |---|---|---|
 | Basic | 11 | `shared/validation-rules/aasd-constraints.ts` |
 | Advanced | 11 | `shared/validation-rules/aasd-advanced-constraints.ts` |
-| Structural | 36 | `shared/validation-rules/aasd-structural.ts` |
-| Semantic | 43 | `shared/validation-rules/aasd-semantic.ts` |
+| Structural | 27 | `shared/validation-rules/aasd-structural.ts` |
+| Semantic | 24 | `shared/validation-rules/aasd-semantic.ts` |
 | Reference | 25 | `shared/validation-rules/aasd-reference.ts` |
 | Data Type | 12 | `shared/validation-rules/aasd-datatype.ts` |
 | Cardinality | 7 | `shared/validation-rules/aasd-cardinality.ts` |
@@ -18,7 +29,7 @@ Each rule has a `category` field; use `getConstraintsByCategory(category)` / `ge
 
 1. Add the rule to the relevant category file (matching the `ValidationRule` shape from `shared/validation-types.ts`), not a new file — categories are meaningful groupings, not arbitrary splits.
 2. Add unit tests under `tests/unit/shared/validation/aasd/` for the specific rule, and integration tests under `tests/integration/validation/` if it interacts with other rules.
-3. Update the constraint count/table in `.kiro/CONSOLIDATED-SUMMARY.md` if the total changes — that file is the tracked source of truth for "how many constraints are implemented," and other docs (including this one) quote it.
+3. Update the constraint count/table in this file and `ai/analysis/FEATURE_CATALOG.md` if the total changes. `.kiro/CONSOLIDATED-SUMMARY.md` is a historical planning snapshot (see its warning banner) and is no longer the tracked source of truth.
 
 ## Severity
 
