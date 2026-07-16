@@ -348,6 +348,8 @@ export function AasExplorerIntegrated({
             <PropertyPanel
               node={selectedNode}
               fileId={fileId}
+              environment={environment}
+              onSaved={() => onEnvironmentChange?.(environment)}
             />
           </div>
         </ResizablePanel>

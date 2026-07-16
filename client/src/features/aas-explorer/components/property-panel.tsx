@@ -46,9 +46,11 @@ interface PropertyPanelProps {
   readonly node: any;
   readonly fileId?: string;
   readonly environment?: any;
+  /** Called after a property value is successfully persisted to the file. */
+  readonly onSaved?: () => void;
 }
 
-export function PropertyPanel({ node, fileId, environment }: PropertyPanelProps) {
+export function PropertyPanel({ node, fileId, environment, onSaved }: PropertyPanelProps) {
   if (!node) {
     return (
       <Card className="h-full">
@@ -89,7 +91,7 @@ export function PropertyPanel({ node, fileId, environment }: PropertyPanelProps)
               <TabsTrigger value="metadata">Metadata</TabsTrigger>
             </TabsList>
             <TabsContent value="properties" className="space-y-4 mt-4">
-              {renderNodeContent(node, fileId, environment)}
+              {renderNodeContent(node, fileId, environment, onSaved)}
             </TabsContent>
             <TabsContent value="metadata" className="space-y-4 mt-4">
               {renderMetadata(node.data)}
@@ -102,7 +104,7 @@ export function PropertyPanel({ node, fileId, environment }: PropertyPanelProps)
 }
 
 // Render node content based on type
-function renderNodeContent(node: any, fileId?: string, environment?: any) {
+function renderNodeContent(node: any, fileId?: string, environment?: any, onSaved?: () => void) {
   const data = node.data;
 
   if (!data) {
@@ -118,7 +120,7 @@ function renderNodeContent(node: any, fileId?: string, environment?: any) {
     case "submodel":
       return <SubmodelView data={data} />;
     case "submodelElement":
-      return <SubmodelElementView data={data} fileId={fileId} environment={environment} />;
+      return <SubmodelElementView data={data} fileId={fileId} environment={environment} onSaved={onSaved} />;
     default:
       return <GenericView data={data} />;
   }
@@ -217,12 +219,12 @@ function SubmodelView({ data }: { readonly data: Submodel }) {
 }
 
 // SubmodelElement View - Type-specific rendering
-function SubmodelElementView({ data, fileId, environment }: { readonly data: SubmodelElement; readonly fileId?: string; readonly environment?: any }) {
+function SubmodelElementView({ data, fileId, environment, onSaved }: { readonly data: SubmodelElement; readonly fileId?: string; readonly environment?: any; readonly onSaved?: () => void }) {
   const modelType = data.modelType;
 
   switch (modelType) {
     case "Property":
-      return <PropertyView data={data as Property} fileId={fileId} environment={environment} />;
+      return <PropertyView data={data as Property} fileId={fileId} environment={environment} onSaved={onSaved} />;
     case "MultiLanguageProperty":
       return <MultiLanguagePropertyView data={data as MultiLanguageProperty} fileId={fileId} environment={environment} />;
     case "Range":
@@ -255,7 +257,7 @@ function SubmodelElementView({ data, fileId, environment }: { readonly data: Sub
 }
 
 // Type-specific views
-function PropertyView({ data, fileId, environment }: { readonly data: Property; readonly fileId?: string; readonly environment?: any }) {
+function PropertyView({ data, fileId, environment, onSaved }: { readonly data: Property; readonly fileId?: string; readonly environment?: any; readonly onSaved?: () => void }) {
   return (
     <div className="space-y-4">
       <PropertyRow label="ID Short" value={data.idShort} icon={<Type className="h-4 w-4" />} />
@@ -294,6 +296,7 @@ function PropertyView({ data, fileId, environment }: { readonly data: Property; 
             await updatePropertyValue(fileId, propertyPath, newValue);
             console.log('✅ Property saved to file:', element.idShort, '=', newValue);
             alert(`Property "${element.idShort}" saved to file!`);
+            onSaved?.();
           } catch (error) {
             console.error('❌ Save failed:', error);
             alert(`Failed to save: ${error instanceof Error ? error.message : 'Unknown error'}`);

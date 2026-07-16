@@ -979,6 +979,84 @@ router.post("/:id/search/by-description", async (req: Request, res: Response) =>
 });
 
 // ============================================================================
+// Document Shelf Endpoint (VDI 2770 / IDTA Handover Documentation)
+// ============================================================================
+
+// GET /api/aasx/:id/documents - Parse VDI 2770 documents from the environment
+router.get("/:id/documents", async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    // Load environment
+    const envPath = path.join(process.cwd(), "data", "aasx", `${id}-environment.json`);
+    let environment;
+    try {
+      const data = await fs.readFile(envPath, "utf-8");
+      environment = JSON.parse(data);
+    } catch {
+      res.status(404).json({ error: "Environment not found. File may not be parsed yet." });
+      return;
+    }
+
+    const { defaultLang } = req.query;
+    const lang = typeof defaultLang === "string" && defaultLang ? defaultLang : "en";
+
+    const { DocumentEntityList } = await import("./src/models/document-entity.js");
+
+    // Resolve which AAS references a given submodel (fallback: first AAS)
+    const shells: any[] = environment.assetAdministrationShells || [];
+    const resolveAasId = (submodelId: string): string => {
+      for (const aas of shells) {
+        const refs: any[] = aas.submodels || [];
+        if (refs.some((ref) => ref?.keys?.some((k: any) => k.value === submodelId))) {
+          return aas.id || "";
+        }
+      }
+      return shells[0]?.id || "";
+    };
+
+    // A submodel may follow any VDI 2770 version; run each parser and de-duplicate
+    const seen = new Set<string>();
+    const documents: unknown[] = [];
+
+    for (const submodel of environment.submodels || []) {
+      const aasId = resolveAasId(submodel.id);
+      const parsed = [
+        ...DocumentEntityList.parseSubmodelForV10(id, aasId, submodel, lang),
+        ...DocumentEntityList.parseSubmodelForV11(id, aasId, submodel, lang),
+        ...DocumentEntityList.parseSubmodelForV12(id, aasId, submodel, lang),
+      ];
+
+      for (const entity of parsed) {
+        if (entity.referableHash && seen.has(entity.referableHash)) {
+          continue;
+        }
+        if (entity.referableHash) {
+          seen.add(entity.referableHash);
+        }
+        // Return only the presentation fields the client shelf needs
+        // (omit the heavy sourceElements* subtrees carried for C# parity).
+        documents.push({
+          smVersion: entity.smVersion,
+          title: entity.title,
+          organization: entity.organization,
+          furtherInfo: entity.furtherInfo,
+          countryCodes: entity.countryCodes,
+          digitalFile: entity.digitalFile,
+          previewFile: entity.previewFile,
+          referableHash: entity.referableHash,
+        });
+      }
+    }
+
+    res.json({ documents });
+  } catch (error) {
+    console.error("Get documents error:", error);
+    res.status(500).json({ error: "Failed to parse documents" });
+  }
+});
+
+// ============================================================================
 // Element Management Endpoints
 // ============================================================================
 
