@@ -4,6 +4,7 @@
  */
 
 import type { Environment, SubmodelElement } from '../../../../../shared';
+import { authenticatedFetch } from '@/features/auth/utils/jwt-auth-utils';
 
 /**
  * Update a property value in the environment
@@ -13,7 +14,7 @@ export async function updatePropertyValue(
   propertyPath: string,
   value: any
 ): Promise<void> {
-  const response = await fetch(`/api/aasx/environment/${fileId}/property`, {
+  const response = await authenticatedFetch(`/api/aasx/environment/${fileId}/property`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -39,7 +40,7 @@ export async function updateEnvironment(
   fileId: string,
   environment: Environment
 ): Promise<void> {
-  const response = await fetch(`/api/aasx/environment/${fileId}`, {
+  const response = await authenticatedFetch(`/api/aasx/environment/${fileId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',

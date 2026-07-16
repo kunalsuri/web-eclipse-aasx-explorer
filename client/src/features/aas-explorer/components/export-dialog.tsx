@@ -19,6 +19,7 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { authenticatedFetch } from '@/features/auth/utils/jwt-auth-utils';
 
 interface ExportDialogProps {
   fileId: string;
@@ -58,7 +59,7 @@ export function ExportDialog({ fileId, fileName = 'export', trigger }: ExportDia
           break;
       }
 
-      const response = await fetch(url);
+      const response = await authenticatedFetch(url);
 
       if (!response.ok) {
         throw new Error('Export failed');

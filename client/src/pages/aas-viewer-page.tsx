@@ -42,6 +42,7 @@ import {
 import type { Environment } from "../../../shared";
 import type { ValidationResult } from "../../../shared/aas-validation-engine";
 import { ValidationPanel } from "@/features/aas-explorer/components/validation-panel";
+import { authenticatedFetch } from "@/features/auth/utils/jwt-auth-utils";
 
 interface AasxFile {
   id: string;
@@ -51,7 +52,7 @@ interface AasxFile {
 }
 
 async function fetchFiles(): Promise<AasxFile[]> {
-  const response = await fetch("/api/aasx/files");
+  const response = await authenticatedFetch("/api/aasx/files");
   if (!response.ok) {
     throw new Error("Failed to fetch files");
   }
@@ -60,7 +61,7 @@ async function fetchFiles(): Promise<AasxFile[]> {
 }
 
 async function fetchEnvironment(fileId: string): Promise<Environment> {
-  const response = await fetch(`/api/aasx/environment/${fileId}`);
+  const response = await authenticatedFetch(`/api/aasx/environment/${fileId}`);
   if (!response.ok) {
     throw new Error("Environment not found. Parse the file first.");
   }
@@ -69,7 +70,7 @@ async function fetchEnvironment(fileId: string): Promise<Environment> {
 }
 
 async function fetchDocuments(fileId: string): Promise<DocumentEntity[]> {
-  const response = await fetch(`/api/aasx/${fileId}/documents`);
+  const response = await authenticatedFetch(`/api/aasx/${fileId}/documents`);
   if (!response.ok) {
     throw new Error("Failed to fetch documents");
   }
@@ -120,7 +121,7 @@ export function AasViewerPage() {
   const handleLoadSample = async () => {
     // Try to load from file first
     try {
-      const response = await fetch('/api/aasx/environment/sample-aas');
+      const response = await authenticatedFetch('/api/aasx/environment/sample-aas');
       if (response.ok) {
         const data = await response.json();
         setEnvironment(data.environment);

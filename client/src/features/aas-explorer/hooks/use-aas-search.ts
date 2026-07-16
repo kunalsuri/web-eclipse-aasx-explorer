@@ -6,6 +6,7 @@
 import { useState, useCallback } from 'react';
 import type { SearchResult, SearchOptions } from '../../../../../shared/aas-search-types';
 import type { AdvancedFilterOptions } from '../../../../../shared/aas-search-filters';
+import { authenticatedFetch } from '@/features/auth/utils/jwt-auth-utils';
 
 interface UseAASSearchResult {
   search: (options: SearchOptions, filters?: AdvancedFilterOptions) => Promise<void>;
@@ -44,7 +45,7 @@ export function useAASSearch(fileId: string): UseAASSearchResult {
       setError(null);
 
       try {
-        const response = await fetch(`/api/aasx/${fileId}/search`, {
+        const response = await authenticatedFetch(`/api/aasx/${fileId}/search`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

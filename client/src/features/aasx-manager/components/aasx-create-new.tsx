@@ -36,6 +36,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
+import { authenticatedFetch } from "@/features/auth/utils/jwt-auth-utils";
 
 // ============================================================================
 // Types
@@ -68,7 +69,7 @@ interface CreatePackageResponse {
 async function createNewPackage(
   request: CreatePackageRequest
 ): Promise<CreatePackageResponse> {
-  const response = await fetch("/api/aasx/new", {
+  const response = await authenticatedFetch("/api/aasx/new", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
