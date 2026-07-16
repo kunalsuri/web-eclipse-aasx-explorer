@@ -1,6 +1,6 @@
 <!-- Copyright (c) 2026 Kunal Suri (CEA LIST). All rights reserved. -->
 # SPEC: AASX route authentication
-> **Status:** draft
+> **Status:** approved
 > **Author:** AI draft · **Date:** 2026-07-16 · **Revision:** 1
 
 This spec is written to be implemented **without further design decisions**.

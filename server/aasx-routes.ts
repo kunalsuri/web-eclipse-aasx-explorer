@@ -7,6 +7,7 @@ import { ExcelExportService } from "./src/services/excel-export-service.js";
 import { CsvExportService } from "./src/services/csv-export-service.js";
 import { ExcelImportService } from "./src/services/excel-import-service.js";
 import { AasxPackageService } from "./src/services/aasx-package-service.js";
+import { validateAccessToken } from "./auth/auth-middleware";
 
 const router = Router();
 
@@ -15,7 +16,7 @@ const router = Router();
 // ============================================================================
 
 // POST /api/aasx/new - Create a new empty AASX package
-router.post("/new", async (req: Request, res: Response) => {
+router.post("/new", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { packageName, includeDefaultAAS, includeDefaultSubmodel, template } = req.body;
 
@@ -176,7 +177,7 @@ async function saveEnvironment(id: string, environment: unknown): Promise<void> 
 }
 
 // POST /api/aasx/upload - Upload AASX file
-router.post("/upload", upload.single("file"), async (req: Request, res: Response) => {
+router.post("/upload", validateAccessToken, upload.single("file"), async (req: Request, res: Response) => {
   try {
     if (!req.file) {
       res.status(400).json({ error: "No file uploaded" });
@@ -223,7 +224,7 @@ router.post("/upload", upload.single("file"), async (req: Request, res: Response
 });
 
 // POST /api/aasx/parse/:id - Parse an uploaded AASX file
-router.post("/parse/:id", async (req: Request, res: Response) => {
+router.post("/parse/:id", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const metadata = await readMetadata();
@@ -276,7 +277,7 @@ router.post("/parse/:id", async (req: Request, res: Response) => {
 });
 
 // GET /api/aasx/environment/:id - Get parsed environment
-router.get("/environment/:id", async (req: Request, res: Response) => {
+router.get("/environment/:id", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const envPath = path.join(
@@ -300,7 +301,7 @@ router.get("/environment/:id", async (req: Request, res: Response) => {
 });
 
 // GET /api/aasx/files - List all AASX files
-router.get("/files", async (_req: Request, res: Response) => {
+router.get("/files", validateAccessToken, async (_req: Request, res: Response) => {
   try {
     const metadata = await readMetadata();
     const files = metadata.map((m) => ({
@@ -317,7 +318,7 @@ router.get("/files", async (_req: Request, res: Response) => {
 });
 
 // GET /api/aasx/files/:id - Get file metadata
-router.get("/files/:id", async (req: Request, res: Response) => {
+router.get("/files/:id", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const metadata = await readMetadata();
@@ -341,7 +342,7 @@ router.get("/files/:id", async (req: Request, res: Response) => {
 });
 
 // GET /api/aasx/download/:id - Download AASX file
-router.get("/download/:id", async (req: Request, res: Response) => {
+router.get("/download/:id", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const metadata = await readMetadata();
@@ -360,7 +361,7 @@ router.get("/download/:id", async (req: Request, res: Response) => {
 });
 
 // DELETE /api/aasx/files/:id - Delete AASX file
-router.delete("/files/:id", async (req: Request, res: Response) => {
+router.delete("/files/:id", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const metadata = await readMetadata();
@@ -392,7 +393,7 @@ router.delete("/files/:id", async (req: Request, res: Response) => {
 });
 
 // PATCH /api/aasx/environment/:id/property - Update a property value
-router.patch("/environment/:id/property", async (req: Request, res: Response) => {
+router.patch("/environment/:id/property", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { propertyPath, value } = req.body;
@@ -449,7 +450,7 @@ router.patch("/environment/:id/property", async (req: Request, res: Response) =>
 });
 
 // PUT /api/aasx/environment/:id - Replace entire environment
-router.put("/environment/:id", async (req: Request, res: Response) => {
+router.put("/environment/:id", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { environment } = req.body;
@@ -474,7 +475,7 @@ router.put("/environment/:id", async (req: Request, res: Response) => {
 });
 
 // POST /api/aasx/:id/validate - Validate an AASX environment
-router.post("/:id/validate", async (req: Request, res: Response) => {
+router.post("/:id/validate", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { preset, rules } = req.body;
@@ -520,7 +521,7 @@ router.post("/:id/validate", async (req: Request, res: Response) => {
 });
 
 // GET /api/aasx/:id/validation - Get cached validation result
-router.get("/:id/validation", async (req: Request, res: Response) => {
+router.get("/:id/validation", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const validationPath = path.join(process.cwd(), "data", "aasx", `${id}-validation.json`);
@@ -539,7 +540,7 @@ router.get("/:id/validation", async (req: Request, res: Response) => {
 });
 
 // GET /api/aasx/:id/validation-report - Generate validation report
-router.get("/:id/validation-report", async (req: Request, res: Response) => {
+router.get("/:id/validation-report", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { format = "json" } = req.query;
@@ -621,7 +622,7 @@ router.get("/:id/validation-report", async (req: Request, res: Response) => {
 });
 
 // GET /api/aasx/validation/presets - List available validation presets
-router.get("/validation/presets", async (_req: Request, res: Response) => {
+router.get("/validation/presets", validateAccessToken, async (_req: Request, res: Response) => {
   try {
     const { validationEngine } = await import("../shared/aas-validation-engine.js");
     const presets = validationEngine.getPresets();
@@ -633,7 +634,7 @@ router.get("/validation/presets", async (_req: Request, res: Response) => {
 });
 
 // GET /api/aasx/validation/rules - List available validation rules
-router.get("/validation/rules", async (_req: Request, res: Response) => {
+router.get("/validation/rules", validateAccessToken, async (_req: Request, res: Response) => {
   try {
     const { validationEngine } = await import("../shared/aas-validation-engine.js");
     const rules = validationEngine.getRules();
@@ -645,7 +646,7 @@ router.get("/validation/rules", async (_req: Request, res: Response) => {
 });
 
 // POST /api/aasx/validation/presets - Create custom preset
-router.post("/validation/presets", async (req: Request, res: Response) => {
+router.post("/validation/presets", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { preset } = req.body;
 
@@ -670,7 +671,7 @@ router.post("/validation/presets", async (req: Request, res: Response) => {
 });
 
 // GET /api/aasx/validation/presets/:id - Get custom preset
-router.get("/validation/presets/:id", async (req: Request, res: Response) => {
+router.get("/validation/presets/:id", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { presetManager } = await import("./src/services/validation-preset-manager.js");
@@ -690,7 +691,7 @@ router.get("/validation/presets/:id", async (req: Request, res: Response) => {
 });
 
 // DELETE /api/aasx/validation/presets/:id - Delete custom preset
-router.delete("/validation/presets/:id", async (req: Request, res: Response) => {
+router.delete("/validation/presets/:id", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { presetManager } = await import("./src/services/validation-preset-manager.js");
@@ -713,7 +714,7 @@ router.delete("/validation/presets/:id", async (req: Request, res: Response) => 
 });
 
 // GET /api/aasx/validation/presets/custom/list - List custom presets
-router.get("/validation/presets/custom/list", async (_req: Request, res: Response) => {
+router.get("/validation/presets/custom/list", validateAccessToken, async (_req: Request, res: Response) => {
   try {
     const { presetManager } = await import("./src/services/validation-preset-manager.js");
     await presetManager.initialize();
@@ -731,7 +732,7 @@ router.get("/validation/presets/custom/list", async (_req: Request, res: Respons
 // ============================================================================
 
 // POST /api/aasx/:id/search/index - Index an environment for searching
-router.post("/:id/search/index", async (req: Request, res: Response) => {
+router.post("/:id/search/index", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -758,7 +759,7 @@ router.post("/:id/search/index", async (req: Request, res: Response) => {
 });
 
 // POST /api/aasx/:id/search - Search within an indexed environment
-router.post("/:id/search", async (req: Request, res: Response) => {
+router.post("/:id/search", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { filters, ...searchOptions } = req.body;
@@ -797,7 +798,7 @@ router.post("/:id/search", async (req: Request, res: Response) => {
 });
 
 // GET /api/aasx/:id/search/status - Get search index status
-router.get("/:id/search/status", async (req: Request, res: Response) => {
+router.get("/:id/search/status", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { aasSearchService } = await import("./src/services/aas-search-service.js");
@@ -817,7 +818,7 @@ router.get("/:id/search/status", async (req: Request, res: Response) => {
 });
 
 // DELETE /api/aasx/:id/search/index - Clear search index for a file
-router.delete("/:id/search/index", async (req: Request, res: Response) => {
+router.delete("/:id/search/index", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { aasSearchService } = await import("./src/services/aas-search-service.js");
@@ -835,7 +836,7 @@ router.delete("/:id/search/index", async (req: Request, res: Response) => {
 });
 
 // POST /api/aasx/:id/search/by-value - Search by property value
-router.post("/:id/search/by-value", async (req: Request, res: Response) => {
+router.post("/:id/search/by-value", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { value, ...options } = req.body;
@@ -871,7 +872,7 @@ router.post("/:id/search/by-value", async (req: Request, res: Response) => {
 });
 
 // POST /api/aasx/:id/search/by-id - Search by ID or idShort
-router.post("/:id/search/by-id", async (req: Request, res: Response) => {
+router.post("/:id/search/by-id", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { searchId, ...options } = req.body;
@@ -907,7 +908,7 @@ router.post("/:id/search/by-id", async (req: Request, res: Response) => {
 });
 
 // POST /api/aasx/:id/search/by-semantic-id - Search by semantic ID
-router.post("/:id/search/by-semantic-id", async (req: Request, res: Response) => {
+router.post("/:id/search/by-semantic-id", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { semanticId, ...options } = req.body;
@@ -943,7 +944,7 @@ router.post("/:id/search/by-semantic-id", async (req: Request, res: Response) =>
 });
 
 // POST /api/aasx/:id/search/by-description - Search by description
-router.post("/:id/search/by-description", async (req: Request, res: Response) => {
+router.post("/:id/search/by-description", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { description, ...options } = req.body;
@@ -983,7 +984,7 @@ router.post("/:id/search/by-description", async (req: Request, res: Response) =>
 // ============================================================================
 
 // GET /api/aasx/:id/documents - Parse VDI 2770 documents from the environment
-router.get("/:id/documents", async (req: Request, res: Response) => {
+router.get("/:id/documents", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -1061,7 +1062,7 @@ router.get("/:id/documents", async (req: Request, res: Response) => {
 // ============================================================================
 
 // POST /api/aasx/:id/submodel - Create new submodel
-router.post("/:id/submodel", async (req: Request, res: Response) => {
+router.post("/:id/submodel", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const submodel = req.body;
@@ -1091,7 +1092,7 @@ router.post("/:id/submodel", async (req: Request, res: Response) => {
 });
 
 // POST /api/aasx/:id/submodel/:submodelId/element - Create new element in submodel
-router.post("/:id/submodel/:submodelId/element", async (req: Request, res: Response) => {
+router.post("/:id/submodel/:submodelId/element", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id, submodelId } = req.params;
     const element = req.body;
@@ -1128,7 +1129,7 @@ router.post("/:id/submodel/:submodelId/element", async (req: Request, res: Respo
 });
 
 // DELETE /api/aasx/:id/submodel/:submodelId - Delete submodel
-router.delete("/:id/submodel/:submodelId", async (req: Request, res: Response) => {
+router.delete("/:id/submodel/:submodelId", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id, submodelId } = req.params;
 
@@ -1160,7 +1161,7 @@ router.delete("/:id/submodel/:submodelId", async (req: Request, res: Response) =
 });
 
 // DELETE /api/aasx/:id/submodel/:submodelId/element/:elementIdShort - Delete element
-router.delete("/:id/submodel/:submodelId/element/:elementIdShort", async (req: Request, res: Response) => {
+router.delete("/:id/submodel/:submodelId/element/:elementIdShort", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id, submodelId, elementIdShort } = req.params;
 
@@ -1199,7 +1200,7 @@ router.delete("/:id/submodel/:submodelId/element/:elementIdShort", async (req: R
 });
 
 // POST /api/aasx/:id/element/duplicate - Duplicate an element
-router.post("/:id/element/duplicate", async (req: Request, res: Response) => {
+router.post("/:id/element/duplicate", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { submodelId, elementIdShort } = req.body;
@@ -1248,7 +1249,7 @@ router.post("/:id/element/duplicate", async (req: Request, res: Response) => {
 // ============================================================================
 
 // GET /api/aasx/:id/export/json - Export to JSON
-router.get("/:id/export/json", async (req: Request, res: Response) => {
+router.get("/:id/export/json", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { pretty } = req.query;
@@ -1271,7 +1272,7 @@ router.get("/:id/export/json", async (req: Request, res: Response) => {
 });
 
 // GET /api/aasx/:id/export/csv - Export to CSV
-router.get("/:id/export/csv", async (req: Request, res: Response) => {
+router.get("/:id/export/csv", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { type } = req.query;
@@ -1297,7 +1298,7 @@ router.get("/:id/export/csv", async (req: Request, res: Response) => {
 });
 
 // GET /api/aasx/:id/export/metadata - Get export metadata
-router.get("/:id/export/metadata", async (req: Request, res: Response) => {
+router.get("/:id/export/metadata", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -1324,7 +1325,7 @@ router.get("/:id/export/metadata", async (req: Request, res: Response) => {
 // ============================================================================
 
 // GET /api/aasx/:id/export/excel - Export environment to Excel
-router.get("/:id/export/excel", async (req: Request, res: Response) => {
+router.get("/:id/export/excel", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { includeMetadata, multiLanguage } = req.query;
@@ -1350,7 +1351,7 @@ router.get("/:id/export/excel", async (req: Request, res: Response) => {
 });
 
 // GET /api/aasx/:id/submodel/:submodelId/export/csv - Export submodel to CSV
-router.get("/:id/submodel/:submodelId/export/csv", async (req: Request, res: Response) => {
+router.get("/:id/submodel/:submodelId/export/csv", validateAccessToken, async (req: Request, res: Response) => {
   try {
     const { id, submodelId } = req.params;
     const { delimiter } = req.query;
@@ -1382,7 +1383,7 @@ router.get("/:id/submodel/:submodelId/export/csv", async (req: Request, res: Res
 });
 
 // POST /api/aasx/:id/import/excel - Import properties from Excel
-router.post("/:id/import/excel", upload.single('file'), async (req: Request, res: Response) => {
+router.post("/:id/import/excel", validateAccessToken, upload.single('file'), async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const file = req.file;
